@@ -1,7 +1,12 @@
 export default function Home() {
 	return (
-		<main className='flex min-h-screen flex-col items-center justify-between p-24'>
-			<h2>Hello</h2>
+		<main className='flex min-h-screen flex-col items-center justify-start p-32 gap-8'>
+			<h1 className='text-6xl text-sky-500 font-semibold tracking-wider'>
+				Scrum Diving
+			</h1>
+			<h2 className='text-2xl text-gray-300 py-4'>
+				Because it's not really poker
+			</h2>
 		</main>
 	)
 }

@@ -25,6 +25,12 @@ const config: Config = {
 				dark: {
 					...require('daisyui/src/theming/themes').dark,
 					'base-100': '#00001b',
+					'base-200': '#000014',
+					'base-300': '#00010b',
+					'.btn:disabled': {
+						'--tw-bg-opacity': '0.4',
+						'--tw-text-opacity': '0.4',
+					},
 				},
 			},
 			'halloween',

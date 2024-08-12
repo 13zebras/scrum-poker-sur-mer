@@ -1,8 +1,11 @@
+// HOST ROOM
 'use client'
 
 import { useEffect, useState } from 'react'
 import { socket } from '@/socket'
 import SocketIoTestSection from '@/components/socketIoTest/SocketIoTestSection'
+import HostSettingsButton from '@/components/HostSettingsButton'
+import HostControls from '@/components/HostControls'
 import StoryPoints from '@/components/StoryPoints'
 import CardsContainer from '@/components/CardsContainer'
 
@@ -12,29 +15,37 @@ export type ChatEvent = {
 	room: string
 }
 
-export default function UserRooms({ params }: { params: { room: string } }) {
+export default function HostRooms({ params }: { params: { room: string } }) {
 	const [roomId, setRoomId] = useState('')
 	const [userName, setUserName] = useState('')
-	// const [chatEvents, setChatEvents] = useState<ChatEvent[]>([])
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const { room } = params
 
-		console.log('%c>>> on user page load roomId:', 'color: red', room)
+		console.log('%c>>> on load HOST ROOM roomId:', 'color: red', room)
 
-		const user = 'Bob'
+		const hostDataLocalStorage = localStorage.getItem('scrumDivingHostData')
+		const hostData =
+			hostDataLocalStorage && JSON.parse(hostDataLocalStorage)
 
-		socket.emit('join-room', room, user)
+		console.log('%c>>> hostData LocalStorage', 'color: red', hostData)
+		const hostFirstName = hostData?.hostName
+
+		socket.emit('join-room', room, hostFirstName)
 
 		setRoomId(room)
-		setUserName(user)
+		setUserName(hostFirstName)
 	}, [])
 
 	return (
 		<main className='px-16 py-12 flex flex-col items-center gap-12 w-full'>
-			<h1 className='text-3xl text-green-400'>USER Scrum Diving Room</h1>
+			<h1 className='text-3xl text-pink-600 pb-8'>
+				HOST Scrum Diving Room
+			</h1>
+			<HostSettingsButton />
 			<div className='text-2xl text-zinc-500 h-[60vh] w-full flex flex-col justify-start items-center gap-8'>
+				<HostControls />
 				<div className='text-2xl text-zinc-500 h-full w-full flex flex-row gap-8 justify-start items-center'>
 					<StoryPoints />
 					<CardsContainer />
