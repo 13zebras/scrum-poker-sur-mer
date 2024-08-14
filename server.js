@@ -18,19 +18,26 @@ app.prepare().then(() => {
 		},
 	})
 
+	// TODO:  move some of this code into a separate file.
+	// note:  not sure how to do that yet as this is the server.
 	io.on('connection', (socket) => {
-		console.log('>>> server socket.id', socket.id)
+		console.log('**************************************************')
+		console.log('>> server socket.id', socket.id)
 
-		socket.on('join-room', (roomId, userName) => {
-			console.log('>>> join-room roomId: ', roomId)
-			console.log('>>> join-room userName: ', userName)
+		socket.on('join-room', (message, roomId, userName) => {
+			console.log('>> join-room message: ', message)
+			console.log('>> join-room roomId: ', roomId)
+			console.log('>> join-room userName: ', userName)
+			console.log('**************************************************')
+
 			socket.join(roomId)
-			io.to(roomId).emit('user-connected', roomId, userName)
+			io.to(roomId).emit('user-connected', message, roomId, userName)
 		})
 
-		socket.on('client-message', (message, roomId) => {
-			console.log('>>> client-message: ', message, roomId)
-			io.to(roomId).emit('chat', message, roomId)
+		socket.on('client-data', (message, roomId, userName) => {
+			console.log('>> client-data: ', message, roomId, userName)
+			console.log('**************************************************')
+			io.to(roomId).emit('server-data', message, roomId, userName)
 		})
 	})
 
@@ -40,6 +47,6 @@ app.prepare().then(() => {
 			process.exit(1)
 		})
 		.listen(port, () => {
-			console.log(`>>>Ready on http://${hostname}:${port}`)
+			console.log(`*** Ready on http://${hostname}:${port} ***`)
 		})
 })
