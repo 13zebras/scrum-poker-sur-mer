@@ -1,7 +1,12 @@
 import { useState, useRef } from 'react'
-import { socket } from '@/socket'
+import { socketRoomEmitter } from '@/services/socket'
 
-export default function MessageForm({ room: roomId }: { room: string }) {
+type Props = {
+	roomId: string
+	userName: string
+}
+
+export default function MessageForm({ roomId, userName }: Props) {
 	const [message, setMessage] = useState('')
 
 	const [isLoading, setIsLoading] = useState(false)
@@ -10,17 +15,22 @@ export default function MessageForm({ room: roomId }: { room: string }) {
 	function handleSend(event: React.FormEvent) {
 		event.preventDefault()
 		setIsLoading(true)
-		console.log('%c>>> message:', 'color: red', message, roomId)
+		console.log(
+			'%c>>> MessageForms:',
+			'color: red',
+			message,
+			roomId,
+			userName,
+		)
 
-		socket.emit('client-message', message, roomId)
-
+		socketRoomEmitter('client-data', message, roomId, userName)
 		if (messageRef.current) messageRef.current.value = ''
+		setIsLoading(false)
 	}
 
 	return (
-		<div className='py-6 w-full max-w-[700px]'>
+		<div className='py-6 w-full max-w-[800px]'>
 			<form className='w-full flex flex-row items-center justify-start gap-4'>
-				{/* <span className='text-gray-300 w-16'>Msg:</span> */}
 				<button
 					type='submit'
 					disabled={isLoading}

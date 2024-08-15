@@ -1,9 +1,9 @@
 'use client'
 
-import { useListenerEvents } from '@/services/socketIoServices'
-import ConnectionManager from '@/components/socketIoTest/ConnectionManager'
-import Events from '@/components/socketIoTest/Events'
-import MessageForm from '@/components/socketIoTest/MessageForm'
+import { useListenerEvents } from '@/services/socket'
+import ConnectionManager from '@/components/socketIoDevTools/ConnectionManager'
+import Events from '@/components/socketIoDevTools/Events'
+import MessageForm from '@/components/socketIoDevTools/MessageForm'
 
 type Props = {
 	userName: string
