@@ -2,44 +2,35 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { socket } from '@/socket'
-import SocketIoTestSection from '@/components/socketIoTest/SocketIoTestSection'
+import SocketIoInfo from '@/components/socketIoDevTools/SocketIoInfo'
+
+import { socketRoomEmitter } from '@/services/socket'
 import HostSettingsButton from '@/components/HostSettingsButton'
 import HostControls from '@/components/HostControls'
 import StoryPoints from '@/components/StoryPoints'
 import CardsContainer from '@/components/CardsContainer'
 
-export type ChatEvent = {
-	message: string
-	timeStamp: string
-	room: string
-}
-
 export default function HostRooms({ params }: { params: { room: string } }) {
-	const [roomId, setRoomId] = useState('')
-	const [userName, setUserName] = useState('')
+	const { room } = params
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	console.log('%c>>> HOST ROOM roomId:', 'color: #5f0', room)
+
+	const hostDataLocalStorage = localStorage.getItem('scrumDivingHostData')
+	const hostData = hostDataLocalStorage && JSON.parse(hostDataLocalStorage)
+
+	console.log(
+		'%c>>> HOST ROOM hostData from LocalStorage',
+		'color: yellow',
+		hostData,
+	)
+	const hostFirstName = hostData?.hostName
+
 	useEffect(() => {
-		const { room } = params
-
-		console.log('%c>>> on load HOST ROOM roomId:', 'color: red', room)
-
-		const hostDataLocalStorage = localStorage.getItem('scrumDivingHostData')
-		const hostData =
-			hostDataLocalStorage && JSON.parse(hostDataLocalStorage)
-
-		console.log('%c>>> hostData LocalStorage', 'color: red', hostData)
-		const hostFirstName = hostData?.hostName
-
-		socket.emit('join-room', room, hostFirstName)
-
-		setRoomId(room)
-		setUserName(hostFirstName)
-	}, [])
+		socketRoomEmitter('join-room', 'Room Joined', room, hostFirstName)
+	}, [room, hostFirstName])
 
 	return (
-		<main className='px-16 py-12 flex flex-col items-center gap-12 w-full'>
+		<main className='px-16 py-12 flex flex-col items-center gap-12 w-full animate-fade-in-500'>
 			<h1 className='text-3xl text-pink-600 pb-8'>
 				HOST Scrum Diving Room
 			</h1>
@@ -52,8 +43,8 @@ export default function HostRooms({ params }: { params: { room: string } }) {
 				</div>
 			</div>
 
-			{/*** Socket.io Test Section ***/}
-			<SocketIoTestSection userName={userName} roomId={roomId} />
+			{/*** Socket.io DevTools - Remove Before Release ***/}
+			<SocketIoInfo roomId={room} userName={hostFirstName} />
 		</main>
 	)
 }

@@ -1,38 +1,25 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { socket } from '@/socket'
-import SocketIoTestSection from '@/components/socketIoTest/SocketIoTestSection'
+import SocketIoInfo from '@/components/socketIoDevTools/SocketIoInfo'
+import { socketRoomEmitter } from '@/services/socket'
 import StoryPoints from '@/components/StoryPoints'
 import CardsContainer from '@/components/CardsContainer'
-
-export type ChatEvent = {
-	message: string
-	timeStamp: string
-	room: string
-}
+import { getRandomName } from '@/utils/testData'
 
 export default function UserRooms({ params }: { params: { room: string } }) {
-	const [roomId, setRoomId] = useState('')
-	const [userName, setUserName] = useState('')
-	// const [chatEvents, setChatEvents] = useState<ChatEvent[]>([])
+	const [user, setUser] = useState('')
+	const { room } = params
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		const { room } = params
-
-		console.log('%c>>> on user page load roomId:', 'color: red', room)
-
-		const user = 'Bob'
-
-		socket.emit('join-room', room, user)
-
-		setRoomId(room)
-		setUserName(user)
-	}, [])
+		const user = getRandomName()
+		console.log('%c>>> roomId User params:', 'color: red', room, user)
+		setUser(user)
+		socketRoomEmitter('join-room', 'joined room', room, user)
+	}, [room])
 
 	return (
-		<main className='px-16 py-12 flex flex-col items-center gap-12 w-full'>
+		<main className='px-16 py-12 flex flex-col items-center gap-12 w-full animate-fade-in-500'>
 			<h1 className='text-3xl text-green-400'>USER Scrum Diving Room</h1>
 			<div className='text-2xl text-zinc-500 h-[60vh] w-full flex flex-col justify-start items-center gap-8'>
 				<div className='text-2xl text-zinc-500 h-full w-full flex flex-row gap-8 justify-start items-center'>
@@ -41,8 +28,8 @@ export default function UserRooms({ params }: { params: { room: string } }) {
 				</div>
 			</div>
 
-			{/*** Socket.io Test Section ***/}
-			<SocketIoTestSection userName={userName} roomId={roomId} />
+			{/*** Socket.io DevTools - Remove Before Release ***/}
+			<SocketIoInfo roomId={room} userName={user} />
 		</main>
 	)
 }
