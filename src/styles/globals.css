@@ -8,8 +8,8 @@
   }
 }
 
-dialog.modal::backdrop {
-	@apply bg-black/60;
+.btn-md-w {
+	@apply h-10 min-h-10 w-[20rem] text-lg
 }
 
 .btn-outline-gray {
