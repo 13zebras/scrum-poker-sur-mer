@@ -3,7 +3,7 @@
 import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
 
-export type ListenerRes = {
+type ListenerRes = {
 	messageServer: string
 	roomIdServer: string
 	userNameServer: string

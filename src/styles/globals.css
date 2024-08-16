@@ -22,11 +22,11 @@
 }
 
 .btn-points {
-	@apply btn-primary;
+	@apply w-14 h-14 min-h-14 p-0;
 }
 
 .btn-points:is(input[type='radio']):after {
-	@apply text-xl;
+	@apply text-xl font-bold;
 	--tw-content: attr(value);
 	content: var(--tw-content);
 }
@@ -41,10 +41,11 @@
   /* @apply border-red-600 bg-red-700 text-white; */
   @media (hover: hover) {
     &:hover {
-      @supports (color: color-mix(in oklab, black, black)) {
+		@apply border-success bg-success text-success-content;
+      /* @supports (color: color-mix(in oklab, black, black)) {
         background-color: color-mix(in oklab, theme(colors.accent) 90%, black);
         border-color: color-mix(in oklab, theme(colors.accent) 90%, black);
-      }
+      } */
     }
   }
   &:focus-visible {

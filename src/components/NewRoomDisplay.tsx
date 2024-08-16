@@ -47,7 +47,7 @@ export default function NewRoomDisplay({
 						type='button'
 						onClick={copyToClipboard}
 						disabled={!hideGoLink}
-						className='btn btn-accent btn-md-w disabled:text-accent/100 disabled:bg-transparent disabled:opacity-100 animate-fade-in-300'
+						className='btn btn-accent btn-md-w disabled:text-accent/100 disabled:bg-transparent disabled:opacity-100 disabled:text-[1.35rem] animate-fade-in-300'
 					>
 						{hideGoLink
 							? 'Copy Room URL to Clipboard'
@@ -55,14 +55,17 @@ export default function NewRoomDisplay({
 					</button>
 				</div>
 			</div>
-
-			<Link
-				href={linkUrl}
-				className={`btn btn-secondary btn-md-w uppercase duration-500 ${hideGoLink && 'disabled'}`}
-			>
-				Go to New Room
-				<RightArrowIcon className='h-7 w-7 inline' />
-			</Link>
+			<div className='h-10'>
+				{!hideGoLink && (
+					<Link
+						href={linkUrl}
+						className='btn btn-secondary btn-md-w uppercase duration-500'
+					>
+						Go to New Room
+						<RightArrowIcon className='h-7 w-7 inline' />
+					</Link>
+				)}
+			</div>
 		</div>
 	)
 }
