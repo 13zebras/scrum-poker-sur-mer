@@ -1,6 +1,5 @@
 export default function useLocalStorage() {
-	// biome-ignore lint/suspicious/noExplicitAny: can pass anything
-	const setItemLocalStorage = (key: string, value: any) => {
+	const setItemLocalStorage = (key: string, value: unknown) => {
 		try {
 			localStorage.setItem(key, JSON.stringify(value))
 		} catch (error) {
