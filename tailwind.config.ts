@@ -12,8 +12,32 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
-			keyframes: {},
-			animation: {},
+			animation: {
+				'fade-in-600': 'fade-in 300ms ease-out 300ms 1 both',
+				'fade-in-500': 'fade-in 400ms ease-out 100ms 1 both',
+				'fade-in-300': 'fade-in 300ms ease-out 0ms 1 both',
+				'fade-in-150': 'fade-in 150ms ease-out 0ms 1 both',
+			},
+			keyframes: {
+				'fade-in': {
+					from: {
+						opacity: '0',
+					},
+					to: {
+						opacity: '1',
+					},
+				},
+				'fade-in-scale': {
+					'0%': {
+						transform: 'scale(0.9)',
+						opacity: '0',
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1',
+					},
+				},
+			},
 		},
 	},
 	plugins: [daisyui],
@@ -25,6 +49,12 @@ const config: Config = {
 				dark: {
 					...require('daisyui/src/theming/themes').dark,
 					'base-100': '#00001b',
+					'base-200': '#000014',
+					'base-300': '#00010b',
+					'.btn:disabled': {
+						'--tw-bg-opacity': '0.4',
+						'--tw-text-opacity': '0.4',
+					},
 				},
 			},
 			'halloween',

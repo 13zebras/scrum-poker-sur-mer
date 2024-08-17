@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.btn-md-w {
+	@apply h-10 min-h-10 w-[20rem] text-lg
+}
+
+.btn-outline-gray {
+	@apply border border-gray-700 text-gray-400 bg-transparent;
+	@media (hover: hover) {
+		&:hover {
+			@apply border border-gray-500 text-gray-300 bg-transparent;
+		}
+	}
+}
+
+.btn-points {
+	@apply w-14 h-14 min-h-14 p-0;
+}
+
+.btn-points:is(input[type='radio']):after {
+	@apply text-xl font-bold;
+	--tw-content: attr(value);
+	content: var(--tw-content);
+}
+
+/* .btn-points:is(input[type='radio']):hover {
+	--tw-border-opacity: 0.5;
+	--tw-bg-opacity: 0.7;
+} */
+
+.btn-points:is(input[type="radio"]:checked) {
+  @apply border-success bg-success text-success-content;
+  /* @apply border-red-600 bg-red-700 text-white; */
+  @media (hover: hover) {
+    &:hover {
+		@apply border-success bg-success text-success-content;
+      /* @supports (color: color-mix(in oklab, black, black)) {
+        background-color: color-mix(in oklab, theme(colors.accent) 90%, black);
+        border-color: color-mix(in oklab, theme(colors.accent) 90%, black);
+      } */
+    }
+  }
+  &:focus-visible {
+    @apply outline-primary;
+  }
+}
