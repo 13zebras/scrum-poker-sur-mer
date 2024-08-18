@@ -20,10 +20,14 @@
 			"enabled": true,
 			"quoteStyle": "single",
 			"indentStyle": "tab",
+			"indentWidth": 4,
 			"lineWidth": 80
 		},
 		"linter": {
 			"enabled": true
+		},
+		"parser": {
+			"cssModules": true
 		}
 	},
 	"javascript": {

@@ -3,9 +3,17 @@
 @tailwind utilities;
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+	.text-balance {
+		text-wrap: balance;
+	}
+}
+
+body {
+	@apply flex justify-center items-start;
+}
+
+.btn-xs {
+	@apply h-7 min-h-7 px-3 text-[0.8rem]
 }
 
 .btn-md-w {
@@ -13,10 +21,10 @@
 }
 
 .btn-outline-gray {
-	@apply border border-gray-700 text-gray-400 bg-transparent;
+	@apply border border-gray-500 text-gray-400 bg-transparent;
 	@media (hover: hover) {
 		&:hover {
-			@apply border border-gray-500 text-gray-300 bg-transparent;
+			@apply border-gray-400 text-gray-300 bg-transparent;
 		}
 	}
 }
@@ -37,18 +45,15 @@
 } */
 
 .btn-points:is(input[type="radio"]:checked) {
-  @apply border-success bg-success text-success-content;
-  /* @apply border-red-600 bg-red-700 text-white; */
-  @media (hover: hover) {
-    &:hover {
-		@apply border-success bg-success text-success-content;
-      /* @supports (color: color-mix(in oklab, black, black)) {
-        background-color: color-mix(in oklab, theme(colors.accent) 90%, black);
-        border-color: color-mix(in oklab, theme(colors.accent) 90%, black);
-      } */
-    }
-  }
-  &:focus-visible {
-    @apply outline-primary;
-  }
+	@apply border-success/80 bg-success/80 text-success-content;
+	@media (hover: hover) {
+		&:hover {
+			@apply border-success/80 bg-success/80 text-success-content;
+		}
+	}
+	&:focus-visible {
+		@apply outline-primary;
+	}
 }
+
+

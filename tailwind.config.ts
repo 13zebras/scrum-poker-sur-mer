@@ -40,7 +40,7 @@ const config: Config = {
 			},
 		},
 	},
-	plugins: [daisyui],
+	plugins: [daisyui, require('tailwindcss-animate')],
 	// daisyUI config (these are the default values)
 	daisyui: {
 		themes: [
@@ -48,6 +48,7 @@ const config: Config = {
 			{
 				dark: {
 					...require('daisyui/src/theming/themes').dark,
+					success: '#50e500',
 					'base-100': '#00001b',
 					'base-200': '#000014',
 					'base-300': '#00010b',
