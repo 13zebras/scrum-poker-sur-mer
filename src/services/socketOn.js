@@ -4,13 +4,13 @@ module.exports = (io, socket) => {
 	socket.onAny((eventName, ...args) => {
 		console.log('>> eventName:', eventName)
 		console.log('>> args:', args)
-		const [message, roomId, userName] = args
+		const [message, userName, timeStamp, roomId] = args
 		// console.log('>> message, roomId, userName:', message, roomId, userName)
 		console.log('**************************************************')
 		if (eventName === 'join-room') {
 			socket.join(roomId)
 		}
-		io.to(roomId).emit(eventName, message, roomId, userName)
+		io.to(roomId).emit(eventName, message, userName, timeStamp)
 	})
 }
 

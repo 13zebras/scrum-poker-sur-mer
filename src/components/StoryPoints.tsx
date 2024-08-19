@@ -2,8 +2,15 @@
 
 import StoryPointButton from './StoryPointButton'
 
-export default function StoryPoints() {
+export default function StoryPoints({
+	setSelectedStoryPoint,
+}: { setSelectedStoryPoint: (value: string) => void }) {
 	const storyPointValues = ['?', 0, 1, 2, 3, 5, 8, 13, 20, 40, 100]
+
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setSelectedStoryPoint(event.target.value)
+	}
+
 	return (
 		<div className='w-40 flex flex-col justify-center items-center'>
 			<h3 className='text-lg text-center px-4 pt-0 text-gray-300'>
@@ -14,8 +21,12 @@ export default function StoryPoints() {
 					<StoryPointButton
 						key={storyPoint}
 						storyPoint={storyPoint}
+						onChange={handleChange}
 					/>
 				))}
+				{/* <div className='py-4 text-xl text-center text-red-600'>
+					{selectedStoryPoint}
+				</div> */}
 			</div>
 		</div>
 	)

@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 import RightArrowIcon from './icons/RightArrowIcon'
@@ -8,21 +7,21 @@ import RightArrowIcon from './icons/RightArrowIcon'
 type NewRoomProps = {
 	roomUrl: string
 	hostRoomUrl: string
-	hostFirstName: string
+	hostName: string
 }
 
 export default function NewRoomDisplay({
 	roomUrl,
 	hostRoomUrl,
-	hostFirstName,
+	hostName,
 }: NewRoomProps) {
 	const [hideGoLink, setHideGoLink] = useState(true)
-
-	const router = useRouter()
 
 	const linkUrl = hideGoLink ? '' : hostRoomUrl
 
 	function copyToClipboard() {
+		navigator.clipboard.writeText(roomUrl)
+		// alert('Room URL copied to clipboard!')
 		setHideGoLink(false)
 	}
 
@@ -30,7 +29,7 @@ export default function NewRoomDisplay({
 		<div className='w-full flex flex-col items-center gap-16 animate-fade-in-500'>
 			<div className='w-full max-w-[48rem] flex flex-col items-center justify-center gap-12'>
 				<h2 className='font-bold text-gray-200 text-3xl'>
-					{hostFirstName}'s New Room URL
+					{hostName}'s New Room URL
 				</h2>
 				<div className='flex flex-col items-center justify-center'>
 					<span className='w-3/4 text-base text-gray-300 text-center pb-1'>

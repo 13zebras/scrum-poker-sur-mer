@@ -39,7 +39,7 @@
 			"indentWidth": 4,
 			"trailingCommas": "all",
 			"quoteProperties": "asNeeded",
-			"lineWidth": 80,
+			"lineWidth": 100,
 			"bracketSpacing": true,
 			"bracketSameLine": false
 		}

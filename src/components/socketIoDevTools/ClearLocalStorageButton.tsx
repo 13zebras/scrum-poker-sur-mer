@@ -1,10 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 export default function ClearLocalStorageButton() {
-	const router = useRouter()
-
 	function handleOnClick() {
 		localStorage.removeItem('scrumDivingHostData')
 		window.location.reload()

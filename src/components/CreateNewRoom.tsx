@@ -10,7 +10,7 @@ export default function CreateNewRoom() {
 	const [showNameInput, setShowNameInput] = useState(true)
 	const [domain, setDomain] = useState('')
 	const hostRef = useRef<HTMLInputElement>(null)
-	const [hostFirstName, setHostFirstName] = useState('')
+	const [hostName, setHostName] = useState('')
 
 	useEffect(() => {
 		const hostname = window.location.hostname
@@ -22,12 +22,12 @@ export default function CreateNewRoom() {
 		if (hostDataLocalStorage) {
 			const hostData = JSON.parse(hostDataLocalStorage)
 			if (hostData?.hostName) {
-				setHostFirstName(hostData?.hostName)
+				setHostName(hostData?.hostName)
 				setShowNameInput(false)
 			}
 		}
 		console.log(
-			'%c>>> MODAL hostDataLocalStorage:',
+			'%c>>> CNR first load hostDataLocalStorage:',
 			'color: red',
 			hostDataLocalStorage,
 		)
@@ -35,7 +35,7 @@ export default function CreateNewRoom() {
 
 	function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
 		event.preventDefault()
-		setHostFirstName(event.target.value)
+		setHostName(event.target.value)
 	}
 
 	function generateAlphaNumeric() {
@@ -49,17 +49,21 @@ export default function CreateNewRoom() {
 
 		setRoomUrl(newRoomUrl)
 		setHostRoomUrl(newHostRoomUrl)
-		if (hostRef.current) hostRef.current.value = ''
-		const valuesLocalStorage = JSON.stringify({
-			hostName: hostFirstName,
-			roomUrl: newHostRoomUrl,
-		})
-		localStorage.setItem('scrumDivingHostData', valuesLocalStorage)
+
+		localStorage.setItem(
+			'scrumDivingHostData',
+			JSON.stringify({
+				hostName: hostName,
+				roomUrl: newRoomUrl,
+				hostRoomUrl: newHostRoomUrl,
+				roomId: newRoomNumber,
+			}),
+		)
 
 		setShowRoomDisplay(true)
+		if (hostRef.current) hostRef.current.value = ''
 
-		console.log('%c>>> set LocalStorage', 'color: #f0f', valuesLocalStorage)
-		console.log('%c>>> hostFirstName:', 'color: red', hostFirstName)
+		console.log('%c>>> hostName:', 'color: red', hostName)
 		console.log('%c>>> room:', 'color: #5f0', newRoomUrl)
 		console.log('%c>>> host room', 'color: yellow', newHostRoomUrl)
 	}
@@ -79,7 +83,7 @@ export default function CreateNewRoom() {
 					)}
 					{!showNameInput && (
 						<span className='text-3xl text-gray-300 tracking-wider pb-3'>
-							Welcome back {hostFirstName}!
+							Welcome back {hostName}!
 						</span>
 					)}
 
@@ -87,7 +91,7 @@ export default function CreateNewRoom() {
 						type='button'
 						className='btn btn-warning btn-md-w'
 						onClick={handleCreateRoom}
-						disabled={!hostFirstName}
+						disabled={!hostName}
 					>
 						Click to Create New Room
 					</button>
@@ -97,7 +101,7 @@ export default function CreateNewRoom() {
 				<NewRoomDisplay
 					roomUrl={roomUrl}
 					hostRoomUrl={hostRoomUrl}
-					hostFirstName={hostFirstName}
+					hostName={hostName}
 				/>
 			)}
 		</div>

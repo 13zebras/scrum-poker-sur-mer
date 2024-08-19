@@ -3,13 +3,17 @@
 import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
 
-type ListenerRes = {
-	messageServer: string
-	roomIdServer: string
-	userNameServer: string
+export type ListenerRes = {
+	message: string
+	// roomId: string
+	userName: string
+	timeStamp: string
 }
 
-export interface Event extends ListenerRes {
+type AllUsersPointsRes = {
+	message: ListenerRes[]
+	// roomId: string
+	userName: string
 	timeStamp: string
 }
 
@@ -17,26 +21,46 @@ const socket = io()
 
 export function socketRoomEmitter(
 	emitterName: string,
-	message: string,
-	roomId: string,
+	message: string | ListenerRes[],
 	userName: string,
+	timeStamp: string,
+	roomId: string,
 ) {
-	socket.emit(emitterName, message, roomId, userName)
+	socket.emit(emitterName, message, userName, timeStamp, roomId)
+}
+
+export function useAllUsersPointsListener(listenerName: string) {
+	const [listenerRes, setListenerRes] = useState<AllUsersPointsRes>()
+	useEffect(() => {
+		function onListenerRes(
+			message: ListenerRes[],
+			// roomId: string,
+			userName: string,
+			timeStamp: string,
+		) {
+			setListenerRes({ message, userName, timeStamp })
+			// setListenerRes({ message, roomId, userName, timeStamp })
+		}
+		socket.on(listenerName, onListenerRes)
+
+		return () => {
+			socket.off(listenerName, onListenerRes)
+		}
+	}, [listenerName])
+	return listenerRes
 }
 
 export function useSocketListener(listenerName: string) {
-	const [listenerRes, setListenerRes] = useState<ListenerRes>({
-		messageServer: '',
-		roomIdServer: '',
-		userNameServer: '',
-	})
+	const [listenerRes, setListenerRes] = useState<ListenerRes>()
 	useEffect(() => {
 		function onListenerRes(
-			messageServer: string,
-			roomIdServer: string,
-			userNameServer: string,
+			message: string,
+			// roomId: string,
+			userName: string,
+			timeStamp: string,
 		) {
-			setListenerRes({ messageServer, roomIdServer, userNameServer })
+			setListenerRes({ message, userName, timeStamp })
+			// setListenerRes({ message, roomId, userName, timeStamp })
 		}
 		socket.on(listenerName, onListenerRes)
 
@@ -50,34 +74,41 @@ export function useSocketListener(listenerName: string) {
 
 // Only use this listener for the SocketIoInfo component to display
 // events for testing purposes
-export function useListenerEvents(joinListener: string, dataListener: string) {
-	const [events, setEvents] = useState<Event[]>([])
+export function useListenerEvents(
+	joinListener: string,
+	dataListener: string,
+	pointsListener: string,
+	usersPointsListener: string,
+) {
+	const [events, setEvents] = useState<ListenerRes[]>([])
 
 	useEffect(() => {
 		function onListenerResponse(
-			messageServer: string,
-			roomIdServer: string,
-			userNameServer: string,
+			message: string,
+			userName: string,
+			timeStamp: string,
 		) {
-			const unixTimestamp = Date.now().toString()
-			setEvents((previous: Event[]) => [
-				...previous,
+			setEvents((previous: ListenerRes[]) => [
 				{
-					messageServer: messageServer,
-					roomIdServer: roomIdServer,
-					userNameServer: userNameServer,
-					timeStamp: unixTimestamp,
+					message: message,
+					userName: userName,
+					timeStamp: timeStamp,
 				},
+				...previous,
 			])
 		}
 		socket.on(joinListener, onListenerResponse)
 		socket.on(dataListener, onListenerResponse)
+		socket.on(pointsListener, onListenerResponse)
+		socket.on(usersPointsListener, onListenerResponse)
 
 		return () => {
 			socket.off(joinListener, onListenerResponse)
 			socket.off(dataListener, onListenerResponse)
+			socket.off(pointsListener, onListenerResponse)
+			socket.off(usersPointsListener, onListenerResponse)
 		}
-	}, [joinListener, dataListener])
+	}, [joinListener, dataListener, pointsListener, usersPointsListener])
 
 	return events
 }
@@ -130,14 +161,14 @@ return () => {
 }
 
 useEffect(() => {
-	function onChatEvent(message: string, roomIdServer: string) {
-		const unixTimestamp = Date.now().toString()
+	function onChatEvent(message: string, roomId: string) {
+		const timeStamp = Date.now().toString()
 		setChatEvents((previous) => [
 			...previous,
 			{
 				message: message,
-				timeStamp: unixTimestamp,
-				room: roomIdServer,
+				timeStamp: timeStamp,
+				room: roomId,
 			},
 		])
 	}
@@ -149,10 +180,10 @@ useEffect(() => {
 			roomId,
 		)
 		const newMessage = `${userName} has joined Room ${roomId}`
-		const unixTimestamp = Date.now().toString()
+		const timeStamp = Date.now().toString()
 		setChatEvents((previous) => [
 			...previous,
-			{ message: newMessage, timeStamp: unixTimestamp, room: roomId },
+			{ message: newMessage, timeStamp: timeStamp, room: roomId },
 		])
 	}
 
