@@ -20,7 +20,7 @@ export default function UserCard({
 			<figure className='z-0 size-32 object-cover relative block'>
 				<img
 					src={imageSrc}
-					alt='sealife background'
+					alt={`${name} avatar profile`}
 					className='w-32 h-full object-cover'
 				/>
 			</figure>

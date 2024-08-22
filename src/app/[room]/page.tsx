@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-// import SocketIoInfo from '@/components/socketIoDevTools/SocketIoInfo'
 import { socketRoomEmitter } from '@/services/socket'
 import RoomMainUi from '@/components/RoomMainUi'
 import RoomInfo from '@/components/RoomInfo'
@@ -13,7 +12,7 @@ type Params = {
 
 export default function UserRooms({ params }: { params: Params }) {
 	const [user, setUser] = useState('')
-	const [isJoinClicked, setIsJoinClicked] = useState(false)
+	const [displayErrorMessage, setDisplayErrorMessage] = useState(false)
 	const dialogRef = useRef<HTMLDialogElement>(null)
 	console.log('%c>>> params', 'color: red', params)
 
@@ -25,24 +24,32 @@ export default function UserRooms({ params }: { params: Params }) {
 		}
 	}, [])
 
-	useEffect(() => {
-		console.log('%c>>> user', 'color: red', user)
-		if (!user || !isJoinClicked) return
+	function handleOnSubmit(formValues: { userName: string }) {
+		console.log('%c>>> formValues', 'color: #5f0', formValues)
+		if (!formValues.userName) {
+			setDisplayErrorMessage(true)
+			return
+		}
+		setUser(formValues.userName)
 		const timeStamp = Date.now().toString()
-		socketRoomEmitter('join-room', 'join', user, timeStamp, room)
-	}, [room, user, isJoinClicked])
-
-	function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
-		event.preventDefault()
-		setUser(event.target.value)
+		socketRoomEmitter(
+			'join-room',
+			'join',
+			formValues.userName,
+			timeStamp,
+			room,
+		)
+		if (dialogRef.current) {
+			dialogRef.current.close()
+		}
 	}
 
 	return (
 		<main className='px-16 py-12 flex flex-col items-center gap-8 w-full animate-fade-in-500'>
 			<NewUserDialog
 				dialogRef={dialogRef}
-				handleOnChange={handleOnChange}
-				onJoinClick={() => setIsJoinClicked(true)}
+				onSubmit={handleOnSubmit}
+				displayError={displayErrorMessage}
 			/>
 			<h1 className='text-3xl text-gray-300'>Scrum Diving Room</h1>
 			<RoomInfo roomId={room} userName={user} />

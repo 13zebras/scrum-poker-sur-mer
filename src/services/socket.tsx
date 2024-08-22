@@ -49,7 +49,29 @@ export function useAllUsersPointsListener(listenerName: string) {
 	return listenerRes
 }
 
-export function useSocketListener(listenerName: string, config: any) {
+export function useSocketListener(listenerName: string) {
+	const [listenerRes, setListenerRes] = useState<ListenerRes>()
+
+	useEffect(() => {
+		function onListenerRes(
+			message: string,
+			// roomId: string,
+			userName: string,
+			timeStamp: string,
+		) {
+			setListenerRes({ message, userName, timeStamp })
+		}
+		socket.on(listenerName, onListenerRes)
+
+		return () => {
+			socket.off(listenerName, onListenerRes)
+		}
+	}, [listenerName])
+
+	return listenerRes
+}
+
+export function useSocketListenerWithEmit(listenerName: string, config: any) {
 	const [listenerRes, setListenerRes] = useState<ListenerRes>()
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: not needed as a dependency

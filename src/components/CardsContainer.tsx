@@ -16,11 +16,15 @@ export default function CardsContainer() {
 	// const sampleNames = namesArray.slice(0, 9)
 	const sampleNames: string[] = []
 	const storyPointsArray = [0, 1, 2, 3, 5, 8, 13]
+
 	const allUsersPoints = useAllUsersPointsListener('all-users-story-points')
+
+	// the line below creates an infinite loop
+	// allUsersPoints && setUsersPointsData(allUsersPoints?.message)
+
 	const showStoryPointsListener = useSocketListener(
 		'show-disable-reset-points',
-		{},
-	) // temporarily using {} as config so that it will build and run
+	)
 
 	useEffect(() => {
 		if (!allUsersPoints) return

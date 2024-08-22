@@ -20,18 +20,7 @@ export default function StoryPointsContainer({
 	const [isPointBtnDisabled, setIsPointBtnDisabled] = useState(false)
 
 	// const resetStoryPointBtns = useSocketListener('reset-points')
-	const resetStoryPointBtns = useSocketListener('show-disable-reset-points', {
-		onEmit: (isReset: ListenerRes) => {
-			console.log('%c>>> resetStoryPointBtns', 'color: red', isReset)
-			if (isReset.message === 'true') {
-				setSelectedStoryPoint(null)
-				setIsPointBtnDisabled(true)
-			}
-			if (isReset.message === 'false') {
-				setIsPointBtnDisabled(false)
-			}
-		},
-	})
+	const resetStoryPointBtns = useSocketListener('show-disable-reset-points')
 
 	// useEffect(() => {
 	// 	if (!selectedStoryPoint) return
@@ -45,22 +34,23 @@ export default function StoryPointsContainer({
 	// 	)
 	// }, [selectedStoryPoint, roomId, userName])
 
-	// useEffect(() => {
-	// 	if (!resetStoryPointBtns) return
-	// 	console.log(
-	// 		'%c>>> resetStoryPointBtns',
-	// 		'color: red',
-	// 		resetStoryPointBtns,
-	// 	)
-	// 	if (resetStoryPointBtns.message === 'true') {
-	// 		setSelectedStoryPoint(null)
-	// 		setIsPointBtnDisabled(true)
-	// 	}
-	// 	if (resetStoryPointBtns.message === 'false') {
-	// 		setIsPointBtnDisabled(false)
-	// 	}
-	// }, [resetStoryPointBtns])
+	useEffect(() => {
+		if (!resetStoryPointBtns) return
+		console.log(
+			'%c>>> resetStoryPointBtns',
+			'color: red',
+			resetStoryPointBtns,
+		)
+		if (resetStoryPointBtns.message === 'true') {
+			setSelectedStoryPoint(null)
+			setIsPointBtnDisabled(true)
+		}
+		if (resetStoryPointBtns.message === 'false') {
+			setIsPointBtnDisabled(false)
+		}
+	}, [resetStoryPointBtns])
 
+	// TODO: move to host settings
 	const storyPointValues = ['?', 0, 1, 2, 3, 5, 8, 13, 20, 40, 100]
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
