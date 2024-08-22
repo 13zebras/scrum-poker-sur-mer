@@ -30,11 +30,11 @@ body {
 }
 
 .btn-points {
-	@apply w-14 h-14 min-h-14 p-0;
+	@apply size-12 min-h-12 p-0 border-2;
 }
 
 .btn-points:is(input[type='radio']):after {
-	@apply text-xl font-bold;
+	@apply text-lg font-bold;
 	--tw-content: attr(value);
 	content: var(--tw-content);
 }
@@ -56,4 +56,11 @@ body {
 	}
 }
 
-
+.btn-points:is(input[type="radio"]:disabled) {
+	@apply border-primary/40 bg-primary/0 text-primary/40;
+	@media (hover: hover) {
+		&:hover {
+			@apply border-primary/40 bg-primary/0 text-primary/40;
+		}
+	}
+}

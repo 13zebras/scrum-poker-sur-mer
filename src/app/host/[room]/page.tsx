@@ -3,13 +3,14 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import SocketIoInfo from '@/components/socketIoDevTools/SocketIoInfo'
+// import SocketIoInfo from '@/components/socketIoDevTools/SocketIoInfo'
 import { socketRoomEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 import HostControlButton from '@/components/HostControlButton'
 import HostSettingsButton from '@/components/HostSettingsButton'
 import RoomMainUi from '@/components/RoomMainUi'
+import RoomInfo from '@/components/RoomInfo'
 
 export default function HostRoom({ params }: { params: { room: string } }) {
 	const [allUserPointData, setAllUserPointData] = useState<ListenerRes[]>([])
@@ -86,39 +87,67 @@ export default function HostRoom({ params }: { params: { room: string } }) {
 
 	const handleShowPoints = () => {
 		const timeStamp = Date.now().toString()
-		socketRoomEmitter('show-hide-points', 'show', hostName, timeStamp, room)
+		socketRoomEmitter(
+			'show-disable-reset-points',
+			'true',
+			hostName,
+			timeStamp,
+			room,
+		)
 	}
 
 	const handleClearPoints = () => {
+		const clearedPoints = allUserPointData.map((data) => {
+			return { ...data, message: '-' }
+		})
+		setAllUserPointData(clearedPoints)
 		const timeStamp = Date.now().toString()
-		socketRoomEmitter('show-hide-points', 'hide', hostName, timeStamp, room)
+		socketRoomEmitter(
+			'show-disable-reset-points',
+			'false',
+			hostName,
+			timeStamp,
+			room,
+		)
 	}
 
 	return (
-		<main className='px-16 py-12 relative flex flex-col justify-start items-center gap-12 w-full animate-in fade-in-0 duration-1000'>
-			<h1 className='text-3xl text-pink-600 pb-8'>
-				HOST Scrum Diving Room
-			</h1>
-			<div className='text-2xl text-zinc-500 w-full flex flex-col justify-start items-center gap-10'>
+		<main className='px-16 py-12 relative flex flex-col justify-start items-center gap-8 w-full animate-in fade-in-0 duration-1000'>
+			<h1 className='text-3xl text-gray-300'>Host Scrum Diving Room</h1>
+			<RoomInfo roomId={room} userName={hostName} />
+			<div className='pt-2 w-full flex flex-col justify-start items-center gap-10'>
+				<div className='w-full flex flex-row justify-end gap-12'>
+					<HostControlButton
+						handler={handleShowPoints}
+						color='success'
+					>
+						Show points
+					</HostControlButton>
+					<HostControlButton
+						handler={handleClearPoints}
+						color='error'
+					>
+						Clear Points
+					</HostControlButton>
+				</div>
 				<RoomMainUi roomId={room} userName={hostName} />
 			</div>
-			<div className='w-36 absolute top-8 right-16 flex flex-col gap-4'>
+
+			<div className='w-28 absolute top-10 right-16 flex flex-col gap-4'>
 				<HostSettingsButton />
-				<HostControlButton handler={handleClearPoints} color='error'>
-					Clear Points
-				</HostControlButton>
-				<HostControlButton handler={handleShowPoints} color='success'>
-					Show points
-				</HostControlButton>
 			</div>
 
-			{/*** Remove Before Release - DevTools ***/}
-			<Link
-				href='/host'
-				className='absolute top-9 left-16 underline text-sky-500 hover:text-sky-300'
-			>
-				Host Create Room
-			</Link>
+			{/* TODO: Remove when development is done */}
+			<div className='w-32 absolute top-10 left-16'>
+				<Link
+					href='/host'
+					className='underline text-sky-500 hover:text-sky-300 text-sm'
+				>
+					Host Create Room
+				</Link>
+			</div>
+
+			{/* TODO: remove when development done */}
 			{/* <SocketIoInfo roomId={room} userName={hostName} /> */}
 		</main>
 	)

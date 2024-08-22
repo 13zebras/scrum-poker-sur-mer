@@ -8,7 +8,7 @@ export default function HostControlButton({ handler, children, color }: Props) {
 	return (
 		<button
 			type='button'
-			className={`btn btn-${color} btn-outline btn-xs w-full`}
+			className={`btn btn-${color} btn-outline btn-xs w-28`}
 			onClick={handler}
 			// disabled={}
 		>

@@ -12,6 +12,18 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			colors: {
+				dkblue: {
+					200: '#00007c',
+					300: '#000070',
+					400: '#00005c',
+					500: '#000050',
+					600: '#00003c',
+					700: '#000030',
+					800: '#00001c',
+					900: '#000010',
+				},
+			},
 			animation: {
 				'fade-in-600': 'fade-in 300ms ease-out 300ms 1 both',
 				'fade-in-500': 'fade-in 400ms ease-out 100ms 1 both',
