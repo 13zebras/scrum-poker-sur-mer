@@ -19,7 +19,8 @@ export default function CardsContainer() {
 	const allUsersPoints = useAllUsersPointsListener('all-users-story-points')
 	const showStoryPointsListener = useSocketListener(
 		'show-disable-reset-points',
-	)
+		{},
+	) // temporarily using {} as config so that it will build and run
 
 	useEffect(() => {
 		if (!allUsersPoints) return

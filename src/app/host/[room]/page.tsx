@@ -14,8 +14,9 @@ import RoomInfo from '@/components/RoomInfo'
 
 export default function HostRoom({ params }: { params: { room: string } }) {
 	const [allUserPointData, setAllUserPointData] = useState<ListenerRes[]>([])
-	const storyPointRes = useSocketListener('story-points')
-	const joinRoomRes = useSocketListener('join-room')
+	const storyPointRes = useSocketListener('story-points', {})
+	const joinRoomRes = useSocketListener('join-room', {})
+	// temporarily using {} as config so that it will build and run
 
 	useEffect(() => {
 		if (!storyPointRes) return

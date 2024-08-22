@@ -11,12 +11,12 @@ export default function StoryPointButton({
 	onChange,
 	disabled,
 }: StoryPointButtonProps) {
-	console.log(
-		'%c>>> storyPoint: checked',
-		'color: #5f0',
-		storyPoint,
-		selectedStoryPoint === storyPoint.toString(),
-	)
+	// console.log(
+	// 	'%c>>> storyPoint: checked',
+	// 	'color: #5f0',
+	// 	storyPoint,
+	// 	selectedStoryPoint === storyPoint.toString(),
+	// )
 	return (
 		<input
 			type='radio'

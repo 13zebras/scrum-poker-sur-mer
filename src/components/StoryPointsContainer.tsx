@@ -3,8 +3,9 @@
 import { socketRoomEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import { useState, useEffect } from 'react'
-import StoryPointButton from './StoryPointButton'
-import type { RoomInfoData } from './RoomMainUi'
+import StoryPointButton from '@/components/StoryPointButton'
+import type { RoomInfoData } from '@/components/RoomMainUi'
+import type { ListenerRes } from '@/services/socket'
 
 // export default function StoryPointsContainer({
 // 	setSelectedStoryPoint,
@@ -19,40 +20,61 @@ export default function StoryPointsContainer({
 	const [isPointBtnDisabled, setIsPointBtnDisabled] = useState(false)
 
 	// const resetStoryPointBtns = useSocketListener('reset-points')
-	const resetStoryPointBtns = useSocketListener('show-disable-reset-points')
+	const resetStoryPointBtns = useSocketListener('show-disable-reset-points', {
+		onEmit: (isReset: ListenerRes) => {
+			console.log('%c>>> resetStoryPointBtns', 'color: red', isReset)
+			if (isReset.message === 'true') {
+				setSelectedStoryPoint(null)
+				setIsPointBtnDisabled(true)
+			}
+			if (isReset.message === 'false') {
+				setIsPointBtnDisabled(false)
+			}
+		},
+	})
 
-	useEffect(() => {
-		if (!selectedStoryPoint) return
-		const timeStamp = Date.now().toString()
-		socketRoomEmitter(
-			'story-points',
-			selectedStoryPoint,
-			userName,
-			timeStamp,
-			roomId,
-		)
-	}, [selectedStoryPoint, roomId, userName])
+	// useEffect(() => {
+	// 	if (!selectedStoryPoint) return
+	// 	const timeStamp = Date.now().toString()
+	// 	socketRoomEmitter(
+	// 		'story-points',
+	// 		selectedStoryPoint,
+	// 		userName,
+	// 		timeStamp,
+	// 		roomId,
+	// 	)
+	// }, [selectedStoryPoint, roomId, userName])
 
-	useEffect(() => {
-		if (!resetStoryPointBtns) return
-		console.log(
-			'%c>>> resetStoryPointBtns',
-			'color: red',
-			resetStoryPointBtns,
-		)
-		if (resetStoryPointBtns.message === 'true') {
-			setSelectedStoryPoint(null)
-			setIsPointBtnDisabled(true)
-		}
-		if (resetStoryPointBtns.message === 'false') {
-			setIsPointBtnDisabled(false)
-		}
-	}, [resetStoryPointBtns])
+	// useEffect(() => {
+	// 	if (!resetStoryPointBtns) return
+	// 	console.log(
+	// 		'%c>>> resetStoryPointBtns',
+	// 		'color: red',
+	// 		resetStoryPointBtns,
+	// 	)
+	// 	if (resetStoryPointBtns.message === 'true') {
+	// 		setSelectedStoryPoint(null)
+	// 		setIsPointBtnDisabled(true)
+	// 	}
+	// 	if (resetStoryPointBtns.message === 'false') {
+	// 		setIsPointBtnDisabled(false)
+	// 	}
+	// }, [resetStoryPointBtns])
 
 	const storyPointValues = ['?', 0, 1, 2, 3, 5, 8, 13, 20, 40, 100]
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		console.log('%c>>> spc handleChange', 'color: red', event.target.value)
 		setSelectedStoryPoint(event.target.value)
+		// if (!selectedStoryPoint) return
+		const timeStamp = Date.now().toString()
+		socketRoomEmitter(
+			'story-points',
+			event.target.value,
+			userName,
+			timeStamp,
+			roomId,
+		)
 	}
 
 	return (

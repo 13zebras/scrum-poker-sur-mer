@@ -39,7 +39,6 @@ export function useAllUsersPointsListener(listenerName: string) {
 			timeStamp: string,
 		) {
 			setListenerRes({ message, userName, timeStamp })
-			// setListenerRes({ message, roomId, userName, timeStamp })
 		}
 		socket.on(listenerName, onListenerRes)
 
@@ -50,8 +49,10 @@ export function useAllUsersPointsListener(listenerName: string) {
 	return listenerRes
 }
 
-export function useSocketListener(listenerName: string) {
+export function useSocketListener(listenerName: string, config: any) {
 	const [listenerRes, setListenerRes] = useState<ListenerRes>()
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: not needed as a dependency
 	useEffect(() => {
 		function onListenerRes(
 			message: string,
@@ -60,7 +61,7 @@ export function useSocketListener(listenerName: string) {
 			timeStamp: string,
 		) {
 			setListenerRes({ message, userName, timeStamp })
-			// setListenerRes({ message, roomId, userName, timeStamp })
+			config.onEmit?.({ message, userName, timeStamp })
 		}
 		socket.on(listenerName, onListenerRes)
 
