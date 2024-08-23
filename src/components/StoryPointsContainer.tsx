@@ -2,14 +2,12 @@
 
 import { socketRoomEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
+import { useSocketListenerWithCb } from '@/services/socket'
 import { useState, useEffect } from 'react'
 import StoryPointButton from '@/components/StoryPointButton'
 import type { RoomInfoData } from '@/components/RoomMainUi'
 import type { ListenerRes } from '@/services/socket'
 
-// export default function StoryPointsContainer({
-// 	setSelectedStoryPoint,
-// }: { setSelectedStoryPoint: (value: string) => void }) {
 export default function StoryPointsContainer({
 	roomId,
 	userName,
@@ -19,8 +17,26 @@ export default function StoryPointsContainer({
 	)
 	const [isPointBtnDisabled, setIsPointBtnDisabled] = useState(false)
 
-	// const resetStoryPointBtns = useSocketListener('reset-points')
-	const resetStoryPointBtns = useSocketListener('show-disable-reset-points')
+	// const resetStoryPointBtns = useSocketListener('show-disable-reset-points')
+	const resetStoryPointBtns = useSocketListenerWithCb(
+		'show-disable-reset-points',
+		{
+			callback: (showDisableReset: ListenerRes) => {
+				console.log(
+					'%c>>> showDisableReset',
+					'color: red',
+					showDisableReset,
+				)
+				if (showDisableReset.message === 'true') {
+					setSelectedStoryPoint(null)
+					setIsPointBtnDisabled(true)
+				}
+				if (showDisableReset.message === 'false') {
+					setIsPointBtnDisabled(false)
+				}
+			},
+		},
+	)
 
 	// useEffect(() => {
 	// 	if (!selectedStoryPoint) return
@@ -34,21 +50,21 @@ export default function StoryPointsContainer({
 	// 	)
 	// }, [selectedStoryPoint, roomId, userName])
 
-	useEffect(() => {
-		if (!resetStoryPointBtns) return
-		console.log(
-			'%c>>> resetStoryPointBtns',
-			'color: red',
-			resetStoryPointBtns,
-		)
-		if (resetStoryPointBtns.message === 'true') {
-			setSelectedStoryPoint(null)
-			setIsPointBtnDisabled(true)
-		}
-		if (resetStoryPointBtns.message === 'false') {
-			setIsPointBtnDisabled(false)
-		}
-	}, [resetStoryPointBtns])
+	// useEffect(() => {
+	// 	if (!resetStoryPointBtns) return
+	// 	console.log(
+	// 		'%c>>> resetStoryPointBtns',
+	// 		'color: red',
+	// 		resetStoryPointBtns,
+	// 	)
+	// 	if (resetStoryPointBtns.message === 'true') {
+	// 		setSelectedStoryPoint(null)
+	// 		setIsPointBtnDisabled(true)
+	// 	}
+	// 	if (resetStoryPointBtns.message === 'false') {
+	// 		setIsPointBtnDisabled(false)
+	// 	}
+	// }, [resetStoryPointBtns])
 
 	// TODO: move to host settings
 	const storyPointValues = ['?', 0, 1, 2, 3, 5, 8, 13, 20, 40, 100]

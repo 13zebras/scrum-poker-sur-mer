@@ -15,7 +15,7 @@ export default function NewUserDialog({
 	return (
 		<dialog ref={dialogRef} className='modal bg-black/50'>
 			<div className='modal-box w-full max-w-md h-80 bg-slate-950 border border-slate-800'>
-				<h3 className='font-bold text-2xl text-center mt-2'>
+				<h3 className='font-bold text-2xl text-center mt-1'>
 					Greetings!
 				</h3>
 				<p className='pt-6 text-center'>
@@ -40,8 +40,8 @@ export default function NewUserDialog({
 							name='userName'
 							className='input input-bordered input-primary mb-1 h-10 w-72 text-gray-200 placeholder:italic placeholder:text-primary/80'
 						/>
-						<p className='text-red-500 text-base italic h-6'>
-							{displayError && 'You must enter your name!'}
+						<p className='text-error text-base font-semibold italic h-6'>
+							{displayError && 'Please enter your name!'}
 						</p>
 						<button
 							type='submit'

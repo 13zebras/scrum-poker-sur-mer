@@ -71,7 +71,7 @@ export function useSocketListener(listenerName: string) {
 	return listenerRes
 }
 
-export function useSocketListenerWithEmit(listenerName: string, config: any) {
+export function useSocketListenerWithCb(listenerName: string, config: any) {
 	const [listenerRes, setListenerRes] = useState<ListenerRes>()
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: not needed as a dependency
@@ -83,7 +83,7 @@ export function useSocketListenerWithEmit(listenerName: string, config: any) {
 			timeStamp: string,
 		) {
 			setListenerRes({ message, userName, timeStamp })
-			config.onEmit?.({ message, userName, timeStamp })
+			config.callback({ message, userName, timeStamp })
 		}
 		socket.on(listenerName, onListenerRes)
 

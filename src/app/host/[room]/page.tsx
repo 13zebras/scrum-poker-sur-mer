@@ -3,7 +3,6 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-// import SocketIoInfo from '@/components/socketIoDevTools/SocketIoInfo'
 import { socketRoomEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
@@ -14,9 +13,8 @@ import RoomInfo from '@/components/RoomInfo'
 
 export default function HostRoom({ params }: { params: { room: string } }) {
 	const [allUserPointData, setAllUserPointData] = useState<ListenerRes[]>([])
-	const storyPointRes = useSocketListener('story-points', {})
-	const joinRoomRes = useSocketListener('join-room', {})
-	// temporarily using {} as config so that it will build and run
+	const storyPointRes = useSocketListener('story-points')
+	const joinRoomRes = useSocketListener('join-room')
 
 	useEffect(() => {
 		if (!storyPointRes) return
@@ -147,9 +145,6 @@ export default function HostRoom({ params }: { params: { room: string } }) {
 					Host Create Room
 				</Link>
 			</div>
-
-			{/* TODO: remove when development done */}
-			{/* <SocketIoInfo roomId={room} userName={hostName} /> */}
 		</main>
 	)
 }
