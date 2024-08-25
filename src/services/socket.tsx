@@ -10,7 +10,7 @@ export type ListenerRes = {
 	timeStamp: string
 }
 
-type AllUsersPointsRes = {
+export type AllListenerRes = {
 	message: ListenerRes[]
 	// roomId: string
 	userName: string
@@ -23,14 +23,36 @@ export function socketRoomEmitter(
 	emitterName: string,
 	message: string | ListenerRes[],
 	userName: string,
-	timeStamp: string,
+	// timeStamp: string,
 	roomId: string,
 ) {
+	const timeStamp = Date.now().toString
 	socket.emit(emitterName, message, userName, timeStamp, roomId)
 }
 
-export function useAllUsersPointsListener(listenerName: string) {
-	const [listenerRes, setListenerRes] = useState<AllUsersPointsRes>()
+export function useSocketRoomEmitterLocal(
+	emitterName: string,
+	message: string | ListenerRes[],
+	userName: string,
+	roomId: string,
+	localStorageName: string,
+) {
+	useEffect(() => {
+		console.log('%c>>> message useSocketRoomEmitter', 'color: #f0f', message)
+		const timeStamp = Date.now().toString
+		socket.emit(emitterName, message, userName, timeStamp, roomId)
+
+		if (localStorageName) localStorage.setItem(localStorageName, JSON.stringify([message]))
+	}, [emitterName, message, userName, roomId, localStorageName])
+}
+
+export function useAllUsersPointsListener(
+	listenerName: string,
+	callback?: (data: AllListenerRes) => void,
+) {
+	const [listenerRes, setListenerRes] = useState<AllListenerRes>()
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		function onListenerRes(
 			message: ListenerRes[],
@@ -39,6 +61,8 @@ export function useAllUsersPointsListener(listenerName: string) {
 			timeStamp: string,
 		) {
 			setListenerRes({ message, userName, timeStamp })
+			console.log('%c>>> callback ', 'color: red', callback)
+			if (callback) callback({ message, userName, timeStamp })
 		}
 		socket.on(listenerName, onListenerRes)
 
@@ -49,29 +73,7 @@ export function useAllUsersPointsListener(listenerName: string) {
 	return listenerRes
 }
 
-export function useSocketListener(listenerName: string) {
-	const [listenerRes, setListenerRes] = useState<ListenerRes>()
-
-	useEffect(() => {
-		function onListenerRes(
-			message: string,
-			// roomId: string,
-			userName: string,
-			timeStamp: string,
-		) {
-			setListenerRes({ message, userName, timeStamp })
-		}
-		socket.on(listenerName, onListenerRes)
-
-		return () => {
-			socket.off(listenerName, onListenerRes)
-		}
-	}, [listenerName])
-
-	return listenerRes
-}
-
-export function useSocketListenerWithCb(listenerName: string, config: any) {
+export function useSocketListener(listenerName: string, callback?: (data: ListenerRes) => void) {
 	const [listenerRes, setListenerRes] = useState<ListenerRes>()
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: not needed as a dependency
@@ -83,7 +85,8 @@ export function useSocketListenerWithCb(listenerName: string, config: any) {
 			timeStamp: string,
 		) {
 			setListenerRes({ message, userName, timeStamp })
-			config.callback({ message, userName, timeStamp })
+			console.log('%c>>> callback ', 'color: red', callback)
+			if (callback) callback({ message, userName, timeStamp })
 		}
 		socket.on(listenerName, onListenerRes)
 
@@ -106,11 +109,7 @@ export function useListenerEvents(
 	const [events, setEvents] = useState<ListenerRes[]>([])
 
 	useEffect(() => {
-		function onListenerResponse(
-			message: string,
-			userName: string,
-			timeStamp: string,
-		) {
+		function onListenerResponse(message: string, userName: string, timeStamp: string) {
 			setEvents((previous: ListenerRes[]) => [
 				{
 					message: message,

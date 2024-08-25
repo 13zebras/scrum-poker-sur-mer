@@ -1,14 +1,14 @@
 'use client'
 
 import UserCard from './UserCard'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 import { namesArray } from '@/utils/sampleData'
 import { sealifeImages } from '@/utils/imageLists'
-// import ChatQuestionOutline from './icons/JellyFishOutlineIcon'
 import { useAllUsersPointsListener } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
+import type { AllListenerRes } from '@/services/socket'
 
 export default function CardsContainer() {
 	const [usersPointsData, setUsersPointsData] = useState<ListenerRes[]>([])
@@ -17,36 +17,18 @@ export default function CardsContainer() {
 	const sampleNames: string[] = []
 	const storyPointsArray = [0, 1, 2, 3, 5, 8, 13]
 
-	const allUsersPoints = useAllUsersPointsListener('all-users-story-points')
+	useAllUsersPointsListener('all-users-story-points', (allUserPoints: AllListenerRes) => {
+		const allUserPointsMessages = allUserPoints.message
+		console.log('%c>>> listenerMessages:', 'color: yellow', allUserPoints.message)
+		setUsersPointsData(allUserPointsMessages)
+	})
 
-	// the line below creates an infinite loop
-	// allUsersPoints && setUsersPointsData(allUsersPoints?.message)
-
-	const showStoryPointsListener = useSocketListener(
-		'show-disable-reset-points',
-	)
-
-	useEffect(() => {
-		if (!allUsersPoints) return
-		const listenerMessages = allUsersPoints.message
-		console.log(
-			'%c>>> listenerMessages:',
-			'color: yellow',
-			listenerMessages,
-		)
-		setUsersPointsData(listenerMessages)
-	}, [allUsersPoints])
-
-	useEffect(() => {
-		if (!showStoryPointsListener) return
-		const showPoints = showStoryPointsListener.message === 'true'
+	useSocketListener('show-disable-reset-points', (showDisableReset: ListenerRes) => {
+		const showPoints = showDisableReset.message === 'true'
 		console.log('%c>>> showPoints', 'color: red', showPoints)
 		console.log('%c>>> showPoints type', 'color: #f70', typeof showPoints)
 		setShowStoryPoints(showPoints)
-	}, [showStoryPointsListener])
-
-	// console.log('%c>>> usersPointsData Cards:', 'color: #5f0', usersPointsData)
-	// console.log('%c>>> showStoryPoints', 'color: yellow', showStoryPoints)
+	})
 
 	return (
 		<div className='py-2 flex justify-center items-center flex-wrap text-center gap-8 text-gray-300 border-0 border-gray-800'>
@@ -67,8 +49,7 @@ export default function CardsContainer() {
 
 			{/* TODO: FOR DEVELOPMENT ONLY - REMOVE WHEN DONE */}
 			{sampleNames.map((name, index) => {
-				const storyPoints =
-					storyPointsArray[index % storyPointsArray.length]
+				const storyPoints = storyPointsArray[index % storyPointsArray.length]
 				const imageNumber = (98 - index) % sealifeImages.length
 				const imageSrc = sealifeImages[imageNumber]
 				return (

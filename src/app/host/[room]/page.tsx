@@ -4,6 +4,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { socketRoomEmitter } from '@/services/socket'
+import { useSocketRoomEmitterLocal } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 import HostControlButton from '@/components/HostControlButton'
@@ -13,10 +14,12 @@ import RoomInfo from '@/components/RoomInfo'
 
 export default function HostRoom({ params }: { params: { room: string } }) {
 	const [allUserPointData, setAllUserPointData] = useState<ListenerRes[]>([])
-	const storyPointRes = useSocketListener('story-points')
-	const joinRoomRes = useSocketListener('join-room')
+	// const storyPointRes = useSocketListener('story-points')
+	// const joinRoomRes = useSocketListener('join-room')
 
-	useEffect(() => {
+	console.count('>>> Host room component body')
+
+	useSocketListener('story-points', (storyPointRes: ListenerRes) => {
 		if (!storyPointRes) return
 
 		console.log('%c>>> listener', 'color: red', storyPointRes)
@@ -32,9 +35,9 @@ export default function HostRoom({ params }: { params: { room: string } }) {
 			}
 			return [...prevUsersPoints, storyPointRes]
 		})
-	}, [storyPointRes])
+	})
 
-	useEffect(() => {
+	useSocketListener('join-room', (joinRoomRes: ListenerRes) => {
 		if (!joinRoomRes) return
 
 		console.log('%c>>> joinRoomRes', 'color: red', joinRoomRes)
@@ -51,63 +54,35 @@ export default function HostRoom({ params }: { params: { room: string } }) {
 			}
 			return [...prevUsersPoints, joinRoomRes]
 		})
-	}, [joinRoomRes])
+	})
 
 	const { room } = params
 
 	const hostDataLocalStorage = localStorage.getItem('scrumDivingHostData')
-	const hostName =
-		hostDataLocalStorage && JSON.parse(hostDataLocalStorage)?.hostName
+	const hostName = hostDataLocalStorage && JSON.parse(hostDataLocalStorage)?.hostName
 
 	useEffect(() => {
-		const timeStamp = Date.now().toString()
-		socketRoomEmitter('join-room', 'join', hostName, timeStamp, room)
+		socketRoomEmitter('join-room', 'join', hostName, room)
 	}, [room, hostName])
 
-	useEffect(() => {
-		console.log(
-			'%c>>> allUserPointData Host Room',
-			'color: #f0f',
-			allUserPointData,
-		)
-		const timeStamp = Date.now().toString()
-		socketRoomEmitter(
-			'all-users-story-points',
-			allUserPointData,
-			hostName,
-			timeStamp,
-			room,
-		)
-		localStorage.setItem(
-			'scrumDivingStoryPoints',
-			JSON.stringify([allUserPointData]),
-		)
-	}, [allUserPointData, room, hostName])
+	useSocketRoomEmitterLocal(
+		'all-users-story-points',
+		allUserPointData,
+		hostName,
+		room,
+		'scrumDivingStoryPoints',
+	)
 
 	const handleShowPoints = () => {
-		const timeStamp = Date.now().toString()
-		socketRoomEmitter(
-			'show-disable-reset-points',
-			'true',
-			hostName,
-			timeStamp,
-			room,
-		)
+		socketRoomEmitter('show-disable-reset-points', 'true', hostName, room)
 	}
 
 	const handleClearPoints = () => {
-		const clearedPoints = allUserPointData.map((data) => {
+		const clearedPoints = allUserPointData.map((data: ListenerRes) => {
 			return { ...data, message: '-' }
 		})
 		setAllUserPointData(clearedPoints)
-		const timeStamp = Date.now().toString()
-		socketRoomEmitter(
-			'show-disable-reset-points',
-			'false',
-			hostName,
-			timeStamp,
-			room,
-		)
+		socketRoomEmitter('show-disable-reset-points', 'false', hostName, room)
 	}
 
 	return (
@@ -116,16 +91,10 @@ export default function HostRoom({ params }: { params: { room: string } }) {
 			<RoomInfo roomId={room} userName={hostName} />
 			<div className='pt-2 w-full flex flex-col justify-start items-center gap-10'>
 				<div className='w-full flex flex-row justify-end gap-12'>
-					<HostControlButton
-						handler={handleShowPoints}
-						color='success'
-					>
+					<HostControlButton handler={handleShowPoints} color='success'>
 						Show points
 					</HostControlButton>
-					<HostControlButton
-						handler={handleClearPoints}
-						color='error'
-					>
+					<HostControlButton handler={handleClearPoints} color='error'>
 						Clear Points
 					</HostControlButton>
 				</div>
@@ -138,10 +107,7 @@ export default function HostRoom({ params }: { params: { room: string } }) {
 
 			{/* TODO: Remove when development is done */}
 			<div className='w-32 absolute top-10 left-16'>
-				<Link
-					href='/host'
-					className='underline text-sky-500 hover:text-sky-300 text-sm'
-				>
+				<Link href='/host' className='underline text-sky-500 hover:text-sky-300 text-sm'>
 					Host Create Room
 				</Link>
 			</div>

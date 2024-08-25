@@ -31,12 +31,12 @@ export default function UserRooms({ params }: { params: Params }) {
 			return
 		}
 		setUser(formValues.userName)
-		const timeStamp = Date.now().toString()
+		// const timeStamp = Date.now().toString()
 		socketRoomEmitter(
 			'join-room',
 			'join',
 			formValues.userName,
-			timeStamp,
+			// timeStamp,
 			room,
 		)
 		if (dialogRef.current) {

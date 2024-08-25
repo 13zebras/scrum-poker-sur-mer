@@ -15,17 +15,17 @@ export default function MessageForm({ roomId, userName }: Props) {
 	function handleSend(event: React.FormEvent) {
 		event.preventDefault()
 		setIsLoading(true)
-		const timeStamp = Date.now().toString()
+		// const timeStamp = Date.now().toString()
 		console.log(
 			'%c>>> MessageForms:',
 			'color: red',
 			message,
 			userName,
-			timeStamp,
+			// timeStamp,
 			roomId,
 		)
 
-		socketRoomEmitter('chat-data', message, userName, timeStamp, roomId)
+		socketRoomEmitter('chat-data', message, userName, roomId)
 		if (messageRef.current) messageRef.current.value = ''
 		setIsLoading(false)
 	}
