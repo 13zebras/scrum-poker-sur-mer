@@ -3,8 +3,8 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { socketRoomEmitter } from '@/services/socket'
-import { useSocketRoomEmitterLocal } from '@/services/socket'
+import { socketEmitter } from '@/services/socket'
+import { useSocketEmitterLocal } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 import HostControlButton from '@/components/HostControlButton'
@@ -12,69 +12,71 @@ import HostSettingsButton from '@/components/HostSettingsButton'
 import RoomMainUi from '@/components/RoomMainUi'
 import RoomInfo from '@/components/RoomInfo'
 
-export default function HostRoom({ params }: { params: { room: string } }) {
+export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const [allUserPointData, setAllUserPointData] = useState<ListenerRes[]>([])
 	// const storyPointRes = useSocketListener('story-points')
 	// const joinRoomRes = useSocketListener('join-room')
 
+	const { roomId } = params
+	// console.log('%c>>> params', 'color: yellow', params)
+
 	console.count('>>> Host room component body')
 
-	useSocketListener('story-points', (storyPointRes: ListenerRes) => {
-		if (!storyPointRes) return
+	useSocketListener('story-points', {
+		onChange: (storyPointRes: ListenerRes) => {
+			console.log('%c>>> listener', 'color: red', storyPointRes)
 
-		console.log('%c>>> listener', 'color: red', storyPointRes)
-		setAllUserPointData((prevUsersPoints) => {
-			const index = prevUsersPoints.findIndex((data) => {
-				return data.userName === storyPointRes.userName
+			setAllUserPointData((prevUsersPoints) => {
+				const index = prevUsersPoints.findIndex((data) => {
+					return data.userName === storyPointRes.userName
+				})
+				if (index !== -1) {
+					const noDuplicates = [...prevUsersPoints]
+					noDuplicates[index].message = storyPointRes.message
+					console.log('%c>>> noDuplicates SP', 'color: red', noDuplicates)
+					return noDuplicates
+				}
+				return [...prevUsersPoints, storyPointRes]
 			})
-			if (index !== -1) {
-				const noDuplicates = [...prevUsersPoints]
-				noDuplicates[index].message = storyPointRes.message
-				console.log('%c>>> noDuplicates SP', 'color: red', noDuplicates)
-				return noDuplicates
-			}
-			return [...prevUsersPoints, storyPointRes]
-		})
+		},
 	})
 
-	useSocketListener('join-room', (joinRoomRes: ListenerRes) => {
-		if (!joinRoomRes) return
+	useSocketListener('join-room', {
+		onChange: (joinRoomRes: ListenerRes) => {
+			console.log('%c>>> joinRoomRes', 'color: red', joinRoomRes)
 
-		console.log('%c>>> joinRoomRes', 'color: red', joinRoomRes)
-
-		setAllUserPointData((prevUsersPoints) => {
-			const index = prevUsersPoints.findIndex((data) => {
-				return data.userName === joinRoomRes.userName
+			setAllUserPointData((prevUsersPoints) => {
+				const index = prevUsersPoints.findIndex((data) => {
+					return data.userName === joinRoomRes.userName
+				})
+				if (index !== -1) {
+					const noDuplicates = [...prevUsersPoints]
+					noDuplicates[index].message = joinRoomRes.message
+					console.log('%c>>> noDuplicates JR', 'color: red', noDuplicates)
+					return noDuplicates
+				}
+				return [...prevUsersPoints, joinRoomRes]
 			})
-			if (index !== -1) {
-				const noDuplicates = [...prevUsersPoints]
-				noDuplicates[index].message = joinRoomRes.message
-				console.log('%c>>> noDuplicates JR', 'color: red', noDuplicates)
-				return noDuplicates
-			}
-			return [...prevUsersPoints, joinRoomRes]
-		})
+		},
 	})
-
-	const { room } = params
 
 	const hostDataLocalStorage = localStorage.getItem('scrumDivingHostData')
 	const hostName = hostDataLocalStorage && JSON.parse(hostDataLocalStorage)?.hostName
 
 	useEffect(() => {
-		socketRoomEmitter('join-room', 'join', hostName, room)
-	}, [room, hostName])
+		socketEmitter('join-room', roomId, 'join', hostName)
+	}, [roomId, hostName])
 
-	useSocketRoomEmitterLocal(
+	useSocketEmitterLocal(
 		'all-users-story-points',
+		roomId,
 		allUserPointData,
 		hostName,
-		room,
 		'scrumDivingStoryPoints',
 	)
 
 	const handleShowPoints = () => {
-		socketRoomEmitter('show-disable-reset-points', 'true', hostName, room)
+		socketEmitter('show-disable-reset-points', roomId, true as unknown as string, hostName)
 	}
 
 	const handleClearPoints = () => {
@@ -82,13 +84,13 @@ export default function HostRoom({ params }: { params: { room: string } }) {
 			return { ...data, message: '-' }
 		})
 		setAllUserPointData(clearedPoints)
-		socketRoomEmitter('show-disable-reset-points', 'false', hostName, room)
+		socketEmitter('show-disable-reset-points', roomId, false as unknown as string, hostName)
 	}
 
 	return (
 		<main className='px-16 py-12 relative flex flex-col justify-start items-center gap-8 w-full animate-in fade-in-0 duration-1000'>
 			<h1 className='text-3xl text-gray-300'>Host Scrum Diving Room</h1>
-			<RoomInfo roomId={room} userName={hostName} />
+			<RoomInfo roomId={roomId} userName={hostName} />
 			<div className='pt-2 w-full flex flex-col justify-start items-center gap-10'>
 				<div className='w-full flex flex-row justify-end gap-12'>
 					<HostControlButton handler={handleShowPoints} color='success'>
@@ -98,7 +100,7 @@ export default function HostRoom({ params }: { params: { room: string } }) {
 						Clear Points
 					</HostControlButton>
 				</div>
-				<RoomMainUi roomId={room} userName={hostName} />
+				<RoomMainUi roomId={roomId} userName={hostName} />
 			</div>
 
 			<div className='w-28 absolute top-10 right-16 flex flex-col gap-4'>

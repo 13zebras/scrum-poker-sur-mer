@@ -2,98 +2,74 @@
 
 import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
+import config from '../../tailwind.config'
 
 export type ListenerRes = {
 	message: string
-	// roomId: string
 	userName: string
 	timeStamp: string
 }
 
 export type AllListenerRes = {
 	message: ListenerRes[]
-	// roomId: string
 	userName: string
 	timeStamp: string
 }
 
+type EventName =
+	| 'join-room'
+	| 'story-points'
+	| 'show-disable-reset-points'
+	| 'all-users-story-points'
+
 const socket = io()
 
-export function socketRoomEmitter(
-	emitterName: string,
+export function socketEmitter(
+	eventName: string,
+	roomId: string,
 	message: string | ListenerRes[],
 	userName: string,
-	// timeStamp: string,
-	roomId: string,
 ) {
-	const timeStamp = Date.now().toString
-	socket.emit(emitterName, message, userName, timeStamp, roomId)
+	const timeStamp = Date.now().toString()
+	socket.emit(eventName, roomId, message, userName, timeStamp)
 }
 
-export function useSocketRoomEmitterLocal(
-	emitterName: string,
+export function useSocketEmitterLocal(
+	eventName: string,
+	roomId: string,
 	message: string | ListenerRes[],
 	userName: string,
-	roomId: string,
 	localStorageName: string,
 ) {
 	useEffect(() => {
-		console.log('%c>>> message useSocketRoomEmitter', 'color: #f0f', message)
-		const timeStamp = Date.now().toString
-		socket.emit(emitterName, message, userName, timeStamp, roomId)
+		console.log('%c>>> message useSocketEmitter', 'color: #f0f', message)
+		const timeStamp = Date.now().toString()
+		socket.emit(eventName, roomId, message, userName, timeStamp)
 
 		if (localStorageName) localStorage.setItem(localStorageName, JSON.stringify([message]))
-	}, [emitterName, message, userName, roomId, localStorageName])
+	}, [eventName, roomId, message, userName, localStorageName])
 }
 
-export function useAllUsersPointsListener(
-	listenerName: string,
-	callback?: (data: AllListenerRes) => void,
-) {
-	const [listenerRes, setListenerRes] = useState<AllListenerRes>()
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		function onListenerRes(
-			message: ListenerRes[],
-			// roomId: string,
-			userName: string,
-			timeStamp: string,
-		) {
-			setListenerRes({ message, userName, timeStamp })
-			console.log('%c>>> callback ', 'color: red', callback)
-			if (callback) callback({ message, userName, timeStamp })
-		}
-		socket.on(listenerName, onListenerRes)
-
-		return () => {
-			socket.off(listenerName, onListenerRes)
-		}
-	}, [listenerName])
-	return listenerRes
+type Config = {
+	onChange: (data: ListenerRes) => void
 }
 
-export function useSocketListener(listenerName: string, callback?: (data: ListenerRes) => void) {
+export function useSocketListener(eventName: EventName, config?: Config) {
 	const [listenerRes, setListenerRes] = useState<ListenerRes>()
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: not needed as a dependency
 	useEffect(() => {
-		function onListenerRes(
-			message: string,
-			// roomId: string,
-			userName: string,
-			timeStamp: string,
-		) {
+		function onListenerRes(message: string, userName: string, timeStamp: string) {
 			setListenerRes({ message, userName, timeStamp })
-			console.log('%c>>> callback ', 'color: red', callback)
-			if (callback) callback({ message, userName, timeStamp })
+			console.log('%c>>> config ', 'color: red', config)
+			config?.onChange({ message, userName, timeStamp })
 		}
-		socket.on(listenerName, onListenerRes)
+		socket.on(eventName, onListenerRes)
 
 		return () => {
-			socket.off(listenerName, onListenerRes)
+			socket.off(eventName, onListenerRes)
 		}
-	}, [listenerName])
+	}, [eventName])
 
 	return listenerRes
 }
@@ -137,12 +113,12 @@ export function useListenerEvents(
 
 // Generic Socket.io Emitter.
 //Not sure it is needed, but keeping for now
-export function socketEmitter<T extends unknown[]>(
-	emitterName: string,
+export function socketEmitterGeneric<T extends unknown[]>(
+	eventName: string,
 	message: string,
 	...args: T
 ) {
-	socket.emit(emitterName, message, ...args)
+	socket.emit(eventName, message, ...args)
 }
 // EXAMPLE: socket.emit('client-message', message, roomId)
 

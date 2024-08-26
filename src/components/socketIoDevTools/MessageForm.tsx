@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { socketRoomEmitter } from '@/services/socket'
+import { socketEmitter } from '@/services/socket'
 
 type Props = {
 	roomId: string
@@ -25,7 +25,7 @@ export default function MessageForm({ roomId, userName }: Props) {
 			roomId,
 		)
 
-		socketRoomEmitter('chat-data', message, userName, roomId)
+		socketEmitter('chat-data', roomId, message, userName)
 		if (messageRef.current) messageRef.current.value = ''
 		setIsLoading(false)
 	}

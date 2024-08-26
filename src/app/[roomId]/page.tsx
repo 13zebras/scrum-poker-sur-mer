@@ -1,13 +1,13 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import { socketRoomEmitter } from '@/services/socket'
+import { socketEmitter } from '@/services/socket'
 import RoomMainUi from '@/components/RoomMainUi'
 import RoomInfo from '@/components/RoomInfo'
 import NewUserDialog from '@/components/NewUserDialog'
 
 type Params = {
-	room: string
+	roomId: string
 }
 
 export default function UserRooms({ params }: { params: Params }) {
@@ -16,7 +16,7 @@ export default function UserRooms({ params }: { params: Params }) {
 	const dialogRef = useRef<HTMLDialogElement>(null)
 	console.log('%c>>> params', 'color: red', params)
 
-	const { room } = params
+	const { roomId } = params
 
 	useEffect(() => {
 		if (dialogRef.current) {
@@ -31,14 +31,7 @@ export default function UserRooms({ params }: { params: Params }) {
 			return
 		}
 		setUser(formValues.userName)
-		// const timeStamp = Date.now().toString()
-		socketRoomEmitter(
-			'join-room',
-			'join',
-			formValues.userName,
-			// timeStamp,
-			room,
-		)
+		socketEmitter('join-room', roomId, 'join', formValues.userName)
 		if (dialogRef.current) {
 			dialogRef.current.close()
 		}
@@ -52,13 +45,13 @@ export default function UserRooms({ params }: { params: Params }) {
 				displayError={displayErrorMessage}
 			/>
 			<h1 className='text-3xl text-gray-300'>Scrum Diving Room</h1>
-			<RoomInfo roomId={room} userName={user} />
+			<RoomInfo roomId={roomId} userName={user} />
 			<div className='h-full w-full pt-14 flex flex-col justify-start items-center'>
-				<RoomMainUi roomId={room} userName={user} />
+				<RoomMainUi roomId={roomId} userName={user} />
 			</div>
 
 			{/*** Socket.io DevTools - Remove Before Release ***/}
-			{/* <SocketIoInfo roomId={room} userName={user} /> */}
+			{/* <SocketIoInfo roomId={roomId} userName={user} /> */}
 		</main>
 	)
 }

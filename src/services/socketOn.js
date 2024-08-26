@@ -1,16 +1,17 @@
 // This file is used to handle the socket.on event
 
 module.exports = (io, socket) => {
-	socket.onAny((eventName, ...args) => {
+	socket.onAny((eventName, roomId, ...args) => {
 		console.log('>> eventName:', eventName)
+		console.log('>> roomId:', roomId)
 		console.log('>> args:', args)
-		const [message, userName, timeStamp, roomId] = args
-		// console.log('>> message, roomId, userName:', message, roomId, userName)
+		const [message, userName, timeStamp] = args
+		// console.log('>> message, userName:', message, userName)
 		console.log('**************************************************')
 		if (eventName === 'join-room') {
 			socket.join(roomId)
 		}
-		io.to(roomId).emit(eventName, message, userName, timeStamp)
+		io.to(roomId).emit(eventName, message, userName, timeStamp, ...args)
 	})
 }
 
