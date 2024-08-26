@@ -2,6 +2,7 @@
 
 import { socketEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
+import type { ListenerRes } from '@/services/socket'
 import { useState } from 'react'
 import StoryPointButton from '@/components/StoryPointButton'
 import type { RoomInfoData } from '@/components/RoomMainUi'
