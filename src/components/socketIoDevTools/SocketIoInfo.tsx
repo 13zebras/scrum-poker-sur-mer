@@ -11,26 +11,25 @@ type Props = {
 }
 
 export default function SocketIoInfo({ userName, roomId }: Props) {
-	const allEvents = useListenerEvents('user-connected', 'server-data')
+	const allEvents = useListenerEvents(
+		'join-room',
+		'chat-data',
+		'story-points',
+		'all-users-story-points',
+	)
 
+	console.log('%c>>> allEvents', 'color: #2ff', allEvents)
 	return (
-		<div className='w-full flex flex-col items-start justify-start pt-4 border-t-2 border-blue-700/80 font-mono'>
-			<h3 className='text-[1.1rem] text-amber-400 pb-1'>
-				Socket.io Info
-			</h3>
+		<div className='w-full flex justify-center pt-8 border-t-2 border-blue-800'>
+			<div className='w-full max-w-5xl flex flex-col items-start justify-start font-mono'>
+				<div className='text-base text-amber-400 pb-2'>
+					DevTools: Socket.io Info
+				</div>
 
-			<div className='w-full flex flex-row items-center justify-start gap-4 font-mono pb-3 text-gray-400'>
-				<span className=''>Room: {roomId}</span>
-				<span className=''> | </span>
-				<span className=''>User: {userName}</span>
-				<span className='text-gray-500 pl-2'>
-					(from state and props)
-				</span>
+				<Events events={allEvents} />
+				<MessageForm roomId={roomId} userName={userName} />
+				<ConnectionManager />
 			</div>
-
-			<Events events={allEvents} />
-			<MessageForm roomId={roomId} userName={userName} />
-			<ConnectionManager />
 		</div>
 	)
 }

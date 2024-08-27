@@ -2,94 +2,123 @@
 
 import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
+import config from '../../tailwind.config'
 
-type ListenerRes = {
-	messageServer: string
-	roomIdServer: string
-	userNameServer: string
-}
-
-export interface Event extends ListenerRes {
+export type ListenerRes = {
+	message: string
+	userName: string
 	timeStamp: string
 }
 
-const socket = io()
-
-export function socketRoomEmitter(
-	emitterName: string,
-	message: string,
-	roomId: string,
-	userName: string,
-) {
-	socket.emit(emitterName, message, roomId, userName)
+export type AllListenerRes = {
+	message: ListenerRes[]
+	userName: string
+	timeStamp: string
 }
 
-export function useSocketListener(listenerName: string) {
-	const [listenerRes, setListenerRes] = useState<ListenerRes>({
-		messageServer: '',
-		roomIdServer: '',
-		userNameServer: '',
-	})
+type EventName =
+	| 'join-room'
+	| 'story-points'
+	| 'show-disable-reset-points'
+	| 'all-users-story-points'
+
+const socket = io()
+
+export function socketEmitter(
+	eventName: string,
+	roomId: string,
+	message: string | ListenerRes[],
+	userName: string,
+) {
+	const timeStamp = Date.now().toString()
+	socket.emit(eventName, roomId, message, userName, timeStamp)
+}
+
+export function useSocketEmitterLocal(
+	eventName: string,
+	roomId: string,
+	message: string | ListenerRes[],
+	userName: string,
+	localStorageName: string,
+) {
 	useEffect(() => {
-		function onListenerRes(
-			messageServer: string,
-			roomIdServer: string,
-			userNameServer: string,
-		) {
-			setListenerRes({ messageServer, roomIdServer, userNameServer })
+		console.log('%c>>> message useSocketEmitter', 'color: #f0f', message)
+		const timeStamp = Date.now().toString()
+		socket.emit(eventName, roomId, message, userName, timeStamp)
+
+		if (localStorageName) localStorage.setItem(localStorageName, JSON.stringify([message]))
+	}, [eventName, roomId, message, userName, localStorageName])
+}
+
+type Config = {
+	onChange: (data: ListenerRes) => void
+}
+
+export function useSocketListener(eventName: EventName, config?: Config) {
+	const [listenerRes, setListenerRes] = useState<ListenerRes>()
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: not needed as a dependency
+	useEffect(() => {
+		function onListenerRes(message: string, userName: string, timeStamp: string) {
+			setListenerRes({ message, userName, timeStamp })
+			console.log('%c>>> config ', 'color: red', config)
+			config?.onChange({ message, userName, timeStamp })
 		}
-		socket.on(listenerName, onListenerRes)
+		socket.on(eventName, onListenerRes)
 
 		return () => {
-			socket.off(listenerName, onListenerRes)
+			socket.off(eventName, onListenerRes)
 		}
-	}, [listenerName])
+	}, [eventName])
 
 	return listenerRes
 }
 
 // Only use this listener for the SocketIoInfo component to display
 // events for testing purposes
-export function useListenerEvents(joinListener: string, dataListener: string) {
-	const [events, setEvents] = useState<Event[]>([])
+export function useListenerEvents(
+	joinListener: string,
+	dataListener: string,
+	pointsListener: string,
+	usersPointsListener: string,
+) {
+	const [events, setEvents] = useState<ListenerRes[]>([])
 
 	useEffect(() => {
-		function onListenerResponse(
-			messageServer: string,
-			roomIdServer: string,
-			userNameServer: string,
-		) {
-			const unixTimestamp = Date.now().toString()
-			setEvents((previous: Event[]) => [
-				...previous,
+		function onListenerResponse(message: string, userName: string, timeStamp: string) {
+			setEvents((previous: ListenerRes[]) => [
 				{
-					messageServer: messageServer,
-					roomIdServer: roomIdServer,
-					userNameServer: userNameServer,
-					timeStamp: unixTimestamp,
+					message: message,
+					userName: userName,
+					timeStamp: timeStamp,
 				},
+				...previous,
 			])
 		}
 		socket.on(joinListener, onListenerResponse)
 		socket.on(dataListener, onListenerResponse)
+		socket.on(pointsListener, onListenerResponse)
+		socket.on(usersPointsListener, onListenerResponse)
 
 		return () => {
 			socket.off(joinListener, onListenerResponse)
 			socket.off(dataListener, onListenerResponse)
+			socket.off(pointsListener, onListenerResponse)
+			socket.off(usersPointsListener, onListenerResponse)
 		}
-	}, [joinListener, dataListener])
+	}, [joinListener, dataListener, pointsListener, usersPointsListener])
 
 	return events
 }
 
 // Generic Socket.io Emitter.
 //Not sure it is needed, but keeping for now
-export function socketEmitter<T extends unknown[]>(
-	emitterName: string,
+export function socketEmitterGeneric<T extends unknown[]>(
+	eventName: string,
 	message: string,
 	...args: T
 ) {
-	socket.emit(emitterName, message, ...args)
+	socket.emit(eventName, message, ...args)
 }
 // EXAMPLE: socket.emit('client-message', message, roomId)
 
@@ -130,14 +159,14 @@ return () => {
 }
 
 useEffect(() => {
-	function onChatEvent(message: string, roomIdServer: string) {
-		const unixTimestamp = Date.now().toString()
+	function onChatEvent(message: string, roomId: string) {
+		const timeStamp = Date.now().toString()
 		setChatEvents((previous) => [
 			...previous,
 			{
 				message: message,
-				timeStamp: unixTimestamp,
-				room: roomIdServer,
+				timeStamp: timeStamp,
+				room: roomId,
 			},
 		])
 	}
@@ -149,10 +178,10 @@ useEffect(() => {
 			roomId,
 		)
 		const newMessage = `${userName} has joined Room ${roomId}`
-		const unixTimestamp = Date.now().toString()
+		const timeStamp = Date.now().toString()
 		setChatEvents((previous) => [
 			...previous,
-			{ message: newMessage, timeStamp: unixTimestamp, room: roomId },
+			{ message: newMessage, timeStamp: timeStamp, room: roomId },
 		])
 	}
 

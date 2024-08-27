@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { socketRoomEmitter } from '@/services/socket'
+import { socketEmitter } from '@/services/socket'
 
 type Props = {
 	roomId: string
@@ -15,21 +15,23 @@ export default function MessageForm({ roomId, userName }: Props) {
 	function handleSend(event: React.FormEvent) {
 		event.preventDefault()
 		setIsLoading(true)
+		// const timeStamp = Date.now().toString()
 		console.log(
 			'%c>>> MessageForms:',
 			'color: red',
 			message,
-			roomId,
 			userName,
+			// timeStamp,
+			roomId,
 		)
 
-		socketRoomEmitter('client-data', message, roomId, userName)
+		socketEmitter('chat-data', roomId, message, userName)
 		if (messageRef.current) messageRef.current.value = ''
 		setIsLoading(false)
 	}
 
 	return (
-		<div className='py-6 w-full max-w-[800px]'>
+		<div className='py-6 w-full'>
 			<form className='w-full flex flex-row items-center justify-start gap-4'>
 				<button
 					type='submit'
