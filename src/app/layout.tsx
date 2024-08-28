@@ -19,9 +19,7 @@ export default function RootLayout({
 			<body
 				className={`${inter.className} w-screen h-screen bg-gradient-to-t from-dkblue-900 to-dkblue-400`}
 			>
-				<div className='w-full h-full max-w-[88rem] mx-auto'>
-					{children}
-				</div>
+				<div className='w-full h-full max-w-[80rem] mx-auto'>{children}</div>
 			</body>
 		</html>
 	)

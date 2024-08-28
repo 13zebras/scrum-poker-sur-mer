@@ -12,6 +12,9 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			fontSize: {
+				md: '0.95rem',
+			},
 			colors: {
 				dkblue: {
 					200: '#00007c',

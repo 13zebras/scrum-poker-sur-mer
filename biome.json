@@ -36,7 +36,7 @@
 			"jsxQuoteStyle": "single",
 			"semicolons": "asNeeded",
 			"indentStyle": "tab",
-			"indentWidth": 4,
+			"indentWidth": 2,
 			"trailingCommas": "all",
 			"quoteProperties": "asNeeded",
 			"lineWidth": 100,
