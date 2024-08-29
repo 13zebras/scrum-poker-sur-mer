@@ -22,15 +22,17 @@ export default function CreateNewRoom() {
 		if (hostDataLocalStorage) {
 			const hostData = JSON.parse(hostDataLocalStorage)
 			if (hostData?.hostName) {
-				setHostName(hostData?.hostName)
+				setHostName(hostData.hostName)
 				setShowNameInput(false)
 			}
+			if (hostData?.hostRoomUrl) {
+				setHostRoomUrl(hostData.hostRoomUrl)
+			}
+			if (hostData?.roomUrl) {
+				setRoomUrl(hostData.roomUrl)
+			}
 		}
-		console.log(
-			'%c>>> CNR first load hostDataLocalStorage:',
-			'color: red',
-			hostDataLocalStorage,
-		)
+		console.log('%c>>> CNR first load hostDataLocalStorage:', 'color: red', hostDataLocalStorage)
 	}, [])
 
 	function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -69,40 +71,60 @@ export default function CreateNewRoom() {
 	}
 
 	return (
-		<div className='w-full h-[80%] flex flex-col items-center justify-center'>
+		<div className='w-full h-full flex flex-col items-center'>
 			{!showRoomDisplay && (
-				<div className='w-full flex flex-col items-center gap-8 animate-fade-in-600'>
-					{showNameInput && (
-						<input
-							type='text'
-							ref={hostRef}
-							placeholder='Enter Your First Name'
-							onChange={handleOnChange}
-							className='input input-bordered input-info w-80 text-gray-200 placeholder:italic placeholder:text-info/90'
-						/>
-					)}
-					{!showNameInput && (
-						<span className='text-3xl text-gray-300 tracking-wider pb-3'>
-							Welcome back {hostName}!
-						</span>
-					)}
+				<div className='w-full h-5/6 flex flex-col items-center justify-start animate-fade-in-600'>
+					<h1 className='text-2xl text-gray-300'>Scrum Diving Host</h1>
+					<h2 className='text-xl text-gray-300 py-4'>Create Room Page</h2>
 
-					<button
-						type='button'
-						className='btn btn-warning btn-md-w'
-						onClick={handleCreateRoom}
-						disabled={!hostName}
-					>
-						Click to Create New Room
-					</button>
+					<div className='w-full h-full flex flex-col justify-center items-center gap-8'>
+						{showNameInput && (
+							<input
+								type='text'
+								ref={hostRef}
+								placeholder='Enter Your First Name'
+								onChange={handleOnChange}
+								className='input input-bordered input-info w-80 text-gray-200 placeholder:italic placeholder:text-info/90'
+							/>
+						)}
+						{!showNameInput && (
+							<span className='text-3xl text-gray-300 tracking-wider pb-6'>
+								Welcome back {hostName}!
+							</span>
+						)}
+						{/* TODO: do I want to use previous room URL,
+								or always have host get a new room URL?
+								Currently displaying previous room and new room buttons */}
+						{hostRoomUrl && (
+							<div className='flex flex-col items-center gap-3'>
+								<div className='text-xl text-gray-300 tracking-wider'>Your Last Room URL:</div>
+								<div className='text-base text-gray-300 pb-6'>{hostRoomUrl}</div>
+								<button
+									type='button'
+									className='btn btn-accent btn-md-w'
+									onClick={() => {
+										setShowRoomDisplay(true)
+									}}
+								>
+									Click to Use Last Room
+								</button>
+								<div className='text-lg text-gray-300 pt-16'>or if you prefer a new room:</div>
+							</div>
+						)}
+
+						<button
+							type='button'
+							className='btn btn-warning btn-md-w'
+							onClick={handleCreateRoom}
+							disabled={!hostName}
+						>
+							Click to Create New Room
+						</button>
+					</div>
 				</div>
 			)}
 			{showRoomDisplay && (
-				<NewRoomDisplay
-					roomUrl={roomUrl}
-					hostRoomUrl={hostRoomUrl}
-					hostName={hostName}
-				/>
+				<NewRoomDisplay roomUrl={roomUrl} hostRoomUrl={hostRoomUrl} hostName={hostName} />
 			)}
 		</div>
 	)

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { socketEmitter } from '@/services/socket'
+import { useSocketListener } from '@/services/socket'
 import RoomMainUi from '@/components/RoomMainUi'
 import RoomInfo from '@/components/RoomInfo'
 import NewUserDialog from '@/components/NewUserDialog'
@@ -18,6 +19,12 @@ export default function UserRooms({ params }: { params: Params }) {
 
 	const { roomId } = params
 
+	const hostRoomInfo = useSocketListener('host-room-info')
+	// const roomUrl = hostRoomInfo ? hostRoomInfo.message : ''
+	const hostName = hostRoomInfo ? hostRoomInfo.userName : ''
+	// console.log('%c>>> UserRoom: roomUrl', 'color: #0fd', roomUrl)
+	console.log('%c>>> UserRoom: hostName', 'color: #5fb', hostName)
+
 	useEffect(() => {
 		if (dialogRef.current) {
 			dialogRef.current.showModal()
@@ -31,7 +38,11 @@ export default function UserRooms({ params }: { params: Params }) {
 			return
 		}
 		setUser(formValues.userName)
-		socketEmitter('join-room', roomId, 'join', formValues.userName)
+		socketEmitter('join-room', {
+			roomId: roomId,
+			message: 'join',
+			userName: formValues.userName,
+		})
 		if (dialogRef.current) {
 			dialogRef.current.close()
 		}
@@ -45,8 +56,8 @@ export default function UserRooms({ params }: { params: Params }) {
 				displayError={displayErrorMessage}
 			/>
 			<h1 className='text-3xl text-gray-300'>Scrum Diving Room</h1>
-			<RoomInfo roomId={roomId} userName={user} />
-			<div className='h-full w-full pt-14 flex flex-col justify-start items-center'>
+			<RoomInfo hostName={hostName} userName={user} />
+			<div className='h-full w-full pt-10 flex flex-col justify-start items-center'>
 				<RoomMainUi roomId={roomId} userName={user} />
 			</div>
 

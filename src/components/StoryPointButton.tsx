@@ -1,5 +1,5 @@
 interface StoryPointButtonProps {
-	storyPoint: number | string
+	storyPoint: string
 	selectedStoryPoint: string | null
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 	disabled: boolean
