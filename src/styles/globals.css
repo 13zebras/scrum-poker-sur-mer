@@ -16,6 +16,10 @@ body {
 	@apply h-7 min-h-7 px-3 text-[0.8rem]
 }
 
+.btn-xxs {
+	@apply h-5 min-h-5 w-16 px-1 text-[0.75rem] scale-[0.85]
+}
+
 .btn-md-w {
 	@apply h-10 min-h-10 w-[20rem] text-lg
 }
@@ -24,7 +28,25 @@ body {
 	@apply border border-gray-500 text-gray-400 bg-transparent;
 	@media (hover: hover) {
 		&:hover {
-			@apply border-gray-400 text-gray-300 bg-transparent;
+			@apply border-gray-600 text-gray-300 bg-gray-700;
+		}
+	}
+}
+
+.btn-copy {
+	@apply border border-info text-info bg-transparent duration-300;
+	@media (hover: hover) {
+		&:hover {
+			@apply text-black bg-info duration-300;
+		}
+	}
+}
+
+.btn-copied {
+	@apply border border-info text-black bg-info duration-300;
+	@media (hover: hover) {
+		&:hover {
+			@apply border border-info text-black bg-info duration-300;
 		}
 	}
 }
@@ -64,3 +86,37 @@ body {
 		}
 	}
 }
+
+.btn-checkbox {
+	@apply hidden;
+}
+
+.btn-checkbox-label {
+	@apply size-10 min-h-10 p-0 border-2;
+}
+
+.btn-checkbox:checked + .btn-checkbox-label {
+	@apply border-success/80 bg-success/80 text-success-content;
+	@media (hover: hover) {
+		&:hover {
+			@apply border-success/100 bg-success/90 text-success-content;
+		}
+	}
+	&:focus-visible {
+		@apply outline-primary;
+	}
+}
+
+/* .btn-check:checked + .btn-checkbox {
+	background-color: #007bff;
+	color: white;
+	border-color: #007bff;
+}
+
+.btn-check:hover + .btn-checkbox {
+	background-color: #e0e0e0;
+}
+
+.btn-check:checked:hover + .btn-checkbox {
+	background-color: #0056b3;
+} */

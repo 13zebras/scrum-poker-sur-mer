@@ -2,7 +2,6 @@
 
 import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
-import config from '../../tailwind.config'
 
 export type ListenerRes = {
 	message: string
@@ -18,50 +17,80 @@ export type AllListenerRes = {
 
 type EventName =
 	| 'join-room'
-	| 'story-points'
+	| 'host-room-info'
+	| 'user-story-point'
 	| 'show-disable-reset-points'
 	| 'all-users-story-points'
+	| 'allowed-story-points'
+
+type EmitterOptions = {
+	roomId: string
+	message: string | ListenerRes[] | string[]
+	userName: string
+	localStorageName?: string
+}
 
 const socket = io()
 
-export function socketEmitter(
-	eventName: string,
-	roomId: string,
-	message: string | ListenerRes[],
-	userName: string,
-) {
+// NOTE: this can be used with any options, both on server and client.
+// Emmitters, listeners, & server now use options object pattern.
+export function socketEmitter(eventName: string, options: EmitterOptions) {
 	const timeStamp = Date.now().toString()
-	socket.emit(eventName, roomId, message, userName, timeStamp)
+	console.log(
+		'%c>>> services-socketEmitter:\n',
+		'color: #f0c',
+		eventName,
+		'\n',
+		options.localStorageName,
+		options,
+	)
+	socket.emit(eventName, {
+		roomId: options.roomId,
+		message: options.message,
+		userName: options.userName,
+		timeStamp: timeStamp,
+	})
+	if (options.localStorageName)
+		localStorage.setItem(options.localStorageName, JSON.stringify(options.message))
 }
 
-export function useSocketEmitterLocal(
-	eventName: string,
-	roomId: string,
-	message: string | ListenerRes[],
-	userName: string,
-	localStorageName: string,
-) {
+// TODO: consider deleting useSocketEmitterLocal once certain
+// updated socketEmitter with options (above)
+// works as intended and the same way as this hook.
+// I don't think app will need this useEffect to run any emits.
+export function useSocketEmitterLocal(eventName: string, options: EmitterOptions) {
 	useEffect(() => {
-		console.log('%c>>> message useSocketEmitter', 'color: #f0f', message)
 		const timeStamp = Date.now().toString()
-		socket.emit(eventName, roomId, message, userName, timeStamp)
+		socket.emit(eventName, {
+			roomId: options.roomId,
+			message: options.message,
+			userName: options.userName,
+			timeStamp: timeStamp,
+		})
 
-		if (localStorageName) localStorage.setItem(localStorageName, JSON.stringify([message]))
-	}, [eventName, roomId, message, userName, localStorageName])
+		if (options.localStorageName)
+			localStorage.setItem(options.localStorageName, JSON.stringify(options.message))
+	}, [eventName, options])
 }
 
 type Config = {
 	onChange: (data: ListenerRes) => void
 }
 
+type OnListenerOptions = {
+	message: string
+	userName: string
+	timeStamp: string
+}
+
 export function useSocketListener(eventName: EventName, config?: Config) {
 	const [listenerRes, setListenerRes] = useState<ListenerRes>()
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: not needed as a dependency
 	useEffect(() => {
-		function onListenerRes(message: string, userName: string, timeStamp: string) {
+		function onListenerRes(options: OnListenerOptions) {
+			const { message, userName, timeStamp } = options
 			setListenerRes({ message, userName, timeStamp })
-			console.log('%c>>> config ', 'color: red', config)
+			// console.log('%c>>> config ', 'color: red', config)
 			config?.onChange({ message, userName, timeStamp })
 		}
 		socket.on(eventName, onListenerRes)
@@ -69,13 +98,28 @@ export function useSocketListener(eventName: EventName, config?: Config) {
 		return () => {
 			socket.off(eventName, onListenerRes)
 		}
-	}, [eventName])
+	}, [eventName, config])
 
 	return listenerRes
 }
 
-// Only use this listener for the SocketIoInfo component to display
-// events for testing purposes
+// Generic Socket.io Emitter.
+//Not sure it is needed, but keeping for now
+export function socketEmitterGeneric<T extends unknown[]>(
+	eventName: string,
+	message: string,
+	...args: T
+) {
+	socket.emit(eventName, message, ...args)
+}
+
+/* 
+***************************************************
+TODO: delete useListenerEvents once sure 
+SocketIoInfo component is no longer needed. 
+It was only for dev purposes.
+***************************************************
+
 export function useListenerEvents(
 	joinListener: string,
 	dataListener: string,
@@ -111,21 +155,9 @@ export function useListenerEvents(
 	return events
 }
 
-// Generic Socket.io Emitter.
-//Not sure it is needed, but keeping for now
-export function socketEmitterGeneric<T extends unknown[]>(
-	eventName: string,
-	message: string,
-	...args: T
-) {
-	socket.emit(eventName, message, ...args)
-}
-// EXAMPLE: socket.emit('client-message', message, roomId)
+***************************************************
+*/
 
-//
-//
-//
-//
 /*
 ***************************************************
 ** Other Socket.io code from socketIoDevToolss
@@ -194,5 +226,5 @@ useEffect(() => {
 	}
 }, [])
 
-
+***************************************************
 */

@@ -1,11 +1,22 @@
-import type { RoomInfoData } from '@/components/RoomMainUi'
+type RoomInfoData = {
+	hostName: string
+	roomUrl?: string
+	userName?: string
+}
 
-export default function RoomInfo({ roomId, userName }: RoomInfoData) {
+export default function RoomInfo({ roomUrl, hostName, userName }: RoomInfoData) {
+	const isUser = !!userName
+	// console.log('%c>>> isUser:', 'color: red', isUser)
+
 	return (
-		<div className=' flex flex-row items-center justify-start gap-4 font-mono text-sm text-gray-400'>
-			<span className=''>Your Name: {userName}</span>
-			<span className=''> | </span>
-			<span className=''>RoomId: {roomId}</span>
+		<div className=' flex flex-row items-center justify-center font-mono text-gray-400 text-sm'>
+			{isUser ? (
+				<span>
+					Your Name: {userName} | Host Name: {hostName}
+				</span>
+			) : (
+				<span>User Room URL: {roomUrl}</span>
+			)}
 		</div>
 	)
 }

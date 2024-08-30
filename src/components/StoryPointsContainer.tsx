@@ -2,17 +2,16 @@
 
 import { socketEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
-import type { ListenerRes } from '@/services/socket'
 import { useState } from 'react'
 import StoryPointButton from '@/components/StoryPointButton'
-import type { RoomInfoData } from '@/components/RoomMainUi'
+import type { RoomData } from '@/components/RoomMainUi'
 
-export default function StoryPointsContainer({ roomId, userName }: RoomInfoData) {
+export default function StoryPointsContainer({ roomId, userName }: RoomData) {
 	const [selectedStoryPoint, setSelectedStoryPoint] = useState<string | null>(null)
 	const [isPointBtnDisabled, setIsPointBtnDisabled] = useState(false)
 
 	useSocketListener('show-disable-reset-points', {
-		onChange: (showDisableReset: ListenerRes) => {
+		onChange: (showDisableReset) => {
 			console.log('%c>>> showDisableReset', 'color: red', showDisableReset)
 			const isButtonDisabled = showDisableReset.message as unknown as boolean
 			if (isButtonDisabled) {
@@ -24,19 +23,25 @@ export default function StoryPointsContainer({ roomId, userName }: RoomInfoData)
 		},
 	})
 
-	// TODO: move to host settings
-	const storyPointValues = ['?', 0, 1, 2, 3, 5, 8, 13, 20, 40, 100]
+	const allowedPoints = useSocketListener('allowed-story-points')
+	const allowedPointsArray = (allowedPoints?.message as unknown as string[]) || []
+	// console.log('%c>>> SPContainer: allowedPoints', 'color: #f50', allowedPoints)
+	// console.log('%c>>> SPContainer: allowedPointsArray', 'color: yellow', allowedPointsArray)
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		console.log('%c>>> spc handleChange', 'color: red', event.target.value)
+		// console.log('%c>>> spc handleChange', 'color: red', event.target.value)
 		setSelectedStoryPoint(event.target.value)
-		socketEmitter('story-points', roomId, event.target.value, userName)
+		socketEmitter('user-story-point', {
+			roomId: roomId,
+			message: event.target.value,
+			userName: userName,
+		})
 	}
 
 	return (
 		<div className='relative w-fit px-0 flex flex-row justify-center items-center gap-4 border-0 border-pink-800'>
 			<div className='flex flex-row flex-wrap gap-4 justify-center items-center border-0 border-stone-900'>
-				{storyPointValues.map((storyPoint) => (
+				{allowedPointsArray.map((storyPoint) => (
 					<StoryPointButton
 						key={storyPoint}
 						storyPoint={storyPoint}

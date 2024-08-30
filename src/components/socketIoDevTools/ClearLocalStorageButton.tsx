@@ -3,6 +3,7 @@
 export default function ClearLocalStorageButton() {
 	function handleOnClick() {
 		localStorage.removeItem('scrumDivingHostData')
+		localStorage.removeItem('scrumDivingAllowedStoryPoints')
 		window.location.reload()
 	}
 	return (
