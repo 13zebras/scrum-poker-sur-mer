@@ -25,6 +25,7 @@ app.prepare().then(() => {
 		console.log('**************************************************')
 		console.log('>> server socket.id', socket.id)
 		console.log('**************************************************\n')
+		console.log('**************************************************')
 		socketOnHandler(io, socket)
 	})
 
@@ -34,6 +35,8 @@ app.prepare().then(() => {
 			process.exit(1)
 		})
 		.listen(port, () => {
-			console.log(`*** Ready on http://${hostname}:${port} ***\n\n`)
+			console.log('**************************************************')
+			console.log(`>> Ready on http://${hostname}:${port}`)
+			console.log('**************************************************\n')
 		})
 })

@@ -11,6 +11,10 @@ type Params = {
 	roomId: string
 }
 
+// TODO consider storing user, roomUrl, roomId, hostName in localStorage
+// TODO do we need a userId in case of duplicate names?
+//       the userId could be userName-timeStamp, which would be unique
+
 export default function UserRooms({ params }: { params: Params }) {
 	const [user, setUser] = useState('')
 	const [displayErrorMessage, setDisplayErrorMessage] = useState(false)
@@ -40,7 +44,7 @@ export default function UserRooms({ params }: { params: Params }) {
 		setUser(formValues.userName)
 		socketEmitter('join-room', {
 			roomId: roomId,
-			message: 'join',
+			message: -99,
 			userName: formValues.userName,
 		})
 		if (dialogRef.current) {
@@ -60,9 +64,6 @@ export default function UserRooms({ params }: { params: Params }) {
 			<div className='h-full w-full pt-10 flex flex-col justify-start items-center'>
 				<RoomMainUi roomId={roomId} userName={user} />
 			</div>
-
-			{/*** Socket.io DevTools - Remove Before Release ***/}
-			{/* <SocketIoInfo roomId={roomId} userName={user} /> */}
 		</main>
 	)
 }

@@ -1,25 +1,25 @@
 interface StoryPointButtonProps {
-	storyPoint: string
-	selectedStoryPoint: string | null
-	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+	allowedPointLabel: string
+	selectedStoryPoint: number | null
+	handleSelectPoint: (event: React.ChangeEvent<HTMLInputElement>) => void
 	disabled: boolean
 }
 
 export default function StoryPointButton({
-	storyPoint,
+	allowedPointLabel,
 	selectedStoryPoint,
-	onChange,
+	handleSelectPoint,
 	disabled,
 }: StoryPointButtonProps) {
 	return (
 		<input
 			type='radio'
-			aria-label={`${storyPoint} points`}
+			aria-label={`${allowedPointLabel} points`}
 			className='btn btn-primary btn-outline btn-points'
-			value={storyPoint}
+			value={allowedPointLabel}
 			name='storypoints'
-			checked={selectedStoryPoint === storyPoint.toString()}
-			onChange={onChange}
+			checked={selectedStoryPoint === Number(allowedPointLabel)}
+			onChange={handleSelectPoint}
 			disabled={disabled}
 		/>
 	)

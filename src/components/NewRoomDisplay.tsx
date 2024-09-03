@@ -29,14 +29,14 @@ export default function NewRoomDisplay({ roomUrl, hostRoomUrl, hostName }: NewRo
 				<span className='text-gray-200 font-mono font-bold text-lg'>{roomUrl}</span>
 				<div className='w-3/4 flex flex-col items-center justify-center relative'>
 					<div
-						className={`${showGoLink && 'blur-[2px] opacity-40'} flex flex-col text-lg text-gray-300 text-center pb-1`}
+						className={`flex flex-col text-lg text-gray-300 text-center pb-1 ${showGoLink && 'opacity-0'}`}
 					>
 						<span>Click button to copy URL to the clipboard.</span>
 						<span>Share this URL with your team members.</span>
 					</div>
 					{showGoLink && (
 						<div
-							className='absolute top-2 text-accent text-[1.6rem] text-center font-bold -rotate-[4deg] tracking-wide animate-fade-in-500 saturate-150'
+							className='absolute top-2 text-accent text-2xl text-center font-bold tracking-wide animate-fade-in-500 saturate-125'
 							style={{
 								textShadow: '1px 1px 1px black, 3px 3px 1px black',
 							}}
