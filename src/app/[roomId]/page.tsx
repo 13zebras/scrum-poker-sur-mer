@@ -6,6 +6,7 @@ import { useSocketListener } from '@/services/socket'
 import RoomMainUi from '@/components/RoomMainUi'
 import RoomInfo from '@/components/RoomInfo'
 import NewUserDialog from '@/components/NewUserDialog'
+import { POINT_CODES } from '@/app/host/[roomId]/page'
 
 type Params = {
 	roomId: string
@@ -44,7 +45,7 @@ export default function UserRooms({ params }: { params: Params }) {
 		setUser(formValues.userName)
 		socketEmitter('join-room', {
 			roomId: roomId,
-			message: -99,
+			message: POINT_CODES.JOIN,
 			userName: formValues.userName,
 		})
 		if (dialogRef.current) {

@@ -145,18 +145,3 @@ export default function UserShowPointsCard({
 		</AnimatePresence>
 	)
 }
-
-// bg-base-100 size-32 shadow-xl rounded-lg border border-slate-600 overflow-hidden
-
-// const blankCardRightI = isBlank ? containerRect.width - 128 : 0
-
-// const numberFromLastCard = numberOfCards - index - 1
-// const blankCardRightA = isBlank ? numberFromLastCard * 60 : 0
-
-// const blankCardRotateZ = isBlank ? -90 : 0
-
-// const blankCardRightDelay = isBlank ? 0.5 + numberFromLastCard * 0.2 : 0
-// const blankCardRotateYDelay = isBlank ? 1.5 + numberFromLastCard * 0.2 : aDelay
-// const blankCardRotateZDelay = isBlank ? 2.0 + numberFromLastCard * 0.2 : 0
-
-// const blankCardZIndex = isBlank ? numberFromLastCard : 0

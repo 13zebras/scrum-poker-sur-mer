@@ -7,6 +7,8 @@ import { useState } from 'react'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 
+import { POINT_CODES } from '@/app/host/[roomId]/page'
+
 export default function CardsContainer() {
 	const [sortedUsersPoints, setSortedUsersPoints] = useState<ListenerRes[]>([])
 
@@ -27,16 +29,17 @@ export default function CardsContainer() {
 	const showDisableReset = useSocketListener('show-disable-reset-points')
 	const showStoryPoints = showDisableReset?.message as unknown as boolean
 
-	// -99 = user joined room and hasn't participated yet.
-	// -55 = user has participated at least once and had points cleared.
+	console.log('%c>>> showStoryPoints', 'color: #5f0', showStoryPoints.toString())
+	// POINT_CODES.JOIN = user joined room and hasn't participated yet.
+	// POINT_CODES.RESET = user has participated at least once and had points cleared.
 	const makeStringPoints = (message: number) => {
-		if (message === -99 || message === -55) return '--'
-		if (message === -1) return '?'
+		if (message === POINT_CODES.JOIN || message === POINT_CODES.RESET) return '--'
+		if (POINT_CODES.QUESTION) return '?'
 		return message.toString()
 	}
 
 	const numberOfBlankCards = usersPointsData.filter(
-		({ message }) => message === -99 || message === -55,
+		({ message }) => message === POINT_CODES.JOIN || message === POINT_CODES.RESET,
 	).length
 
 	// console.log('%c>>> CardsContainer: allUsersStoryPoints', 'color: #f70', allUsersStoryPoints)
@@ -44,6 +47,8 @@ export default function CardsContainer() {
 	// console.log('%c>>> CC socketListener: sortedUsersPoints', 'color: #5f0', sortedUsersPoints)
 	// console.log('%c>>> CardsContainer: showStoryPoints', 'color: #f60', showStoryPoints)
 
+	// TODO create a combo UserCard with all needed props, calculations and JSX. Modify the `key` to be different for each of the 2 arrays of points.
+	// key={timeStamp.toString() + showStoryPoints.toString()}
 	return (
 		<div className='relative pt-2 pb-56 flex justify-center items-center flex-wrap text-center gap-8 text-gray-300 border-0 border-red-800 w-full'>
 			{showStoryPoints

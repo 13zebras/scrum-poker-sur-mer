@@ -28,12 +28,12 @@ export default function HostSettingsButton({
 	function onSubmitForm(event: React.FormEvent<HTMLFormElement>) {
 		const formData = new FormData(event.currentTarget)
 		const hideHostCard = formData.getAll('hideHostCard')
-		const hostChosenPoints = formData.getAll('storyPoints')
+		const hostChosenPoints = formData.getAll('storyPoints') as string[]
 		console.log('%c>>> hideHostCard', 'color: #f60', hideHostCard)
 		console.log('%c>>> hostChosenPoints', 'color: #5f0', hostChosenPoints)
 		if (hostChosenPoints.length > 0) {
-			allowedPointsEmitter(hostChosenPoints as string[], true)
-			setAllowedStoryPoints(hostChosenPoints as string[])
+			allowedPointsEmitter(hostChosenPoints, true)
+			setAllowedStoryPoints(hostChosenPoints)
 		}
 	}
 

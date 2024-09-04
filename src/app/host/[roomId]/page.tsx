@@ -12,12 +12,11 @@ import RoomInfo from '@/components/RoomInfo'
 import HostDevButtons from '@/components/socketIoDevTools/HostDevButtons'
 import { namesArray } from '@/utils/sampleData'
 
-// NOTE Story point codes:
-// -99 = '--' when joining room
-// -55 = '-' when resetting points
-// -1 = '?'
-// 0 - 100 = number of story points
-// end note
+export const POINT_CODES = {
+	JOIN: -99,
+	RESET: -55,
+	QUESTION: -1,
+}
 
 export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const [allUsersPointsData, setAllUsersPointsData] = useState<ListenerRes[]>([])
@@ -44,7 +43,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 
 	// emitter for host joining room
 	useEffect(() => {
-		socketEmitter('join-room', { roomId: roomId, message: -99, userName: hostName })
+		socketEmitter('join-room', { roomId: roomId, message: POINT_CODES.JOIN, userName: hostName })
 	}, [roomId, hostName])
 
 	useSocketListener('join-room', {
@@ -162,7 +161,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 
 	const handleClearPoints = () => {
 		const clearedPoints = allUsersPointsData.map((data: ListenerRes) => {
-			return { ...data, message: -55 }
+			return { ...data, message: POINT_CODES.RESET }
 		})
 		setAllUsersPointsData(clearedPoints)
 		allUsersPointsEmitter(clearedPoints)
@@ -177,7 +176,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 	// TODO remove realUsers state, handleAddRandomUsers, and handleRemoveRandomUsers
 	// when done with development
 	const [realUsers, setRealUsers] = useState<ListenerRes[]>([])
-	function handleAddRandomUsers() {
+	function onAddRandomUsers() {
 		const namesStart = Math.floor(Math.random() * 150)
 		const namesEnd = namesStart + 15
 		const sampleNames = namesArray.slice(namesStart, namesEnd)
@@ -185,7 +184,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		setAllUsersPointsData((prevUsersPoints) => {
 			const newUsers = sampleNames.map((name, index) => {
 				const point = Math.floor(Math.random() * 20)
-				const storyPoint = point > 12 ? -99 : point
+				const storyPoint = point > 12 ? POINT_CODES.JOIN : point
 				const userName = `${name}*`
 				const imageNum = allUsersPointsData.length + index
 				const timeStamp = Date.now() + Math.floor(Math.random() * 60000) - 60000
@@ -206,7 +205,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		})
 	}
 
-	function handleRemoveRandomUsers() {
+	function onRemoveRandomUsers() {
 		console.log('%c>>> realUsers remove random users', 'color: #5f0', realUsers)
 		setAllUsersPointsData(realUsers)
 		allUsersPointsEmitter(realUsers)
@@ -246,8 +245,8 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 
 			{/* TODO Remove HostDevButtons when development is done */}
 			<HostDevButtons
-				handleAddRandomUsers={handleAddRandomUsers}
-				handleRemoveRandomUsers={handleRemoveRandomUsers}
+				onAddRandomUsers={onAddRandomUsers}
+				onRemoveRandomUsers={onRemoveRandomUsers}
 			/>
 			{/* END TODO */}
 		</main>
