@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { socketEmitter } from '@/services/socket'
-// import { useSocketEmitterLocal } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 import HostControlButton from '@/components/HostControlButton'
@@ -10,7 +9,6 @@ import HostSettingsButton from '@/components/HostSettingsButton'
 import RoomMainUi from '@/components/RoomMainUi'
 import RoomInfo from '@/components/RoomInfo'
 import HostDevButtons from '@/components/socketIoDevTools/HostDevButtons'
-import { namesArray } from '@/utils/sampleData'
 
 export const POINT_CODES = {
 	JOIN: -99,
@@ -92,9 +90,6 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 				message: roomUrl,
 				userName: hostName,
 			})
-
-			// TODO remove setRealUsers state, only for dev purposes
-			setRealUsers((prevUsers) => [...prevUsers, userJoinWithImageNumber])
 		},
 	})
 
@@ -172,46 +167,6 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		})
 	}
 
-	///////////////////////////////////////////////////////////////////////////////////
-	// TODO remove realUsers state, handleAddRandomUsers, and handleRemoveRandomUsers
-	// when done with development
-	const [realUsers, setRealUsers] = useState<ListenerRes[]>([])
-	function onAddRandomUsers() {
-		const namesStart = Math.floor(Math.random() * 150)
-		const namesEnd = namesStart + 15
-		const sampleNames = namesArray.slice(namesStart, namesEnd)
-
-		setAllUsersPointsData((prevUsersPoints) => {
-			const newUsers = sampleNames.map((name, index) => {
-				const point = Math.floor(Math.random() * 20)
-				const storyPoint = point > 12 ? POINT_CODES.JOIN : point
-				const userName = `${name}*`
-				const imageNum = allUsersPointsData.length + index
-				const timeStamp = Date.now() + Math.floor(Math.random() * 60000) - 60000
-				// NOTE: 60000ms = 1 minute. Each sample user would get
-				// a random time stamp between 1 minute ago and now.
-				return {
-					message: storyPoint,
-					userName: userName,
-					imageNumber: imageNum,
-					timeStamp: timeStamp,
-				}
-			})
-			const newAllPointsState = [...prevUsersPoints, ...newUsers]
-			console.log('%c>>> newAllPointsState random:', 'color: red', newAllPointsState)
-			allUsersPointsEmitter(newAllPointsState)
-			return newAllPointsState
-			// return prevUsersPoints
-		})
-	}
-
-	function onRemoveRandomUsers() {
-		console.log('%c>>> realUsers remove random users', 'color: #5f0', realUsers)
-		setAllUsersPointsData(realUsers)
-		allUsersPointsEmitter(realUsers)
-	}
-	// END TODO ////////////////////////////////////////////////////////
-
 	return (
 		<main className='px-16 py-12 relative flex flex-col justify-start items-center gap-8 w-full animate-in fade-in-0 duration-1000'>
 			<div className='flex flex-col justify-start items-center gap-6'>
@@ -244,9 +199,11 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 			</div>
 
 			{/* TODO Remove HostDevButtons when development is done */}
+
 			<HostDevButtons
-				onAddRandomUsers={onAddRandomUsers}
-				onRemoveRandomUsers={onRemoveRandomUsers}
+				allUsersPoints={allUsersPointsData}
+				onSetAllUsersPoints={setAllUsersPointsData}
+				allUsersPointsEmitter={allUsersPointsEmitter}
 			/>
 			{/* END TODO */}
 		</main>
