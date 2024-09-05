@@ -12,12 +12,20 @@ body {
 	@apply flex justify-center items-start;
 }
 
+.card-points {
+	@apply bg-base-100 size-32 shadow-xl rounded-lg border border-slate-600 overflow-hidden 
+}
+
+.card-body-points {
+	@apply absolute py-4 px-2 justify-start items-center w-full h-full
+}
+
 .btn-xs {
 	@apply h-7 min-h-7 px-3 text-[0.8rem]
 }
 
 .btn-xxs {
-	@apply h-5 min-h-5 w-16 px-1 text-[0.75rem] scale-[0.85]
+	@apply h-5 min-h-5 px-1 text-[0.75rem]
 }
 
 .btn-md-w {
@@ -25,25 +33,26 @@ body {
 }
 
 .btn-outline-gray {
-	@apply border border-gray-500 text-gray-400 bg-transparent;
+	@apply border border-zinc-500 text-zinc-500 bg-transparent;
 	@media (hover: hover) {
 		&:hover {
-			@apply border-gray-600 text-gray-300 bg-gray-700;
+			@apply border-zinc-300 text-zinc-300 bg-zinc-900;
 		}
 	}
 }
 
 .btn-copy {
-	@apply border border-info text-info bg-transparent duration-300;
+	@apply border-0 border-info text-info bg-transparent duration-300;
 	@media (hover: hover) {
 		&:hover {
-			@apply text-black bg-info duration-300;
+			@apply underline underline-offset-2 brightness-125 bg-transparent duration-300;
+			/* @apply text-black bg-info duration-300; */
 		}
 	}
 }
 
 .btn-copied {
-	@apply border border-info text-black bg-info duration-300;
+	@apply border-0 border-info text-black bg-info duration-300;
 	@media (hover: hover) {
 		&:hover {
 			@apply border border-info text-black bg-info duration-300;

@@ -4,15 +4,10 @@ import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
 
 export type ListenerRes = {
-	message: string
+	message: string | number
 	userName: string
-	timeStamp: string
-}
-
-export type AllListenerRes = {
-	message: ListenerRes[]
-	userName: string
-	timeStamp: string
+	imageNumber: number
+	timeStamp: number
 }
 
 type EventName =
@@ -25,73 +20,44 @@ type EventName =
 
 type EmitterOptions = {
 	roomId: string
-	message: string | ListenerRes[] | string[]
+	message: string | number | ListenerRes[] | string[]
 	userName: string
+	imageNumber?: number
 	localStorageName?: string
 }
 
 const socket = io()
 
-// NOTE: this can be used with any options, both on server and client.
+// NOTE: this emittercan be used with any options, both on server and client.
 // Emmitters, listeners, & server now use options object pattern.
 export function socketEmitter(eventName: string, options: EmitterOptions) {
-	const timeStamp = Date.now().toString()
-	console.log(
-		'%c>>> services-socketEmitter:\n',
-		'color: #f0c',
-		eventName,
-		'\n',
-		options.localStorageName,
-		options,
-	)
+	const timeStamp = Date.now()
+
 	socket.emit(eventName, {
 		roomId: options.roomId,
 		message: options.message,
 		userName: options.userName,
 		timeStamp: timeStamp,
+		imageNumber: options.imageNumber,
 	})
 	if (options.localStorageName)
 		localStorage.setItem(options.localStorageName, JSON.stringify(options.message))
-}
-
-// TODO: consider deleting useSocketEmitterLocal once certain
-// updated socketEmitter with options (above)
-// works as intended and the same way as this hook.
-// I don't think app will need this useEffect to run any emits.
-export function useSocketEmitterLocal(eventName: string, options: EmitterOptions) {
-	useEffect(() => {
-		const timeStamp = Date.now().toString()
-		socket.emit(eventName, {
-			roomId: options.roomId,
-			message: options.message,
-			userName: options.userName,
-			timeStamp: timeStamp,
-		})
-
-		if (options.localStorageName)
-			localStorage.setItem(options.localStorageName, JSON.stringify(options.message))
-	}, [eventName, options])
 }
 
 type Config = {
 	onChange: (data: ListenerRes) => void
 }
 
-type OnListenerOptions = {
-	message: string
-	userName: string
-	timeStamp: string
-}
-
 export function useSocketListener(eventName: EventName, config?: Config) {
 	const [listenerRes, setListenerRes] = useState<ListenerRes>()
-
 	useEffect(() => {
-		function onListenerRes(options: OnListenerOptions) {
-			const { message, userName, timeStamp } = options
-			setListenerRes({ message, userName, timeStamp })
-			// console.log('%c>>> config ', 'color: red', config)
-			config?.onChange({ message, userName, timeStamp })
+		function onListenerRes(options: ListenerRes) {
+			const { message, userName, imageNumber, timeStamp } = options
+			console.log('%c>>> onListenerRes message:', 'color: red', message)
+
+			setListenerRes({ message, userName, imageNumber, timeStamp })
+
+			config?.onChange({ message, userName, imageNumber, timeStamp })
 		}
 		socket.on(eventName, onListenerRes)
 
@@ -104,7 +70,7 @@ export function useSocketListener(eventName: EventName, config?: Config) {
 }
 
 // Generic Socket.io Emitter.
-//Not sure it is needed, but keeping for now
+// Not sure it is needed, but keeping for now
 export function socketEmitterGeneric<T extends unknown[]>(
 	eventName: string,
 	message: string,
@@ -112,51 +78,6 @@ export function socketEmitterGeneric<T extends unknown[]>(
 ) {
 	socket.emit(eventName, message, ...args)
 }
-
-/* 
-***************************************************
-TODO: delete useListenerEvents once sure 
-SocketIoInfo component is no longer needed. 
-It was only for dev purposes.
-***************************************************
-
-export function useListenerEvents(
-	joinListener: string,
-	dataListener: string,
-	pointsListener: string,
-	usersPointsListener: string,
-) {
-	const [events, setEvents] = useState<ListenerRes[]>([])
-
-	useEffect(() => {
-		function onListenerResponse(message: string, userName: string, timeStamp: string) {
-			setEvents((previous: ListenerRes[]) => [
-				{
-					message: message,
-					userName: userName,
-					timeStamp: timeStamp,
-				},
-				...previous,
-			])
-		}
-		socket.on(joinListener, onListenerResponse)
-		socket.on(dataListener, onListenerResponse)
-		socket.on(pointsListener, onListenerResponse)
-		socket.on(usersPointsListener, onListenerResponse)
-
-		return () => {
-			socket.off(joinListener, onListenerResponse)
-			socket.off(dataListener, onListenerResponse)
-			socket.off(pointsListener, onListenerResponse)
-			socket.off(usersPointsListener, onListenerResponse)
-		}
-	}, [joinListener, dataListener, pointsListener, usersPointsListener])
-
-	return events
-}
-
-***************************************************
-*/
 
 /*
 ***************************************************

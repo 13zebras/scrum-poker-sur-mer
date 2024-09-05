@@ -73,7 +73,7 @@ export default function CreateNewRoom() {
 	return (
 		<div className='w-full h-full flex flex-col items-center'>
 			{!showRoomDisplay && (
-				<div className='w-full h-5/6 flex flex-col items-center justify-start animate-fade-in-600'>
+				<div className='w-full h-3/4 flex flex-col items-center justify-start animate-fade-in-600'>
 					<h1 className='text-2xl text-gray-300'>Scrum Diving Host</h1>
 					<h2 className='text-xl text-gray-300 py-4'>Create Room Page</h2>
 
@@ -88,14 +88,14 @@ export default function CreateNewRoom() {
 							/>
 						)}
 						{!showNameInput && (
-							<span className='text-3xl text-gray-300 tracking-wider pb-6'>
+							<span className='w-96 text-3xl text-gray-300 text-center tracking-wider leading-relaxed pb-6'>
 								Welcome back {hostName}!
 							</span>
 						)}
-						{/* TODO: do I want to use previous room URL,
+						{/* TODO do I want to use previous room URL,
 								or always have host get a new room URL?
 								Currently displaying previous room and new room buttons */}
-						{hostRoomUrl && (
+						{/* {hostRoomUrl && (
 							<div className='flex flex-col items-center gap-3'>
 								<div className='text-xl text-gray-300 tracking-wider'>Your Last Room URL:</div>
 								<div className='text-base text-gray-300 pb-6'>{hostRoomUrl}</div>
@@ -110,7 +110,7 @@ export default function CreateNewRoom() {
 								</button>
 								<div className='text-lg text-gray-300 pt-16'>or if you prefer a new room:</div>
 							</div>
-						)}
+						)} */}
 
 						<button
 							type='button'

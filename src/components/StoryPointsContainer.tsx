@@ -7,7 +7,7 @@ import StoryPointButton from '@/components/StoryPointButton'
 import type { RoomData } from '@/components/RoomMainUi'
 
 export default function StoryPointsContainer({ roomId, userName }: RoomData) {
-	const [selectedStoryPoint, setSelectedStoryPoint] = useState<string | null>(null)
+	const [selectedStoryPoint, setSelectedStoryPoint] = useState<number | null>(null)
 	const [isPointBtnDisabled, setIsPointBtnDisabled] = useState(false)
 
 	useSocketListener('show-disable-reset-points', {
@@ -28,12 +28,13 @@ export default function StoryPointsContainer({ roomId, userName }: RoomData) {
 	// console.log('%c>>> SPContainer: allowedPoints', 'color: #f50', allowedPoints)
 	// console.log('%c>>> SPContainer: allowedPointsArray', 'color: yellow', allowedPointsArray)
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleSelectPoint = (event: React.ChangeEvent<HTMLInputElement>) => {
 		// console.log('%c>>> spc handleChange', 'color: red', event.target.value)
-		setSelectedStoryPoint(event.target.value)
+		const selectedPoint = event.target.value === '?' ? -1 : Number(event.target.value)
+		setSelectedStoryPoint(selectedPoint)
 		socketEmitter('user-story-point', {
 			roomId: roomId,
-			message: event.target.value,
+			message: selectedPoint,
 			userName: userName,
 		})
 	}
@@ -41,12 +42,12 @@ export default function StoryPointsContainer({ roomId, userName }: RoomData) {
 	return (
 		<div className='relative w-fit px-0 flex flex-row justify-center items-center gap-4 border-0 border-pink-800'>
 			<div className='flex flex-row flex-wrap gap-4 justify-center items-center border-0 border-stone-900'>
-				{allowedPointsArray.map((storyPoint) => (
+				{allowedPointsArray.map((allowedPoint) => (
 					<StoryPointButton
-						key={storyPoint}
-						storyPoint={storyPoint}
+						key={allowedPoint}
+						allowedPointLabel={allowedPoint}
 						selectedStoryPoint={selectedStoryPoint}
-						onChange={handleChange}
+						handleSelectPoint={handleSelectPoint}
 						disabled={isPointBtnDisabled}
 					/>
 				))}
