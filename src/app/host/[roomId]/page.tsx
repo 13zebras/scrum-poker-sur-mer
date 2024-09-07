@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { socketEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
@@ -20,8 +21,9 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const [allUsersPointsData, setAllUsersPointsData] = useState<ListenerRes[]>([])
 
 	const { roomId } = params
-
-	// console.count('>>> Host room component body')
+	const demoMode = roomId.includes('demomode')
+	const splitRoomId = roomId.split('-')
+	const numDemoUsers = splitRoomId[1] ? Number.parseInt(splitRoomId[1]) : 0
 
 	// NOTE: these values are passed to the story point buttons.
 	// The radio buttons will submit one of these values as strings.
@@ -68,7 +70,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					newAllPointsState = noDuplicates
 				} else {
 					newAllPointsState = [...prevUsersPoints, userJoinWithImageNumber]
-					console.log('%c>>> newAllPointsState join:', 'color: #f0f', newAllPointsState)
+					// console.log('%c>>> newAllPointsState join:', 'color: #f0f', newAllPointsState)
 				}
 				// when someone joins the room, emit the allUsersPointsData
 				allUsersPointsEmitter(newAllPointsState)
@@ -103,18 +105,18 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 				})
 
 				// TODO Consider updating entire object for user, not only the message.
-				// At least updated the timestamp so it can be used remove users
+				// At least update the timestamp so it can be used to remove users
 				// who have not submitted points in 30 minutes.
 				let newAllPointsState: ListenerRes[] = []
 				if (index !== -1) {
 					const noDuplicates = [...prevUsersPoints]
 					noDuplicates[index].message = storyPointRes.message
-					console.log('%c>>> noDuplicates SP', 'color: red', noDuplicates)
+					// console.log('%c>>> noDuplicates SP', 'color: red', noDuplicates)
 					newAllPointsState = noDuplicates
 				} else {
 					newAllPointsState = [...prevUsersPoints, storyPointRes]
 				}
-				console.log('%c>>> newAllPointsState storyPoints:', 'color: #5f0', newAllPointsState)
+				// console.log('%c>>> newAllPointsState storyPoints:', 'color: #5f0', newAllPointsState)
 
 				// when someone joins the room, emit the allUsersPointsData so new user
 				// has all current users and points
@@ -170,7 +172,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 	return (
 		<main className='px-16 py-12 relative flex flex-col justify-start items-center gap-8 w-full animate-in fade-in-0 duration-1000'>
 			<div className='flex flex-col justify-start items-center gap-6'>
-				<h1 className='text-3xl text-gray-300'>Host Scrum Diving Room</h1>
+				<h1 className='text-3xl text-gray-300'>Host: Scrum Under the Sea</h1>
 				<RoomInfo roomUrl={roomUrl} hostName={hostName} />
 			</div>
 			<div className='pt-2 w-full flex flex-col justify-start items-center gap-12'>
@@ -187,7 +189,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 				<RoomMainUi roomId={roomId} userName={hostName} />
 			</div>
 
-			<div className='w-8 absolute top-6 right-16'>
+			<div className='absolute top-4 right-16'>
 				<HostSettingsButton
 					roomId={roomId}
 					roomUrl={roomUrl}
@@ -197,15 +199,28 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					setAllowedStoryPoints={setAllowedStoryPoints}
 				/>
 			</div>
+			<div className='absolute top-4 left-12 flex flex-row flex-start items-center gap-8 scale-90'>
+				<Link href='/host' className='btn btn-outline-gray h-6 min-h-6 w-28 px-1 text-xs'>
+					Create Room
+				</Link>
+				{demoMode && (
+					<HostDevButtons
+						allUsersPoints={allUsersPointsData}
+						onSetAllUsersPoints={setAllUsersPointsData}
+						allUsersPointsEmitter={allUsersPointsEmitter}
+						numDemoUsers={numDemoUsers}
+					/>
+				)}
+			</div>
 
-			{/* TODO Remove HostDevButtons when development is done */}
-
-			<HostDevButtons
-				allUsersPoints={allUsersPointsData}
-				onSetAllUsersPoints={setAllUsersPointsData}
-				allUsersPointsEmitter={allUsersPointsEmitter}
-			/>
-			{/* END TODO */}
+			{/* {demoMode && (
+				<HostDevButtons
+					allUsersPoints={allUsersPointsData}
+					onSetAllUsersPoints={setAllUsersPointsData}
+					allUsersPointsEmitter={allUsersPointsEmitter}
+					numDemoUsers={numDemoUsers}
+				/>
+			)} */}
 		</main>
 	)
 }

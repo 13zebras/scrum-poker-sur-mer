@@ -8,18 +8,20 @@ type HostDevButtonsProps = {
 	allUsersPoints: ListenerRes[]
 	onSetAllUsersPoints: React.Dispatch<React.SetStateAction<ListenerRes[]>>
 	allUsersPointsEmitter: (newUsersPoints: ListenerRes[]) => void
+	numDemoUsers: number
 }
 
 export default function HostDevButtons({
 	allUsersPoints,
 	onSetAllUsersPoints,
 	allUsersPointsEmitter,
+	numDemoUsers,
 }: HostDevButtonsProps) {
 	const [realUsers, setRealUsers] = useState<ListenerRes[]>([])
 
 	function onAddRandomUsers() {
 		const namesStart = Math.floor(Math.random() * 150)
-		const namesEnd = namesStart + 15
+		const namesEnd = numDemoUsers ? namesStart + numDemoUsers : namesStart + 4
 		const sampleNames = namesArray.slice(namesStart, namesEnd)
 
 		onSetAllUsersPoints((prevUsersPoints) => {
@@ -40,10 +42,9 @@ export default function HostDevButtons({
 				}
 			})
 			const newAllPointsState = [...prevUsersPoints, ...newUsers]
-			console.log('%c>>> newAllPointsState random:', 'color: red', newAllPointsState)
+			// console.log('%c>>> newAllPointsState random:', 'color: red', newAllPointsState)
 			allUsersPointsEmitter(newAllPointsState)
 			return newAllPointsState
-			// return prevUsersPoints
 		})
 	}
 
@@ -54,24 +55,25 @@ export default function HostDevButtons({
 	}
 
 	return (
-		<div className='w-72 absolute top-2 left-0 flex flex-row flex-wrap justify-start items-center gap-2 scale-90'>
-			<button
-				type='button'
-				onClick={onRemoveRandomUsers}
-				className='btn btn-outline-gray h-6 min-h-6 w-32 px-1 text-xs order-1'
-			>
-				Del Rand Users
-			</button>
+		<div className='flex flex-row justify-start items-center gap-2'>
 			<button
 				type='button'
 				onClick={onAddRandomUsers}
-				className='btn btn-outline-gray h-6 min-h-6 w-32 px-1 text-xs order-3'
+				className='btn btn-outline-gray h-6 min-h-6 w-24 px-1 text-xs'
 			>
-				Add Rand Users
+				Add Users
 			</button>
-			<Link href='/host' className='btn btn-outline-gray h-6 min-h-6 w-32 px-1 text-xs order-2'>
+			<button
+				type='button'
+				onClick={onRemoveRandomUsers}
+				className='btn btn-outline-gray h-6 min-h-6 w-24 px-1 text-xs'
+			>
+				Del Users
+			</button>
+
+			{/* <Link href='/host' className='btn btn-outline-gray h-6 min-h-6 w-32 px-1 text-xs order-2'>
 				Create Room
-			</Link>
+			</Link> */}
 		</div>
 	)
 }

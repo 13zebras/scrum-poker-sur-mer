@@ -26,6 +26,11 @@ const config: Config = {
 					800: '#00001c',
 					900: '#000010',
 				},
+				gray: {
+					300: '#d1d5db',
+					350: '#b2b6bd',
+					400: '#9ca3af',
+				},
 			},
 			animation: {
 				'fade-in-600': 'fade-in 300ms ease-out 300ms 1 both',
