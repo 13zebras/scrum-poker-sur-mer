@@ -70,7 +70,8 @@ export default function UserPointsCard({
 
 	// scalingPositionOffset is shifting rows down due to scaling of cards.
 	const scalingPositionOffset = (cardSize - blankSize) / 2
-	const scalingBottomOffset = scalingPositionOffset + blankSize
+	const additionalBottomOffset = -20
+	const scalingBottomOffset = -1 * (scalingPositionOffset + blankSize) + additionalBottomOffset
 
 	// The right position of the blank card is determined by the
 	// number of cards from the last card in the row.
@@ -87,11 +88,11 @@ export default function UserPointsCard({
 	// of the card that we want to show, in this case 40%. And we are placing
 	// the top row at bottom = 0, and all lower rows below the bottom = 0.
 	const thisCardRowBottom = isMoveBlank
-		? thisCardRow * blankSize * showHowMuchBlankCard * -1 - scalingBottomOffset
+		? -1 * thisCardRow * blankSize * showHowMuchBlankCard + scalingBottomOffset
 		: 0
 
 	const lastRowBottom = isMoveBlank
-		? (numberOfRows - 1) * blankSize * showHowMuchBlankCard * -1 - scalingBottomOffset
+		? -1 * (numberOfRows - 1) * blankSize * showHowMuchBlankCard + scalingBottomOffset
 		: 0
 
 	// blank cards do not turn around the y axis.
