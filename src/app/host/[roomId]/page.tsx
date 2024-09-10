@@ -13,12 +13,20 @@ import HostDevButtons from '@/components/socketIoDevTools/HostDevButtons'
 
 export const POINT_CODES = {
 	JOIN: -99,
-	RESET: -55,
+	HIDE_HOST: -77,
+	RESET: -33,
 	QUESTION: -1,
 }
 
 export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const [allUsersPointsData, setAllUsersPointsData] = useState<ListenerRes[]>([])
+
+	const hostCardLocalStorage = localStorage.getItem('scrumDivingShowHostCard')
+	const hostCardShow: boolean = hostCardLocalStorage && JSON.parse(hostCardLocalStorage)
+
+	const [showHostCard, setShowHostCard] = useState<boolean>(hostCardShow)
+
+	console.log('%c>>> hostCardLocalStorage', 'color: red', hostCardLocalStorage)
 
 	const { roomId } = params
 	const demoMode = roomId.includes('demomode')
@@ -40,38 +48,56 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const hostDataLocalStorage = localStorage.getItem('scrumDivingHostData')
 	const hostName = hostDataLocalStorage && JSON.parse(hostDataLocalStorage)?.hostName
 	const roomUrl: string = hostDataLocalStorage && JSON.parse(hostDataLocalStorage)?.roomUrl
+	const hostRoomUrl: string = hostDataLocalStorage && JSON.parse(hostDataLocalStorage)?.hostRoomUrl
 
 	// emitter for host joining room
 	useEffect(() => {
-		socketEmitter('join-room', { roomId: roomId, message: POINT_CODES.JOIN, userName: hostName })
-	}, [roomId, hostName])
+		console.log('%c>>> showHostCard', 'color: red', showHostCard)
+		const hostPoints = showHostCard ? POINT_CODES.JOIN : POINT_CODES.HIDE_HOST
+		socketEmitter('join-room', { roomId: roomId, message: hostPoints, userName: hostName })
+		localStorage.setItem('scrumDivingShowHostCard', JSON.stringify(showHostCard))
+	}, [roomId, hostName, showHostCard])
 
 	useSocketListener('join-room', {
 		onChange: (joinRoomRes) => {
-			// console.log('%c>>> joinRoomRes', 'color: red', joinRoomRes)
+			console.log('%c>>> joinRoomRes', 'color: red', joinRoomRes)
 			// console.log('%c>>> allUsersPointsData.length', 'color: red', allUsersPointsData.length)
 
 			// add imageNumber to the user who joined the room
+			// TODO: because of adding and removing host, you need to always find the max imageNumber and add 1 to it to get the next imageNumber.
+			const maxImageNumber = allUsersPointsData.reduce(
+				(max, user) => (user.imageNumber > max ? user.imageNumber : max),
+				allUsersPointsData[0]?.imageNumber ?? 0,
+			)
+			console.log('%c>>> maxImageNumber', 'color: #4f0', maxImageNumber)
 			const userJoinWithImageNumber = {
 				...joinRoomRes,
-				imageNumber: allUsersPointsData.length,
+				imageNumber: maxImageNumber + 1,
 			}
+
 			// console.log('%c>>> userJoinWithImageNumber', 'color: red', userJoinWithImageNumber)
 
-			setAllUsersPointsData((prevUsersPoints) => {
+			setAllUsersPointsData((prevUsersPoints: ListenerRes[]) => {
 				const index = prevUsersPoints.findIndex((data) => {
 					return data.userName === userJoinWithImageNumber.userName
 				})
 				let newAllPointsState: ListenerRes[] = []
 				if (index !== -1) {
 					const noDuplicates = [...prevUsersPoints]
-					noDuplicates[index].message = userJoinWithImageNumber.message
-					// console.log('%c>>> noDuplicates JR', 'color: #f0f', noDuplicates)
+					if (userJoinWithImageNumber.message === POINT_CODES.HIDE_HOST) {
+						noDuplicates.splice(index, 1)
+					} else {
+						noDuplicates[index].message = userJoinWithImageNumber.message
+					}
+					console.log('%c>>> noDuplicates JR', 'color: yellow', noDuplicates)
 					newAllPointsState = noDuplicates
+				} else if (userJoinWithImageNumber.message === POINT_CODES.HIDE_HOST) {
+					return [...prevUsersPoints]
 				} else {
 					newAllPointsState = [...prevUsersPoints, userJoinWithImageNumber]
-					// console.log('%c>>> newAllPointsState join:', 'color: #f0f', newAllPointsState)
 				}
+				// if (joinRoomRes.message === POINT_CODES.HIDE_HOST) return
+				console.log('%c>>> newAllPointsState join:', 'color: #f0f', newAllPointsState)
 				// when someone joins the room, emit the allUsersPointsData
 				allUsersPointsEmitter(newAllPointsState)
 				// set the allUsersPointsData state with new user data
@@ -191,12 +217,14 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 
 			<div className='absolute top-4 right-16'>
 				<HostSettingsButton
-					roomId={roomId}
+					hostRoomUrl={hostRoomUrl}
 					roomUrl={roomUrl}
 					allowedPointsEmitter={allowedPointsEmitter}
 					defaultStoryPointValues={defaultStoryPointValues}
 					allowedStoryPoints={allowedStoryPoints}
 					setAllowedStoryPoints={setAllowedStoryPoints}
+					showHostCard={showHostCard}
+					setShowHostCard={setShowHostCard}
 				/>
 			</div>
 			<div className='absolute top-4 left-12 flex flex-row flex-start items-center gap-8 scale-90'>
