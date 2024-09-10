@@ -96,7 +96,6 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 				} else {
 					newAllPointsState = [...prevUsersPoints, userJoinWithImageNumber]
 				}
-				// if (joinRoomRes.message === POINT_CODES.HIDE_HOST) return
 				console.log('%c>>> newAllPointsState join:', 'color: #f0f', newAllPointsState)
 				// when someone joins the room, emit the allUsersPointsData
 				allUsersPointsEmitter(newAllPointsState)
@@ -240,15 +239,6 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					/>
 				)}
 			</div>
-
-			{/* {demoMode && (
-				<HostDevButtons
-					allUsersPoints={allUsersPointsData}
-					onSetAllUsersPoints={setAllUsersPointsData}
-					allUsersPointsEmitter={allUsersPointsEmitter}
-					numDemoUsers={numDemoUsers}
-				/>
-			)} */}
 		</main>
 	)
 }

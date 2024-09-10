@@ -22,12 +22,6 @@ export default function CreateNewRoom() {
 				setHostName(hostData.hostName)
 				setShowNameInput(false)
 			}
-			// if (hostData?.hostRoomUrl) {
-			// 	setHostRoomUrl(hostData.hostRoomUrl)
-			// }
-			// if (hostData?.roomUrl) {
-			// 	setRoomUrl(hostData.roomUrl)
-			// }
 		}
 		console.log('%c>>> New Room Handler hostDataLocalStorage:', 'color: red', hostDataLocalStorage)
 	}, [])
@@ -172,6 +166,13 @@ export default function CreateNewRoom() {
 // 	or always have host get a new room URL?
 // 	Currently displaying ONLY new room button
 //  code below is for previous room URL.
+
+// if (hostData?.hostRoomUrl) {
+// 	setHostRoomUrl(hostData.hostRoomUrl)
+// }
+// if (hostData?.roomUrl) {
+// 	setRoomUrl(hostData.roomUrl)
+// }
 //
 // {hostRoomUrl && (
 // 	<div className='flex flex-col items-center gap-3'>
