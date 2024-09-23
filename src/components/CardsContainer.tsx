@@ -1,7 +1,5 @@
 'use client'
 
-import UserCard from './UserCard'
-import UserShowPointsCard from './UserShowPointsCard'
 import UserPointsCard from './UserPointsCard'
 import { useState, useEffect, useRef } from 'react'
 

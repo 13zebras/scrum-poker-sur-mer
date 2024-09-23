@@ -5,8 +5,9 @@ import '@/styles/globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-	title: 'Scrum Diving',
-	description: "It isn't really scrum poker, is it?",
+	title: 'Scrum Under the Sea',
+	description:
+		"A tool for Scrum teams to estimate storypoints. (It isn't really scrum poker, is it)?",
 }
 
 export default function RootLayout({
