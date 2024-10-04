@@ -5,7 +5,7 @@ type Props = {
 	onChange: (value: 'show' | 'hide') => void
 }
 
-export default function RadioButtonGroup({ selectedOption, onChange }: Props): JSX.Element {
+export default function RadioShowHide({ selectedOption, onChange }: Props): JSX.Element {
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange(event.target.value as RadioOption)
 	}

@@ -1,7 +1,7 @@
 'use client'
 
 import GearIcon from './icons/GearIcon'
-import RadioButtonGroup from './RadioButtonGroup'
+import RadioShowHide from './RadioShowHide'
 import { useRef } from 'react'
 
 type Props = {
@@ -74,7 +74,7 @@ export default function HostSettingsButton({
 								onSubmit={onSubmitForm}
 							>
 								<div className='w-full flex flex-col items-center gap-5 pb-2'>
-									<RadioButtonGroup
+									<RadioShowHide
 										selectedOption={showHostCard ? 'show' : 'hide'}
 										onChange={(value: 'show' | 'hide') => setShowHostCard(value === 'show')}
 									/>
