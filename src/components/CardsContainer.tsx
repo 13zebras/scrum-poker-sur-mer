@@ -2,6 +2,7 @@
 
 import UserPointsCard from './UserPointsCard'
 import { useState, useEffect, useRef } from 'react'
+import useResize from '@/utils/hooks/useResize'
 
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
@@ -10,24 +11,9 @@ import { POINT_CODES } from '@/app/host/[roomId]/page'
 
 export default function CardsContainer() {
 	const [sortedUsersPoints, setSortedUsersPoints] = useState<ListenerRes[]>([])
-	const containerRef = useRef<HTMLDivElement>(null)
-	const [containerWidth, setContainerWidth] = useState(0)
 
 	// container width is need for the animation of the cards
-	useEffect(() => {
-		const handleResize = () => {
-			if (containerRef.current) {
-				setContainerWidth(containerRef.current.getBoundingClientRect().width)
-			}
-		}
-		handleResize()
-
-		window.addEventListener('resize', handleResize)
-
-		return () => {
-			window.removeEventListener('resize', handleResize)
-		}
-	}, [])
+	const [containerRef, containerWidth] = useResize()
 
 	const allUsersStoryPoints = useSocketListener('all-users-story-points', {
 		onChange: (allPointsRes) => {

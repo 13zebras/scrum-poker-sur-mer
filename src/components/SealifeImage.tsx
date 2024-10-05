@@ -17,7 +17,7 @@ export function SealifeImage({ imageNum, alt }: Props) {
 	// Users are more likely to get a different image each time they play
 
 	const imageOffset = pathName.split('/').slice(-1)[0].charCodeAt(0)
-	const newImageNum = (imageNum + imageOffset) % totalImages
+	const newImageNum = ((imageNum + imageOffset) % totalImages) + 1
 
 	const paddedImageNum = newImageNum.toString().padStart(3, '0')
 	return (

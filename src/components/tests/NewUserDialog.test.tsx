@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, userEvent } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import NewUserDialog from '@/components/NewUserDialog'
 import type { RefObject } from 'react'
 
@@ -11,6 +12,7 @@ const mockRef: RefObject<HTMLDialogElement> = {
 // TODO: Add more tests for NewUserDialog
 describe('NewUserDialog', () => {
 	it('submit the form calls onSubmit prop', async () => {
+		const user = userEvent.setup()
 		const handleOnSubmit = jest.fn()
 		render(
 			<NewUserDialog
@@ -22,13 +24,13 @@ describe('NewUserDialog', () => {
 		)
 		const input = screen.getByLabelText('your first name') as HTMLInputElement
 
-		fireEvent.change(input, { target: { value: 'bob' } })
+		await user.type(input, 'bob')
 		expect(input.value).toBe('bob')
-		const button = screen.getByRole('button', { name: 'Join Room' })
-		fireEvent.click(button)
-		expect(handleOnSubmit).toHaveBeenCalledWith('bob')
 
-		// screen.debug();
+		const form = screen.getByRole('form')
+		fireEvent.submit(form)
+
+		expect(handleOnSubmit).toHaveBeenCalledWith('bob')
 	})
 
 	it('renders display error', () => {

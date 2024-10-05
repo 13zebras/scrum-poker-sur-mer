@@ -21,7 +21,7 @@ describe('SealifeImage', () => {
 		const { container } = render(<SealifeImage imageNum={imageNum} alt='Test image' />)
 
 		const imgElement = container.querySelector('img')
-		expect(imgElement!.src).toContain('sealife-images%2Fsealife_256_008.webp&w=640&q=75')
+		expect(imgElement!.src).toContain('sealife-images%2Fsealife_256_009.webp&w=640&q=75')
 	})
 
 	it('renders img with 2nd correct source number', () => {
@@ -29,7 +29,7 @@ describe('SealifeImage', () => {
 		const { container } = render(<SealifeImage imageNum={imageNum} alt='Test image' />)
 
 		const imgElement = container.querySelector('img')
-		expect(imgElement!.src).toContain('sealife-images%2Fsealife_256_012.webp&w=640&q=75')
+		expect(imgElement!.src).toContain('sealife-images%2Fsealife_256_013.webp&w=640&q=75')
 	})
 
 	it('renders image and alt text', () => {

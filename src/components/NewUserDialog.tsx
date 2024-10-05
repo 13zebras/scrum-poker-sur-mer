@@ -30,6 +30,7 @@ export default function NewUserDialog({
 				<p className='text-center'>then click Join Room!</p>
 				<div className='modal-action mt-7'>
 					<form
+						role='form'
 						method='dialog'
 						className='w-full flex flex-col items-center gap-2'
 						onSubmit={() => handleOnSubmit(newUserName)}
