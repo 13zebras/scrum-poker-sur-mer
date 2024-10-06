@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import Home from '@/app/page'
 
 describe('Page', () => {
-	test('Home page renders properly', () => {
+	it('renders properly', () => {
 		render(<Home />)
 		const heading1 = screen.getByRole('heading', { level: 1 })
 		expect(heading1).toBeInTheDocument()

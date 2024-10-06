@@ -53,7 +53,7 @@ export function useSocketListener(eventName: EventName, config?: Config) {
 	useEffect(() => {
 		function onListenerRes(options: ListenerRes) {
 			const { message, userName, imageNumber, timeStamp } = options
-			console.log('%c>>> onListenerRes message:', 'color: red', message)
+			console.log('%c>>> onListenerRes event, options:', 'color: red', eventName, options)
 
 			setListenerRes({ message, userName, imageNumber, timeStamp })
 

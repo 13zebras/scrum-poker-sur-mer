@@ -31,8 +31,6 @@ export default function HostSettingsButton({
 		const formData = new FormData(event.currentTarget)
 		const showHideHostCard = formData.getAll('showHideHostCard')
 		const hostChosenPoints = formData.getAll('storyPoints') as string[]
-		console.log('%c>>> showHideHostCard', 'color: #f60', showHideHostCard)
-		console.log('%c>>> hostChosenPoints', 'color: #5f0', hostChosenPoints)
 		setShowHostCard(showHideHostCard[0] === 'show')
 		if (hostChosenPoints.length > 0) {
 			allowedPointsEmitter(hostChosenPoints, true)

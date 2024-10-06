@@ -23,7 +23,7 @@ export default function UserPointsCard({
 	showPoints,
 	containerWidth,
 }: CardProps) {
-	//
+	// '--' is a blank card
 	const isBlank = storyPoint === '--'
 
 	// isMoveBlank is used to determine if the card is removed to the bottom
@@ -35,10 +35,13 @@ export default function UserPointsCard({
 	const blankScale = 0.8
 	const blankSize = cardSize * blankScale
 
+	// when showing points, the opacity of the black "cover" is 35%
+	const showPointsOpacity = showPoints ? '35' : '20'
+
 	// blank cards have a few different css properties
 	const bgTextColorGap = isMoveBlank
-		? 'bg-black/40 text-gray-350 gap-6'
-		: 'bg-black/20 text-gray-100 gap-4'
+		? 'bg-black/40 text-gray-350'
+		: `bg-black/${showPointsOpacity} text-gray-100`
 
 	const blankPosition = isMoveBlank ? 'absolute' : 'relative'
 
@@ -70,7 +73,9 @@ export default function UserPointsCard({
 
 	// scalingPositionOffset is shifting rows down due to scaling of cards.
 	const scalingPositionOffset = (cardSize - blankSize) / 2
-	const additionalBottomOffset = -20
+	
+	const additionalBottomOffset = 0
+	>>>>> additionalBottomOffset:', 'color: #f60', additionalBottomOffset)
 	const scalingBottomOffset = -1 * (scalingPositionOffset + blankSize) + additionalBottomOffset
 
 	// The right position of the blank card is determined by the
@@ -117,12 +122,6 @@ export default function UserPointsCard({
 	// increase from top card row to bottom card row going down..
 	// cards with points are not stacked, so z-index is 0
 	const blankZIndex = isMoveBlank ? 50 - thisCardRow : 0
-
-	// console.log('%c>>> containerWidth', 'color: #f60', containerWidth)
-	// console.log('%c>>> numberOfBlanksPerRow', 'color: #f60', numberOfBlanksPerRow)
-	// console.log('%c>>> numberOfRows', 'color: yellow', numberOfRows)
-	// console.log('%c>>> thisCardRow', 'color: red', thisCardRow)
-	// console.log('%c>>> thisCardRowBottom', 'color: #5f0', thisCardRowBottom)
 
 	return (
 		<AnimatePresence>
@@ -175,7 +174,7 @@ export default function UserPointsCard({
 				>
 					{showPoints || isBlank ? (
 						<h2
-							className='card-title text-4xl h-12 tracking-wide'
+							className='card-title text-[2.5rem] h-12 tracking-wide'
 							style={{
 								textShadow: '1px 1px 1px black, 3px 3px 1px black',
 							}}

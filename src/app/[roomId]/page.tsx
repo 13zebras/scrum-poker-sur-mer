@@ -20,7 +20,6 @@ export default function UserRooms({ params }: { params: Params }) {
 	const [user, setUser] = useState('')
 	const [displayErrorMessage, setDisplayErrorMessage] = useState(false)
 	const dialogRef = useRef<HTMLDialogElement>(null)
-	console.log('%c>>> params', 'color: red', params)
 
 	const { roomId } = params
 
@@ -28,7 +27,6 @@ export default function UserRooms({ params }: { params: Params }) {
 	// const roomUrl = hostRoomInfo ? hostRoomInfo.message : ''
 	const hostName = hostRoomInfo ? hostRoomInfo.userName : ''
 	// console.log('%c>>> UserRoom: roomUrl', 'color: #0fd', roomUrl)
-	console.log('%c>>> UserRoom: hostName', 'color: #5fb', hostName)
 
 	useEffect(() => {
 		if (dialogRef.current) {

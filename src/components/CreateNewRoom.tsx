@@ -29,7 +29,7 @@ export default function CreateNewRoom() {
 				setRoomUrl(hostData.roomUrl)
 			}
 		}
-		console.log('%c>>> New Room Handler hostDataLocalStorage:', 'color: red', hostDataLocalStorage)
+		// console.log('%c>>> New Room Handler hostDataLocalStorage:', 'color: red', hostDataLocalStorage)
 	}, [])
 
 	function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {

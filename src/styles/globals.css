@@ -13,11 +13,11 @@ body {
 }
 
 .card-points {
-	@apply bg-base-100 size-32 shadow-xl rounded-lg border border-slate-600 overflow-hidden 
+	@apply bg-base-100 size-[7.5rem] shadow-xl rounded-lg border border-slate-600 overflow-hidden 
 }
 
 .card-body-points {
-	@apply absolute py-4 px-2 justify-start items-center w-full h-full
+	@apply absolute pt-4 pb-3 px-2 justify-start items-center w-full h-full
 }
 
 .btn-xs {

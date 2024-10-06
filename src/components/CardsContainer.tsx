@@ -44,11 +44,6 @@ export default function CardsContainer() {
 
 	const usersPointsForCards = showStoryPoints ? sortedUsersPoints : usersPointsData
 
-	// console.log('%c>>> CardsContainer: allUsersStoryPoints', 'color: #f70', allUsersStoryPoints)
-	// console.log('%c>>> CardsContainer: usersPointsData', 'color: red', usersPointsData)
-	// console.log('%c>>> CC socketListener: sortedUsersPoints', 'color: #5f0', sortedUsersPoints)
-	// console.log('%c>>> CardsContainer: showStoryPoints', 'color: #f60', showStoryPoints)
-
 	// NOTE: the key needs to change when showStoryPoints changes and therefore
 	// the array changes to sortedUsersPoints. The timestamp makes each key unique, and
 	// showStoryPoints causes the key to change when the array changes. So:
@@ -56,7 +51,7 @@ export default function CardsContainer() {
 	return (
 		<div
 			ref={containerRef}
-			className='relative pt-2 pb-20 flex justify-center items-center flex-wrap text-center gap-8 text-gray-300 border-0 border-red-800 w-full'
+			className='relative pt-2 pb-[12vh] flex justify-center items-center flex-wrap text-center gap-8 text-gray-300 border-0 border-red-800 w-full'
 		>
 			{usersPointsForCards.map(({ message, userName, imageNumber, timeStamp }, index, array) => {
 				const storyPoint = makeStringPoints(message as number)

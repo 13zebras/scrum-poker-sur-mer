@@ -9,7 +9,7 @@ const mockRef: RefObject<HTMLDialogElement> = {
 		close: jest.fn(),
 	} as unknown as HTMLDialogElement,
 }
-// TODO: Add more tests for NewUserDialog
+
 describe('NewUserDialog', () => {
 	it('submit the form calls onSubmit prop', async () => {
 		const user = userEvent.setup()
