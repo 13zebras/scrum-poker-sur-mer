@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 type Props = {
 	imageNum: number
@@ -8,8 +9,17 @@ type Props = {
 const totalImages = 35
 
 export function SealifeImage({ imageNum, alt }: Props) {
-	imageNum = (imageNum % totalImages) + 1
-	const paddedImageNum = imageNum.toString().padStart(3, '0')
+	const pathName = usePathname()
+
+	// NOTE imageOffset adds a bit of randomness based on the first
+	// character of the roomId which is the long string in the pathName.
+	// Each time a new room is created, the imageOffset changes
+	// Users are more likely to get a different image each time they play
+
+	const imageOffset = pathName.split('/').slice(-1)[0].charCodeAt(0)
+	const newImageNum = ((imageNum + imageOffset) % totalImages) + 1
+
+	const paddedImageNum = newImageNum.toString().padStart(3, '0')
 	return (
 		<Image
 			src={`/sealife-images/sealife_256_${paddedImageNum}.webp`}

@@ -20,7 +20,6 @@ export default function UserRooms({ params }: { params: Params }) {
 	const [user, setUser] = useState('')
 	const [displayErrorMessage, setDisplayErrorMessage] = useState(false)
 	const dialogRef = useRef<HTMLDialogElement>(null)
-	console.log('%c>>> params', 'color: red', params)
 
 	const { roomId } = params
 
@@ -28,7 +27,6 @@ export default function UserRooms({ params }: { params: Params }) {
 	// const roomUrl = hostRoomInfo ? hostRoomInfo.message : ''
 	const hostName = hostRoomInfo ? hostRoomInfo.userName : ''
 	// console.log('%c>>> UserRoom: roomUrl', 'color: #0fd', roomUrl)
-	console.log('%c>>> UserRoom: hostName', 'color: #5fb', hostName)
 
 	useEffect(() => {
 		if (dialogRef.current) {
@@ -36,17 +34,17 @@ export default function UserRooms({ params }: { params: Params }) {
 		}
 	}, [])
 
-	function handleOnSubmit(formValues: { userName: string }) {
-		console.log('%c>>> formValues', 'color: #5f0', formValues)
-		if (!formValues.userName) {
+	function handleOnSubmit(newUserName: string) {
+		console.log('%c>>> newUserName', 'color: #5f0', newUserName)
+		if (!newUserName) {
 			setDisplayErrorMessage(true)
 			return
 		}
-		setUser(formValues.userName)
+		setUser(newUserName)
 		socketEmitter('join-room', {
 			roomId: roomId,
 			message: POINT_CODES.JOIN,
-			userName: formValues.userName,
+			userName: newUserName,
 		})
 		if (dialogRef.current) {
 			dialogRef.current.close()
@@ -57,7 +55,7 @@ export default function UserRooms({ params }: { params: Params }) {
 		<main className='px-16 py-12 flex flex-col items-center gap-8 w-full animate-fade-in-500'>
 			<NewUserDialog
 				dialogRef={dialogRef}
-				onSubmit={handleOnSubmit}
+				handleOnSubmit={handleOnSubmit}
 				displayError={displayErrorMessage}
 			/>
 			<h1 className='text-3xl text-gray-300'>Scrum Diving Room</h1>

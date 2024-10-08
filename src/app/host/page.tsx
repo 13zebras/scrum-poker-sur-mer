@@ -4,7 +4,7 @@ import ClearLocalStorageButton from '@/components/socketIoDevTools/ClearLocalSto
 
 export default function Host() {
 	return (
-		<main className='px-16 py-10 w-full h-screen flex flex-col items-center relative'>
+		<main className='px-16 py-12 w-full h-screen flex flex-col items-center relative'>
 			<CreateNewRoom />
 			<ClearLocalStorageButton />
 		</main>

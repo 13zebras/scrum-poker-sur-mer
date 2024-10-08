@@ -12,7 +12,6 @@ export default function StoryPointsContainer({ roomId, userName }: RoomData) {
 
 	useSocketListener('show-disable-reset-points', {
 		onChange: (showDisableReset) => {
-			console.log('%c>>> showDisableReset', 'color: red', showDisableReset)
 			const isButtonDisabled = showDisableReset.message as unknown as boolean
 			if (isButtonDisabled) {
 				setSelectedStoryPoint(null)
@@ -25,11 +24,8 @@ export default function StoryPointsContainer({ roomId, userName }: RoomData) {
 
 	const allowedPoints = useSocketListener('allowed-story-points')
 	const allowedPointsArray = (allowedPoints?.message as unknown as string[]) || []
-	// console.log('%c>>> SPContainer: allowedPoints', 'color: #f50', allowedPoints)
-	// console.log('%c>>> SPContainer: allowedPointsArray', 'color: yellow', allowedPointsArray)
 
 	const handleSelectPoint = (event: React.ChangeEvent<HTMLInputElement>) => {
-		// console.log('%c>>> spc handleChange', 'color: red', event.target.value)
 		const selectedPoint = event.target.value === '?' ? -1 : Number(event.target.value)
 		setSelectedStoryPoint(selectedPoint)
 		socketEmitter('user-story-point', {
