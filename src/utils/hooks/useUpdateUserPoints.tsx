@@ -19,9 +19,7 @@ export default function useUpdateUsersPoints({ allUsersPointsEmitter }: UpdateUs
 			allUsersPointsEmitter(usersPointsUpdate)
 		} else {
 			setAllUsersPointsData((prevUsersPoints: ListenerRes[]) => {
-				const index = prevUsersPoints.findIndex(
-					(data) => data.userName === usersPointsUpdate.userName,
-				)
+				const index = prevUsersPoints.findIndex((data) => data.userId === usersPointsUpdate.userId)
 				console.log('%c>>> index', 'color: #f0f', index)
 				let newAllPointsState: ListenerRes[]
 
@@ -31,6 +29,9 @@ export default function useUpdateUsersPoints({ allUsersPointsEmitter }: UpdateUs
 						noDuplicates.splice(index, 1)
 					} else {
 						noDuplicates[index].message = usersPointsUpdate.message
+					}
+					if (noDuplicates[index].userName !== usersPointsUpdate.userName) {
+						noDuplicates[index].userName = usersPointsUpdate.userName
 					}
 					newAllPointsState = noDuplicates
 				} else if (usersPointsUpdate.message === POINT_CODES.HIDE_HOST) {

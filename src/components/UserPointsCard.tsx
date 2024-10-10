@@ -73,9 +73,9 @@ export default function UserPointsCard({
 
 	// scalingPositionOffset is shifting rows down due to scaling of cards.
 	const scalingPositionOffset = (cardSize - blankSize) / 2
-	
+
 	const additionalBottomOffset = 0
-	>>>>> additionalBottomOffset:', 'color: #f60', additionalBottomOffset)
+
 	const scalingBottomOffset = -1 * (scalingPositionOffset + blankSize) + additionalBottomOffset
 
 	// The right position of the blank card is determined by the

@@ -2,8 +2,8 @@
 
 export default function ClearLocalStorageButton() {
 	function handleOnClick() {
-		localStorage.removeItem('scrumDivingHostData')
-		localStorage.removeItem('scrumDivingAllowedStoryPoints')
+		localStorage.removeItem('scrumPokerLaMerHostData')
+		localStorage.removeItem('scrumPokerLaMerAllowedStoryPoints')
 		window.location.reload()
 	}
 	return (

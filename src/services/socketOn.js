@@ -2,7 +2,7 @@
 
 module.exports = (io, socket) => {
 	socket.onAny((eventName, options) => {
-		const { roomId, message, userName, timeStamp, ...otherOptions } = options
+		const { roomId, message, userName, userId, timeStamp, ...otherOptions } = options
 		const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false })
 		console.log('>> Time:', currentTime, '\n>>')
 
@@ -15,6 +15,7 @@ module.exports = (io, socket) => {
 		io.to(roomId).emit(eventName, {
 			message: message,
 			userName: userName,
+			userId: userId,
 			timeStamp: timeStamp,
 			...otherOptions,
 		})

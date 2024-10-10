@@ -5,9 +5,8 @@ import '@/styles/globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-	title: 'Scrum Under the Sea',
-	description:
-		"A tool for Scrum teams to estimate storypoints. (It isn't really scrum poker, is it)?",
+	title: 'Scrum Poker Under the Sea',
+	description: "A tool for Scrum teams to estimate storypoints with a twist: it's under the sea!",
 }
 
 export default function RootLayout({
@@ -18,9 +17,10 @@ export default function RootLayout({
 	return (
 		<html lang='en'>
 			<body
-				className={`${inter.className} w-screen h-screen bg-gradient-to-t from-dkblue-900 to-dkblue-400`}
+				className={`${inter.className} w-screen h-screen bg-gradient-to-t from-dkblue-800 to-dkblue-300`}
 			>
-				<div className='w-full h-full max-w-[80rem] mx-auto'>{children}</div>
+				{children}
+				{/* <div className='w-full h-full max-w-[80rem] mx-auto'>{children}</div> */}
 			</body>
 		</html>
 	)

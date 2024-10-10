@@ -88,10 +88,10 @@ body {
 }
 
 .btn-points:is(input[type="radio"]:disabled) {
-	@apply border-primary/40 bg-primary/0 text-primary/40;
+	@apply border-primary/30 bg-primary/0 text-primary/30;
 	@media (hover: hover) {
 		&:hover {
-			@apply border-primary/40 bg-primary/0 text-primary/40;
+			@apply border-primary/30 bg-primary/0 text-primary/30;
 		}
 	}
 }
