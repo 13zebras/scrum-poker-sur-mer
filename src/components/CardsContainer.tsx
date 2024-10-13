@@ -13,7 +13,7 @@ export default function CardsContainer() {
 	const [sortedUsersPoints, setSortedUsersPoints] = useState<ListenerRes[]>([])
 
 	// container width is need for the animation of the cards
-	const [containerRef, containerWidth] = useResize()
+	const { width: containerWidth, ref: containerRef } = useResize('ref')
 
 	const allUsersStoryPoints = useSocketListener('all-users-story-points', {
 		onChange: (allPointsRes) => {
@@ -44,6 +44,10 @@ export default function CardsContainer() {
 
 	const usersPointsForCards = showStoryPoints ? sortedUsersPoints : usersPointsData
 
+	// console.log('%c>>> containerWidth', 'color: yellow', containerWidth)
+	// console.log('%c>>> usersPointsForCards', 'color: red', usersPointsForCards)
+	// console.log('%c>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', 'color: gray')
+
 	// NOTE: the key needs to change when showStoryPoints changes and therefore
 	// the array changes to sortedUsersPoints. The timestamp makes each key unique, and
 	// showStoryPoints causes the key to change when the array changes. So:
@@ -51,7 +55,7 @@ export default function CardsContainer() {
 	return (
 		<div
 			ref={containerRef}
-			className='relative pt-2 pb-[12vh] flex justify-center items-center flex-wrap text-center gap-8 text-gray-300 border-0 border-red-800 w-full'
+			className='relative pb-[6vh] flex justify-center items-center flex-wrap text-center gap-4 text-gray-300 border-0 border-red-900 w-full z-10'
 		>
 			{usersPointsForCards.map(({ message, userName, imageNumber, timeStamp }, index, array) => {
 				const storyPoint = makeStringPoints(message as number)

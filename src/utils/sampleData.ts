@@ -1,8 +1,8 @@
 export function getRandomName() {
-	return namesArray[Math.floor(Math.random() * namesArray.length)]
+	return sampleNamesArray[Math.floor(Math.random() * sampleNamesArray.length)]
 }
 
-export const namesArray = [
+export const sampleNamesArray = [
 	'James',
 	'Mary',
 	'Michael',
@@ -134,14 +134,12 @@ export const namesArray = [
 	'Walter',
 	'Andrea',
 	'Keith',
-	'Megan',
 	'Austin',
 	'Cheryl',
 	'Roger',
 	'Jacqueline',
 	'Terry',
 	'Madison',
-	'Sean',
 	'Teresa',
 	'Gerald',
 	'Abigail',
@@ -193,7 +191,6 @@ export const namesArray = [
 	'Brittany',
 	'Roy',
 	'Theresa',
-	'Bobby',
 	'Kayla',
 	'Caleb',
 	'Alexis',

@@ -13,7 +13,7 @@ body {
 }
 
 .card-points {
-	@apply bg-base-100 size-[7.5rem] shadow-xl rounded-lg border border-slate-600 overflow-hidden 
+	@apply bg-base-100 size-[7.5rem] shadow-xl rounded-lg border-2 border-gray-800 overflow-hidden 
 }
 
 .card-body-points {
@@ -116,16 +116,14 @@ body {
 	}
 }
 
-/* .btn-check:checked + .btn-checkbox {
-	background-color: #007bff;
-	color: white;
-	border-color: #007bff;
+.tooltip::before {
+	background-color: #131317;
+	box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.7);
+	font-size: 0.8rem;
 }
 
-.btn-check:hover + .btn-checkbox {
-	background-color: #e0e0e0;
+.tooltip-fish::before {
+	transform: none;
+	left: auto;
+	right: 0;
 }
-
-.btn-check:checked:hover + .btn-checkbox {
-	background-color: #0056b3;
-} */

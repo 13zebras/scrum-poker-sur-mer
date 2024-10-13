@@ -47,9 +47,9 @@ export default function HostSettingsButton({
 						dialogRef.current.showModal()
 					}
 				}}
-				className='btn btn-ghost size-7 min-h-7 p-0 border-0 hover:bg-transparent'
+				className='btn btn-ghost size-6 min-h-6 p-0 border-0 hover:bg-transparent'
 			>
-				<GearIcon className='text-[1.4rem] hover:text-2xl hover:text-sky-400' />
+				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' />
 			</button>
 			<dialog ref={dialogRef} className='modal bg-black/60'>
 				<div className='modal-box flex justify-center w-full max-w-[46rem] relative bg-slate-950 border-2 border-slate-700 text-gray-300'>

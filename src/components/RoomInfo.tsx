@@ -1,12 +1,12 @@
 import { useState } from 'react'
 
 type RoomInfoData = {
-	hostName: string
+	nameOfHost: string
 	roomUrl?: string
 	userName?: string
 }
 
-export default function RoomInfo({ roomUrl, hostName, userName }: RoomInfoData) {
+export default function RoomInfo({ roomUrl, nameOfHost, userName }: RoomInfoData) {
 	const [isCopied, setIsCopied] = useState(false)
 	const isUser = !!userName
 	// console.log('%c>>> isUser:', 'color: red', isUser)
@@ -23,7 +23,7 @@ export default function RoomInfo({ roomUrl, hostName, userName }: RoomInfoData) 
 		<div className=' flex flex-row items-center justify-center font-mono text-gray-400 text-sm'>
 			{isUser ? (
 				<span>
-					Your Name: {userName} | Host Name: {hostName}
+					Your Name: {userName} | Host Name: {nameOfHost}
 				</span>
 			) : (
 				<div className='flex items-center'>

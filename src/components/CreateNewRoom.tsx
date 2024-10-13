@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import RightArrowIcon from './icons/RightArrowIcon'
+import useLocalStorage from '@/utils/hooks/useLocalStorage'
 
 type CreateCopyGoState = 'create' | 'copy' | 'go'
 
@@ -9,15 +10,17 @@ export default function CreateNewRoom() {
 	const [createCopyGo, setCreateCopyGo] = useState<CreateCopyGoState>('create')
 	const [showNameInput, setShowNameInput] = useState(true)
 	const [roomUrl, setRoomUrl] = useState('')
+	const [roomId, setRoomId] = useState('')
 	const [hostRoomUrl, setHostRoomUrl] = useState('')
 	const [userId, setUserId] = useState('')
 	const hostRef = useRef<HTMLInputElement>(null)
 	const [nameOfHost, setNameOfHost] = useState('')
+	const { getItemLocalStorage } = useLocalStorage()
+	const { setItemLocalStorage } = useLocalStorage()
 
 	useEffect(() => {
-		const hostDataLocalStorage = localStorage.getItem('scrumPokerLaMerHostData')
-		if (hostDataLocalStorage) {
-			const hostData = JSON.parse(hostDataLocalStorage)
+		const hostData = getItemLocalStorage('scrumPokerLaMerHostData')
+		if (hostData) {
 			if (hostData?.nameOfHost) {
 				setNameOfHost(hostData.nameOfHost)
 				setShowNameInput(false)
@@ -28,18 +31,37 @@ export default function CreateNewRoom() {
 			if (hostData?.roomUrl) {
 				setRoomUrl(hostData.roomUrl)
 			}
+			if (hostData?.roomId) {
+				setRoomId(hostData.roomId)
+			}
 			if (hostData?.userId) {
 				setUserId(hostData.userId)
 			} else {
 				setUserId(crypto.randomUUID())
 			}
 		}
-		// console.log('%c>>> New Room Handler hostDataLocalStorage:', 'color: red', hostDataLocalStorage)
-	}, [])
+	}, [getItemLocalStorage])
 
 	function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
 		event.preventDefault()
 		setNameOfHost(event.target.value)
+	}
+
+	function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+		if (event.key === 'Enter' && nameOfHost) {
+			handleCreateRoom()
+		}
+	}
+
+	function handleUseLastRoom() {
+		setCreateCopyGo('copy')
+		setItemLocalStorage('scrumPokerLaMerHostData', {
+			nameOfHost: nameOfHost,
+			roomUrl: roomUrl,
+			hostRoomUrl: hostRoomUrl,
+			roomId: roomId,
+			userId: userId,
+		})
 	}
 
 	function handleCreateRoom() {
@@ -47,36 +69,22 @@ export default function CreateNewRoom() {
 		const http = hostname === 'localhost' ? 'http' : 'https'
 		const port = window.location.port ? `:${window.location.port}` : ''
 
-		// const hostDataLocalStorage = localStorage.getItem('scrumPokerLaMerHostData')
-		// if (hostDataLocalStorage) {
-		// 	const hostData = JSON.parse(hostDataLocalStorage)
-		// 	if (hostData?.hostRoomUrl) {
-		// 		setHostRoomUrl(hostData.hostRoomUrl)
-		// 	}
-		// 	if (hostData?.roomUrl) {
-		// 		setRoomUrl(hostData.roomUrl)
-		// 	}
-		// }
-		// console.log('%c>>> New Room Handler hostDataLocalStorage:', 'color: red', hostDataLocalStorage)
-		const newRoomNumber = crypto.randomUUID().replace(/-/g, '').slice(0, 20)
-		const newRoomUrl = `${http}://${hostname}${port}/${newRoomNumber}`
-		const newHostRoomUrl = `${http}://${hostname}${port}/host/${newRoomNumber}`
+		const newRoomId = crypto.randomUUID().replace(/-/g, '').slice(0, 20)
+		const newRoomUrl = `${http}://${hostname}${port}/${newRoomId}`
+		const newHostRoomUrl = `${http}://${hostname}${port}/host/${newRoomId}`
 
 		setRoomUrl(newRoomUrl)
 		setHostRoomUrl(newHostRoomUrl)
 
 		const newUserId = userId ?? crypto.randomUUID()
 
-		localStorage.setItem(
-			'scrumPokerLaMerHostData',
-			JSON.stringify({
-				nameOfHost: nameOfHost,
-				roomUrl: newRoomUrl,
-				hostRoomUrl: newHostRoomUrl,
-				roomId: newRoomNumber,
-				userId: newUserId,
-			}),
-		)
+		setItemLocalStorage('scrumPokerLaMerHostData', {
+			nameOfHost: nameOfHost,
+			roomUrl: newRoomUrl,
+			hostRoomUrl: newHostRoomUrl,
+			roomId: newRoomId,
+			userId: newUserId,
+		})
 
 		setCreateCopyGo('copy')
 
@@ -97,7 +105,7 @@ export default function CreateNewRoom() {
 						textShadow: '-1px -1px 3px black, 3px 3px 3px black',
 					}}
 				>
-					ScrumPoker sous La Mer
+					Scrum Poker sous la Mer
 				</h1>
 				{showNameInput && (
 					<h2
@@ -120,6 +128,7 @@ export default function CreateNewRoom() {
 								ref={hostRef}
 								placeholder='Enter Your First Name'
 								onChange={handleOnChange}
+								onKeyDown={handleKeyDown}
 								className='input input-bordered input-info w-[22rem] mb-2 text-gray-200 text-xl placeholder:text-lg placeholder:italic placeholder:text-slate-400/70 shadow-xl shadow-black/70'
 							/>
 						) : (
@@ -147,9 +156,7 @@ export default function CreateNewRoom() {
 										<button
 											type='button'
 											className='btn btn-accent w-[22rem] h-11 min-h-11 text-xl shadow-xl shadow-black/70'
-											onClick={() => {
-												setCreateCopyGo('copy')
-											}}
+											onClick={handleUseLastRoom}
 										>
 											Click to Use Last Room
 										</button>
@@ -168,10 +175,7 @@ export default function CreateNewRoom() {
 							textShadow: '-1px -1px 2px black, 2px 2px 2px black',
 						}}
 					>
-						<h3 className='pb-10 font-bold text-gray-200 text-3xl tracking-wide'>
-							{/* {nameOfHost}'s Room URL */}
-							Room URL:
-						</h3>
+						<h3 className='pb-10 font-bold text-gray-200 text-3xl tracking-wide'>Room URL:</h3>
 						<span className='text-gray-200 font-mono text-xl pb-20'>{roomUrl}</span>
 						<div className='w-full h-[3.75rem] flex flex-col justify-center gap-1 items-center text-[1.2rem] ita text-gray-300 text-center pb-2'>
 							{createCopyGo === 'copy' && (
@@ -210,6 +214,7 @@ export default function CreateNewRoom() {
 						type='button'
 						onClick={copyToClipboard}
 						className='btn btn-accent w-full h-11 min-h-11 text-xl animate-fade-in-300 shadow-xl shadow-black/70'
+						tabIndex={0}
 					>
 						Copy Room URL to Clipboard
 					</button>
@@ -217,6 +222,7 @@ export default function CreateNewRoom() {
 					<Link
 						href={hostRoomUrl}
 						className='btn btn-secondary w-full h-11 min-h-11 text-xl uppercase animate-fade-in-300 shadow-xl shadow-black/70'
+						tabIndex={0}
 					>
 						Go to New Room
 						<RightArrowIcon className='h-8 w-8 inline' />

@@ -7,7 +7,7 @@ interface NewUserDialogProps {
 	user: string
 	userId: string
 	isRoomIdLastRoomId: boolean
-	handleOnSubmit: (newUserName: string) => void
+	handleOnSubmit: (newUserName: string, userId: string) => void
 	displayError: boolean
 	open?: boolean
 }
@@ -26,6 +26,8 @@ export default function NewUserDialog({
 	const [returningUser, setReturningUser] = useState(false)
 
 	useEffect(() => {
+		// console.log('%c>>> userId in NewUserDialog', 'color: #f60', userId)
+		// console.log('%c>>> isRoomIdLastRoomId in NewUserDialog', 'color: #5f0', isRoomIdLastRoomId)
 		setReturningUser(!!userId && isRoomIdLastRoomId)
 		if (userId && isRoomIdLastRoomId) {
 			setNewUserName(user)
@@ -40,6 +42,12 @@ export default function NewUserDialog({
 	function handleOnClickNewName() {
 		setReturningUser(false)
 		setNewUserName('')
+	}
+
+	function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+		if (event.key === 'Enter' && newUserName) {
+			handleOnSubmit(newUserName, userId)
+		}
 	}
 
 	return (
@@ -67,6 +75,7 @@ export default function NewUserDialog({
 							className='input input-bordered input-primary h-10 w-72 text-gray-200 placeholder:italic placeholder:text-primary/80 shadow-lg shadow-black/70'
 							aria-label='your first name input'
 							onChange={handleOnChange}
+							onKeyDown={handleKeyDown}
 						/>
 					)}
 				</div>

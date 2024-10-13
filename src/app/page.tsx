@@ -3,20 +3,19 @@ import Image from 'next/image'
 
 export default function Home() {
 	return (
-		<main className='flex w-full min-h-screen h-full flex-col items-center justify-start gap-20 bg-gradient-to-t from-mdblue-800 to-mdblue-400'>
-			<div className='absolute top-0 bg-dkblue-900 opacity-0 z-10 h-full w-full max-w-full overflow-hidden' />
-			<div className='absolute top-0 w-full h-auto overflow-hidden opacity-90'>
+		<main className='flex w-full min-h-screen h-full flex-col items-center justify-start bg-gradient-to-t from-dkblue-800 to-dkblue-400'>
+			<div className='absolute top-[40vh] w-full h-full overflow-hidden opacity-100'>
 				<Image
-					src='/school-fish/school-fish-2000x1600-blue-fade-70.webp'
+					src='/school-fish/school-fish-2000x1200-gradient-67-blur-1-fade-90.webp'
 					alt='background image of a school of fish'
 					width={2000}
-					height={1600}
+					height={1200}
 					priority
-					className='h-full w-auto object-cover object-top'
+					className='h-auto w-full animate-fade-in-1000'
 					sizes='(max-width: 768px) 100vw, (max-width: 1024px) 100vw, (max-width: 1280px) 100vw, (max-width: 1560px) 100vw, 100vw'
-					quality={100}
+					quality={90}
 					placeholder='blur'
-					blurDataURL='/school-fish/school-fish-1200-low.webp'
+					blurDataURL='/school-fish/school-fish-2000x1200-gradient-67-blur-8-fade-90-low.webp'
 				/>
 			</div>
 
@@ -27,7 +26,7 @@ export default function Home() {
 						textShadow: '-1px -1px 3px black, 3px 3px 3px black',
 					}}
 				>
-					ScrumPoker sous La Mer
+					Scrum Poker sous la Mer
 				</h1>
 				<h4
 					className='text-xl text-gray-100 tracking-wider mb-[7vh]'

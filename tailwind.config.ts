@@ -45,6 +45,7 @@ const config: Config = {
 				},
 			},
 			animation: {
+				'fade-in-1000': 'fade-in 800ms ease-out 200ms 1 both',
 				'fade-in-600': 'fade-in 300ms ease-out 300ms 1 both',
 				'fade-in-500': 'fade-in 400ms ease-out 100ms 1 both',
 				'fade-in-300': 'fade-in 300ms ease-out 0ms 1 both',

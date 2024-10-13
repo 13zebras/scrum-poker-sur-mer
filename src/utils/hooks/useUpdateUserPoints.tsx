@@ -6,10 +6,6 @@ type UpdateUsersPointsProps = {
 	allUsersPointsEmitter: (newPoints: ListenerRes[]) => void
 }
 
-// TODO Consider updating entire object for user, not only the message.
-// At least update the timestamp so it can be used to remove users
-// who have not submitted points in 30 minutes.
-
 export default function useUpdateUsersPoints({ allUsersPointsEmitter }: UpdateUsersPointsProps) {
 	const [allUsersPointsData, setAllUsersPointsData] = useState<ListenerRes[]>([])
 
@@ -20,7 +16,6 @@ export default function useUpdateUsersPoints({ allUsersPointsEmitter }: UpdateUs
 		} else {
 			setAllUsersPointsData((prevUsersPoints: ListenerRes[]) => {
 				const index = prevUsersPoints.findIndex((data) => data.userId === usersPointsUpdate.userId)
-				console.log('%c>>> index', 'color: #f0f', index)
 				let newAllPointsState: ListenerRes[]
 
 				if (index !== -1) {
@@ -29,8 +24,6 @@ export default function useUpdateUsersPoints({ allUsersPointsEmitter }: UpdateUs
 						noDuplicates.splice(index, 1)
 					} else {
 						noDuplicates[index].message = usersPointsUpdate.message
-					}
-					if (noDuplicates[index].userName !== usersPointsUpdate.userName) {
 						noDuplicates[index].userName = usersPointsUpdate.userName
 					}
 					newAllPointsState = noDuplicates
