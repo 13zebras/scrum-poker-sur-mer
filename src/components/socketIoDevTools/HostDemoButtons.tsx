@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { ListenerRes } from '@/services/socket'
 import { sampleNamesArray } from '@/utils/sampleData'
-import { POINT_CODES } from '@/app/host/[roomId]/page'
+import { POINT_CODES } from '@/utils/constants'
 
 type HostDemoButtonsProps = {
 	allUsersPoints: ListenerRes[]

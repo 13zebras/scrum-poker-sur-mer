@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import RightArrowIcon from './icons/RightArrowIcon'
-import useLocalStorage from '@/utils/hooks/useLocalStorage'
 
 type CreateCopyGoState = 'create' | 'copy' | 'go'
 
@@ -15,32 +14,31 @@ export default function CreateNewRoom() {
 	const [userId, setUserId] = useState('')
 	const hostRef = useRef<HTMLInputElement>(null)
 	const [nameOfHost, setNameOfHost] = useState('')
-	const { getItemLocalStorage } = useLocalStorage()
-	const { setItemLocalStorage } = useLocalStorage()
 
 	useEffect(() => {
-		const hostData = getItemLocalStorage('scrumPokerLaMerHostData')
+		const hostDataLocalStorage = localStorage.getItem('scrumPokerLaMerHostData')
+		const hostData = hostDataLocalStorage ? JSON.parse(hostDataLocalStorage) : null
 		if (hostData) {
-			if (hostData?.nameOfHost) {
+			if (hostData.nameOfHost) {
 				setNameOfHost(hostData.nameOfHost)
 				setShowNameInput(false)
 			}
-			if (hostData?.hostRoomUrl) {
+			if (hostData.hostRoomUrl) {
 				setHostRoomUrl(hostData.hostRoomUrl)
 			}
-			if (hostData?.roomUrl) {
+			if (hostData.roomUrl) {
 				setRoomUrl(hostData.roomUrl)
 			}
-			if (hostData?.roomId) {
+			if (hostData.roomId) {
 				setRoomId(hostData.roomId)
 			}
-			if (hostData?.userId) {
+			if (hostData.userId) {
 				setUserId(hostData.userId)
 			} else {
 				setUserId(crypto.randomUUID())
 			}
 		}
-	}, [getItemLocalStorage])
+	}, [])
 
 	function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
 		event.preventDefault()
@@ -55,13 +53,16 @@ export default function CreateNewRoom() {
 
 	function handleUseLastRoom() {
 		setCreateCopyGo('copy')
-		setItemLocalStorage('scrumPokerLaMerHostData', {
-			nameOfHost: nameOfHost,
-			roomUrl: roomUrl,
-			hostRoomUrl: hostRoomUrl,
-			roomId: roomId,
-			userId: userId,
-		})
+		localStorage.setItem(
+			'scrumPokerLaMerHostData',
+			JSON.stringify({
+				nameOfHost: nameOfHost,
+				roomUrl: roomUrl,
+				hostRoomUrl: hostRoomUrl,
+				roomId: roomId,
+				userId: userId,
+			}),
+		)
 	}
 
 	function handleCreateRoom() {
@@ -73,18 +74,21 @@ export default function CreateNewRoom() {
 		const newRoomUrl = `${http}://${hostname}${port}/${newRoomId}`
 		const newHostRoomUrl = `${http}://${hostname}${port}/host/${newRoomId}`
 
+		const newUserId = userId ? userId : crypto.randomUUID()
+
 		setRoomUrl(newRoomUrl)
 		setHostRoomUrl(newHostRoomUrl)
-
-		const newUserId = userId ?? crypto.randomUUID()
-
-		setItemLocalStorage('scrumPokerLaMerHostData', {
-			nameOfHost: nameOfHost,
-			roomUrl: newRoomUrl,
-			hostRoomUrl: newHostRoomUrl,
-			roomId: newRoomId,
-			userId: newUserId,
-		})
+		setUserId(newUserId)
+		localStorage.setItem(
+			'scrumPokerLaMerHostData',
+			JSON.stringify({
+				nameOfHost: nameOfHost,
+				roomUrl: newRoomUrl,
+				hostRoomUrl: newHostRoomUrl,
+				roomId: newRoomId,
+				userId: newUserId,
+			}),
+		)
 
 		setCreateCopyGo('copy')
 

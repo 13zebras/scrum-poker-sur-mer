@@ -12,13 +12,7 @@ import RoomInfo from '@/components/RoomInfo'
 import HostDemoButtons from '@/components/socketIoDevTools/HostDemoButtons'
 import useUpdateUsersPoints from '@/utils/hooks/useUpdateUserPoints'
 import AnimatedFish from '@/components/AnimatedFish'
-
-export const POINT_CODES = {
-	JOIN: -99,
-	HIDE_HOST: -77,
-	RESET: -33,
-	QUESTION: -1,
-}
+import { POINT_CODES } from '@/utils/constants'
 
 export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const hostCardLocalStorage = localStorage.getItem('scrumPokerLaMerShowHostCard')

@@ -6,7 +6,7 @@ import { useSocketListener } from '@/services/socket'
 import RoomMainUi from '@/components/RoomMainUi'
 import RoomInfo from '@/components/RoomInfo'
 import NewUserDialog from '@/components/NewUserDialog'
-import { POINT_CODES } from '@/app/host/[roomId]/page'
+import { POINT_CODES } from '@/utils/constants'
 import AnimatedFish from '@/components/AnimatedFish'
 
 type Params = {
@@ -54,6 +54,7 @@ export default function UserRooms({ params }: { params: Params }) {
 		}
 		const newUserId = userId || crypto.randomUUID()
 		setUser(newUserName)
+		setUserId(newUserId)
 		socketEmitter('join-room', {
 			roomId: roomId,
 			message: POINT_CODES.JOIN,
