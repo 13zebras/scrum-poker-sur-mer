@@ -7,7 +7,7 @@ import useResize from '@/utils/hooks/useResize'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 
-import { POINT_CODES } from '@/app/host/[roomId]/page'
+import { POINT_CODES } from '@/utils/constants'
 
 export default function CardsContainer() {
 	const [sortedUsersPoints, setSortedUsersPoints] = useState<ListenerRes[]>([])

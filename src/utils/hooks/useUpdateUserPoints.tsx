@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ListenerRes } from '@/services/socket'
-import { POINT_CODES } from '@/app/host/[roomId]/page'
+import { POINT_CODES } from '@/utils/constants'
 
 type UpdateUsersPointsProps = {
 	allUsersPointsEmitter: (newPoints: ListenerRes[]) => void
