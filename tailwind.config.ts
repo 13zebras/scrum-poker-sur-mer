@@ -17,6 +17,7 @@ const config: Config = {
 			},
 			colors: {
 				dkblue: {
+					100: '#00008f',
 					200: '#00007c',
 					300: '#000070',
 					400: '#00005c',
@@ -26,6 +27,17 @@ const config: Config = {
 					800: '#00001c',
 					900: '#000010',
 				},
+				mdblue: {
+					100: '#0050b0',
+					200: '#00389c',
+					300: '#003090',
+					400: '#00287c',
+					500: '#002070',
+					600: '#00195c',
+					700: '#001150',
+					800: '#000a3c',
+					900: '#000830',
+				},
 				gray: {
 					300: '#d1d5db',
 					350: '#b2b6bd',
@@ -33,6 +45,7 @@ const config: Config = {
 				},
 			},
 			animation: {
+				'fade-in-1000': 'fade-in 800ms ease-out 200ms 1 both',
 				'fade-in-600': 'fade-in 300ms ease-out 300ms 1 both',
 				'fade-in-500': 'fade-in 400ms ease-out 100ms 1 both',
 				'fade-in-300': 'fade-in 300ms ease-out 0ms 1 both',

@@ -2,18 +2,21 @@
 
 export default function ClearLocalStorageButton() {
 	function handleOnClick() {
-		localStorage.removeItem('scrumDivingHostData')
-		localStorage.removeItem('scrumDivingAllowedStoryPoints')
+		localStorage.removeItem('scrumPokerLaMerHostData')
+		localStorage.removeItem('scrumPokerLaMerAllowedStoryPoints')
+		localStorage.removeItem('scrumPokerLaMerStoryPoints')
+		localStorage.removeItem('scrumPokerLaMerShowHostCard')
+		localStorage.removeItem('scrumPokerLaMerUser')
 		window.location.reload()
 	}
 	return (
-		<div className='w-40 absolute bottom-10 right-12'>
+		<div className='w-28 absolute bottom-6 right-8'>
 			<button
 				type='button'
-				className='btn btn-outline btn-secondary btn-sm w-full'
+				className='btn btn-outline btn-accent btn-sm w-full'
 				onClick={handleOnClick}
 			>
-				Clear Local Storage
+				Clear Data
 			</button>
 		</div>
 	)

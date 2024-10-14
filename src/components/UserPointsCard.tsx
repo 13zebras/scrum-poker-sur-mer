@@ -31,9 +31,10 @@ export default function UserPointsCard({
 	const isMoveBlank = showPoints && isBlank
 
 	const cardSize = 128
-	const blankGap = 4
+	const blankGap = 3
 	const blankScale = 0.8
-	const blankSize = cardSize * blankScale
+	const blankSize = Math.floor(cardSize * blankScale)
+	const showHowMuchBlankCard = 0.42
 
 	// when showing points, the opacity of the black "cover" is 35%
 	const showPointsOpacity = showPoints ? '35' : '20'
@@ -56,6 +57,7 @@ export default function UserPointsCard({
 
 	// How many blank cards can fit in the Card Container width?
 	const maxBlanksPerRow = Math.floor(containerWidth / (blankSize + blankGap))
+	// console.log('%c>>> containerWidth', 'color: #a08', containerWidth)
 
 	// Maximum number of rows would be 1 card per row with a very narrow container
 	// which would equal the number of blank cards. The ideal number of rows is reached
@@ -72,51 +74,64 @@ export default function UserPointsCard({
 	const numberOfBlanksPerRow = Math.ceil(numberOfBlanks / numberOfRows)
 
 	// scalingPositionOffset is shifting rows down due to scaling of cards.
-	const scalingPositionOffset = (cardSize - blankSize) / 2
-	
+	const scalingPositionOffset = ((cardSize - blankSize) * showHowMuchBlankCard) / 2
+	// const scalingPositionOffset = 0
+
 	const additionalBottomOffset = 0
-	>>>>> additionalBottomOffset:', 'color: #f60', additionalBottomOffset)
-	const scalingBottomOffset = -1 * (scalingPositionOffset + blankSize) + additionalBottomOffset
+
+	const scalingBottomOffset = -1 * (scalingPositionOffset + blankSize + additionalBottomOffset)
 
 	// The right position of the blank card is determined by the
 	// number of cards from the last card in the row.
+	const rightAdjustment = 6 // the cards are consistently -6px outside the container
 	const blankRightAnimate = isMoveBlank
-		? (numberFromLastCard % numberOfBlanksPerRow) * (blankSize + blankGap) - scalingPositionOffset
+		? Math.floor(
+				(numberFromLastCard % numberOfBlanksPerRow) * (blankSize + blankGap) -
+					scalingPositionOffset +
+					rightAdjustment,
+			)
 		: 0
 
 	// What row is this card in? Top row is 0.
-	const thisCardRow = Math.floor(numberFromLastCard / numberOfBlanksPerRow)
-
-	const showHowMuchBlankCard = 0.4
+	const thisCardRow = isMoveBlank ? Math.floor(numberFromLastCard / numberOfBlanksPerRow) : 0
 
 	// Bottom position is determined by the row number times the portion
 	// of the card that we want to show, in this case 40%. And we are placing
 	// the top row at bottom = 0, and all lower rows below the bottom = 0.
 	const thisCardRowBottom = isMoveBlank
-		? -1 * thisCardRow * blankSize * showHowMuchBlankCard + scalingBottomOffset
+		? Math.floor(-1 * thisCardRow * blankSize * showHowMuchBlankCard + scalingBottomOffset)
 		: 0
 
 	const lastRowBottom = isMoveBlank
-		? -1 * (numberOfRows - 1) * blankSize * showHowMuchBlankCard + scalingBottomOffset
+		? Math.floor(-1 * (numberOfRows - 1) * blankSize * showHowMuchBlankCard + scalingBottomOffset)
 		: 0
-
+	// console.log(
+	// 	'%c>>> thisCardRow, thisCardRowBottom, lastRowBottom, blankRightAnimate',
+	// 	'color: #0f3',
+	// 	thisCardRow,
+	// 	thisCardRowBottom,
+	// 	lastRowBottom,
+	// 	blankRightAnimate,
+	// )
 	// blank cards do not turn around the y axis.
 	// Cards with points turn but in a random direction, to the left or to the right
 	const rotateY = isMoveBlank ? 0 : (Math.random() < 0.5 ? -1 : 1) * 180
 
 	// blank cards are delayed so they slide left in a staggered sequence
-	const blankMoveDelay = isMoveBlank ? 0.5 + (index - firstblankIndex) * 0.25 : 0
-
 	const blankMoveDuration = 0.25
+	const baseBlankMoveDelay = 0.15
+	const blankMoveDelay = isMoveBlank
+		? baseBlankMoveDelay + (index - firstblankIndex) * blankMoveDuration
+		: 0
 
-	// first blank card ends it's movement 0.75s from beginning of animation
-	const totalblankMoveTime = 0.75 + numberOfBlanks * blankMoveDuration
+	// first blank card ends it's movement from beginning of animation
+	const totalblankMoveTime = baseBlankMoveDelay + numberOfBlanks * blankMoveDuration
 
 	// cards with points take 0.5s to flip and show their points
 	const animateDuration = 0.5
 
-	// flip occurs 0.5s after the last blankcard has finished moving
-	const animateDelay = isMoveBlank || !showPoints ? 0 : totalblankMoveTime + 0.5
+	// flip occurs 0.1s after the last blankcard has finished moving
+	const animateDelay = isMoveBlank || !showPoints ? 0 : 0.4 + totalblankMoveTime
 
 	// blank cards rows are stacked on top of each other so z-index needs to
 	// increase from top card row to bottom card row going down..
@@ -152,18 +167,24 @@ export default function UserPointsCard({
 					opacity: {
 						duration: animateDuration,
 					},
-					scale: {
-						type: 'spring',
-						damping: 30,
-						stiffness: 200,
-						mass: 5,
-						restDelta: 0.001,
-					},
+					scale: !isMoveBlank
+						? {
+								type: 'spring',
+								damping: 34,
+								stiffness: 190,
+								mass: 5,
+								restDelta: 0.001,
+							}
+						: {
+								type: 'tween',
+								duration: 0.5,
+								ease: 'easeInOut',
+							},
 				}}
 				className={`card card-points ${blankPosition}`}
 				style={{ zIndex: blankZIndex }}
 			>
-				<figure className='size-32 object-cover absolute'>
+				<figure className='size-[7.5rem] object-cover absolute -inset-[2px]'>
 					<SealifeImage imageNum={imageNumber} alt={`${name} avatar profile`} />
 				</figure>
 				<motion.div

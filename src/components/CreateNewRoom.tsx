@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import RightArrowIcon from './icons/RightArrowIcon'
+import useLocalStorage from '@/utils/hooks/useLocalStorage'
 
 type CreateCopyGoState = 'create' | 'copy' | 'go'
 
@@ -9,17 +10,19 @@ export default function CreateNewRoom() {
 	const [createCopyGo, setCreateCopyGo] = useState<CreateCopyGoState>('create')
 	const [showNameInput, setShowNameInput] = useState(true)
 	const [roomUrl, setRoomUrl] = useState('')
+	const [roomId, setRoomId] = useState('')
 	const [hostRoomUrl, setHostRoomUrl] = useState('')
-
+	const [userId, setUserId] = useState('')
 	const hostRef = useRef<HTMLInputElement>(null)
-	const [hostName, setHostName] = useState('')
+	const [nameOfHost, setNameOfHost] = useState('')
+	const { getItemLocalStorage } = useLocalStorage()
+	const { setItemLocalStorage } = useLocalStorage()
 
 	useEffect(() => {
-		const hostDataLocalStorage = localStorage.getItem('scrumDivingHostData')
-		if (hostDataLocalStorage) {
-			const hostData = JSON.parse(hostDataLocalStorage)
-			if (hostData?.hostName) {
-				setHostName(hostData.hostName)
+		const hostData = getItemLocalStorage('scrumPokerLaMerHostData')
+		if (hostData) {
+			if (hostData?.nameOfHost) {
+				setNameOfHost(hostData.nameOfHost)
 				setShowNameInput(false)
 			}
 			if (hostData?.hostRoomUrl) {
@@ -28,17 +31,37 @@ export default function CreateNewRoom() {
 			if (hostData?.roomUrl) {
 				setRoomUrl(hostData.roomUrl)
 			}
+			if (hostData?.roomId) {
+				setRoomId(hostData.roomId)
+			}
+			if (hostData?.userId) {
+				setUserId(hostData.userId)
+			} else {
+				setUserId(crypto.randomUUID())
+			}
 		}
-		// console.log('%c>>> New Room Handler hostDataLocalStorage:', 'color: red', hostDataLocalStorage)
-	}, [])
+	}, [getItemLocalStorage])
 
 	function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
 		event.preventDefault()
-		setHostName(event.target.value)
+		setNameOfHost(event.target.value)
 	}
 
-	function generateAlphaNumeric() {
-		return Math.random().toString(36).substring(3)
+	function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+		if (event.key === 'Enter' && nameOfHost) {
+			handleCreateRoom()
+		}
+	}
+
+	function handleUseLastRoom() {
+		setCreateCopyGo('copy')
+		setItemLocalStorage('scrumPokerLaMerHostData', {
+			nameOfHost: nameOfHost,
+			roomUrl: roomUrl,
+			hostRoomUrl: hostRoomUrl,
+			roomId: roomId,
+			userId: userId,
+		})
 	}
 
 	function handleCreateRoom() {
@@ -46,33 +69,22 @@ export default function CreateNewRoom() {
 		const http = hostname === 'localhost' ? 'http' : 'https'
 		const port = window.location.port ? `:${window.location.port}` : ''
 
-		const hostDataLocalStorage = localStorage.getItem('scrumDivingHostData')
-		if (hostDataLocalStorage) {
-			const hostData = JSON.parse(hostDataLocalStorage)
-			if (hostData?.hostRoomUrl) {
-				setHostRoomUrl(hostData.hostRoomUrl)
-			}
-			if (hostData?.roomUrl) {
-				setRoomUrl(hostData.roomUrl)
-			}
-		}
-		console.log('%c>>> New Room Handler hostDataLocalStorage:', 'color: red', hostDataLocalStorage)
-		const newRoomNumber = generateAlphaNumeric() + generateAlphaNumeric()
-		const newRoomUrl = `${http}://${hostname}${port}/${newRoomNumber}`
-		const newHostRoomUrl = `${http}://${hostname}${port}/host/${newRoomNumber}`
+		const newRoomId = crypto.randomUUID().replace(/-/g, '').slice(0, 20)
+		const newRoomUrl = `${http}://${hostname}${port}/${newRoomId}`
+		const newHostRoomUrl = `${http}://${hostname}${port}/host/${newRoomId}`
 
 		setRoomUrl(newRoomUrl)
 		setHostRoomUrl(newHostRoomUrl)
 
-		localStorage.setItem(
-			'scrumDivingHostData',
-			JSON.stringify({
-				hostName: hostName,
-				roomUrl: newRoomUrl,
-				hostRoomUrl: newHostRoomUrl,
-				roomId: newRoomNumber,
-			}),
-		)
+		const newUserId = userId ?? crypto.randomUUID()
+
+		setItemLocalStorage('scrumPokerLaMerHostData', {
+			nameOfHost: nameOfHost,
+			roomUrl: newRoomUrl,
+			hostRoomUrl: newHostRoomUrl,
+			roomId: newRoomId,
+			userId: newUserId,
+		})
 
 		setCreateCopyGo('copy')
 
@@ -86,11 +98,26 @@ export default function CreateNewRoom() {
 
 	return (
 		<div className='w-full h-full flex flex-col items-center gap-6 animate-fade-in-600'>
-			<div className='w-full h-1/5 flex flex-col items-center justify-start'>
-				<h1 className='text-4xl text-gray-300'>Scrum Under the Sea</h1>
-				<h2 className='text-3xl text-gray-300 py-4'>
-					{hostRoomUrl ? 'Use or Create a Room' : 'Create a New Room'}
-				</h2>
+			<div className='w-full h-1/6 flex flex-col items-center justify-start'>
+				<h1
+					className='text-5xl text-gray-200'
+					style={{
+						textShadow: '-1px -1px 3px black, 3px 3px 3px black',
+					}}
+				>
+					Scrum Poker sous la Mer
+				</h1>
+				{showNameInput && (
+					<h2
+						className='text-3xl text-gray-200 py-8'
+						style={{
+							textShadow: '-1px -1px 3px black, 3px 3px 3px black',
+						}}
+					>
+						Create a New Room
+						{/* {hostRoomUrl ? 'Use or Create a Room' : 'Create a New Room'} */}
+					</h2>
+				)}
 			</div>
 			<div className='w-full h-80 flex flex-col items-center justify-start'>
 				{createCopyGo === 'create' ? (
@@ -101,26 +128,35 @@ export default function CreateNewRoom() {
 								ref={hostRef}
 								placeholder='Enter Your First Name'
 								onChange={handleOnChange}
-								className='input input-bordered input-info w-96 mb-2 text-gray-200 text-xl placeholder:text-lg placeholder:italic placeholder:text-slate-400/70'
+								onKeyDown={handleKeyDown}
+								className='input input-bordered input-info w-[22rem] mb-2 text-gray-200 text-xl placeholder:text-lg placeholder:italic placeholder:text-slate-400/70 shadow-xl shadow-black/70'
 							/>
 						) : (
 							<>
-								<div className='flex flex-col sm:flex-row items-center justify-center pb-14 text-4xl text-gray-300 text-center'>
+								<div
+									className='flex flex-col sm:flex-row items-center justify-center pb-14 text-4xl text-gray-300 text-center'
+									style={{
+										textShadow: '-1px -1px 2px black, 3px 3px 3px black',
+									}}
+								>
 									<span className='mr-[0.4em]'>Welcome back,</span>
-									<span className=''>{hostName}!</span>
+									<span className=''>{nameOfHost}!</span>
 								</div>
 								{hostRoomUrl && (
-									<div className='flex flex-col items-center'>
+									<div
+										className='flex flex-col items-center'
+										style={{
+											textShadow: '-1px -1px 2px black, 2px 2px 2px black',
+										}}
+									>
 										<div className='text-xl text-gray-300 tracking-wider pb-2'>
 											Your Last Room URL:
 										</div>
 										<div className='text-lg text-gray-300 pb-6'>{hostRoomUrl}</div>
 										<button
 											type='button'
-											className='btn btn-accent w-[22rem] h-10 min-h-10 text-xl'
-											onClick={() => {
-												setCreateCopyGo('copy')
-											}}
+											className='btn btn-accent w-[22rem] h-11 min-h-11 text-xl shadow-xl shadow-black/70'
+											onClick={handleUseLastRoom}
 										>
 											Click to Use Last Room
 										</button>
@@ -133,12 +169,15 @@ export default function CreateNewRoom() {
 						)}
 					</div>
 				) : (
-					<div className='w-full h-full flex flex-col items-center justify-end animate-fade-in-300'>
-						<h3 className='pb-14 font-bold text-gray-200 text-4xl tracking-wide'>
-							{hostName}'s Room URL
-						</h3>
-						<span className='text-gray-200 font-mono text-xl pb-10'>{roomUrl}</span>
-						<div className='w-full h-[3.75rem] flex flex-col justify-center gap-1 items-center text-[1.2rem] ita text-gray-300 text-center'>
+					<div
+						className='w-full h-full flex flex-col items-center justify-end animate-fade-in-300'
+						style={{
+							textShadow: '-1px -1px 2px black, 2px 2px 2px black',
+						}}
+					>
+						<h3 className='pb-10 font-bold text-gray-200 text-3xl tracking-wide'>Room URL:</h3>
+						<span className='text-gray-200 font-mono text-xl pb-20'>{roomUrl}</span>
+						<div className='w-full h-[3.75rem] flex flex-col justify-center gap-1 items-center text-[1.2rem] ita text-gray-300 text-center pb-2'>
 							{createCopyGo === 'copy' && (
 								<>
 									<span>Click button to copy URL to the clipboard.</span>
@@ -147,9 +186,9 @@ export default function CreateNewRoom() {
 							)}
 							{createCopyGo === 'go' && (
 								<span
-									className='text-accent text-2xl font-bold tracking-wide saturate-125 animate-fade-in-300'
+									className='text-slate-200 text-2xl font-bold tracking-wide saturate-125 animate-fade-in-300'
 									style={{
-										textShadow: '1px 1px 1px black, 3px 3px 1px black',
+										textShadow: '-1px -1px 2px black, 3px 3px 3px black',
 									}}
 								>
 									URL Copied to Clipboard!
@@ -164,9 +203,9 @@ export default function CreateNewRoom() {
 				{createCopyGo === 'create' ? (
 					<button
 						type='button'
-						className='btn btn-warning w-full h-10 min-h-10 text-xl'
+						className='btn btn-warning w-full h-11 min-h-11 text-xl shadow-xl shadow-black/70'
 						onClick={handleCreateRoom}
-						disabled={!hostName}
+						disabled={!nameOfHost}
 					>
 						Click to Create New Room
 					</button>
@@ -174,14 +213,16 @@ export default function CreateNewRoom() {
 					<button
 						type='button'
 						onClick={copyToClipboard}
-						className='btn btn-accent w-full h-10 min-h-10 text-xl animate-fade-in-300'
+						className='btn btn-accent w-full h-11 min-h-11 text-xl animate-fade-in-300 shadow-xl shadow-black/70'
+						tabIndex={0}
 					>
 						Copy Room URL to Clipboard
 					</button>
 				) : (
 					<Link
 						href={hostRoomUrl}
-						className='btn btn-secondary w-full h-10 min-h-10 text-xl uppercase animate-fade-in-300'
+						className='btn btn-secondary w-full h-11 min-h-11 text-xl uppercase animate-fade-in-300 shadow-xl shadow-black/70'
+						tabIndex={0}
 					>
 						Go to New Room
 						<RightArrowIcon className='h-8 w-8 inline' />

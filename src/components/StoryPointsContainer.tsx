@@ -6,7 +6,7 @@ import { useState } from 'react'
 import StoryPointButton from '@/components/StoryPointButton'
 import type { RoomData } from '@/components/RoomMainUi'
 
-export default function StoryPointsContainer({ roomId, userName }: RoomData) {
+export default function StoryPointsContainer({ roomId, userName, userId }: RoomData) {
 	const [selectedStoryPoint, setSelectedStoryPoint] = useState<number | null>(null)
 	const [isPointBtnDisabled, setIsPointBtnDisabled] = useState(false)
 
@@ -32,6 +32,7 @@ export default function StoryPointsContainer({ roomId, userName }: RoomData) {
 			roomId: roomId,
 			message: selectedPoint,
 			userName: userName,
+			userId: userId,
 		})
 	}
 
