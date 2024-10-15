@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
 
@@ -15,10 +15,8 @@ export default function useResize(containerType = 'both', debounceDelay = 300): 
 	const [debouncedWidth, setViewportWidth] = useDebounceValue(0, debounceDelay)
 	const [debouncedHeight, setViewportHeight] = useDebounceValue(0, debounceDelay)
 	const [debouncedRect, setRect] = useDebounceValue<DOMRect | null>(null, debounceDelay)
-	// const [debouncedWidth, setViewportWidth] = useState(0)
-	// const [debouncedHeight, setViewportHeight] = useState(0)
-	// const [debouncedRect, setRect] = useState<DOMRect | null>(null)
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: debounce same as useState, not needed in dependency array
 	const handleResize = useCallback(() => {
 		const isViewport = containerType === 'viewport'
 		const isContainer = containerType === 'container'
@@ -42,7 +40,7 @@ export default function useResize(containerType = 'both', debounceDelay = 300): 
 	}, [containerType])
 
 	useEffect(() => {
-		handleResize() // Initial call
+		handleResize()
 
 		let resizeObserver: ResizeObserver | null = null
 		if (containerType !== 'viewport' && containerRef.current) {
@@ -59,34 +57,6 @@ export default function useResize(containerType = 'both', debounceDelay = 300): 
 			}
 		}
 	}, [containerType, handleResize])
-
-	// useEffect(() => {
-	// 	const isViewport = containerType === 'viewport'
-	// 	const isContainer = containerType === 'container'
-	// 	const isBoth = containerType === 'both'
-	// 	const handleResize = () => {
-	// 		let vpWidth = 0
-	// 		let vpHeight = 0
-	// 		let containerRect: DOMRect | null = null
-	// 		if (isViewport || isBoth) {
-	// 			vpWidth = window.innerWidth
-	// 			vpHeight = window.innerHeight
-	// 		}
-	// 		if (isContainer || isBoth) {
-	// 			containerRect = containerRef.current?.getBoundingClientRect() || null
-	// 		}
-	// 		setViewportWidth(vpWidth)
-	// 		setViewportHeight(vpWidth)
-	// 		setDebouncedRect(containerRect)
-	// 	}
-	// 	handleResize()
-
-	// 	window.addEventListener('resize', handleResize)
-
-	// 	return () => {
-	// 		window.removeEventListener('resize', handleResize)
-	// 	}
-	// }, [containerType])
 
 	return {
 		viewportWidth: debouncedWidth,

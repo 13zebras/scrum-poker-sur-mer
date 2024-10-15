@@ -13,7 +13,7 @@ export default function AnimatedFish() {
 	const controls = useAnimationControls()
 	const animationRef = useRef<boolean>(false)
 
-	const { width: viewportWidth, height: viewportHeight } = useResize()
+	const { viewportWidth, viewportHeight } = useResize()
 
 	const createFrames = useCallback(() => {
 		const durationScale = 1
@@ -68,10 +68,9 @@ export default function AnimatedFish() {
 				if (!animationRef.current) break
 
 				setIsFlipped(frame.flipped)
-
 				await controls.start({
-					x: viewportWidth * frame.x,
-					y: viewportHeight * frame.y,
+					x: viewportWidth ? viewportWidth * frame.x : 0,
+					y: viewportHeight ? viewportHeight * frame.y : 0,
 					transition: {
 						duration: frame.duration,
 						delay: frame.delay,
@@ -109,7 +108,10 @@ export default function AnimatedFish() {
 					scaleX: isFlipped ? 1 : -1,
 				}}
 				animate={controls}
-				initial={{ x: viewportWidth * -0.1, y: viewportHeight * 0.75 }}
+				initial={{
+					x: viewportWidth ? viewportWidth * -0.1 : 0,
+					y: viewportHeight ? viewportHeight * 0.75 : 0,
+				}}
 				className={`${isFishSwimming ? 'opacity-100' : 'opacity-0'} fixed z-0 transition-opacity duration-500 ${displayNone ? 'hidden' : ''}`}
 			>
 				<TropicalFishIcon className='size-9' />
