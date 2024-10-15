@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import '@/styles/globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+import '@/styles/globals.css'
 
 export const metadata: Metadata = {
 	title: 'Scrum Poker Under the Sea',
@@ -19,9 +17,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en'>
-			<body
-				className={`${inter.className} w-screen h-screen bg-gradient-to-t from-dkblue-800 to-dkblue-200`}
-			>
+			<body className='w-screen h-screen bg-gradient-to-t from-dkblue-800 to-dkblue-200'>
 				{children}
 			</body>
 		</html>

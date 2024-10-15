@@ -20,7 +20,7 @@ export default function RoomInfo({ roomUrl, nameOfHost, userName }: RoomInfoData
 	}
 
 	return (
-		<div className=' flex flex-row items-center justify-center font-mono text-gray-400 text-sm'>
+		<div className=' flex flex-row items-center justify-center font-mono text-gray-300 font-semibold text-sm'>
 			{isUser ? (
 				<span>
 					Your Name: {userName} | Host Name: {nameOfHost}

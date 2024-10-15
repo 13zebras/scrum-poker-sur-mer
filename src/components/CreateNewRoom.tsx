@@ -103,21 +103,9 @@ export default function CreateNewRoom() {
 	return (
 		<div className='w-full h-full flex flex-col items-center gap-6 animate-fade-in-600'>
 			<div className='w-full h-1/6 flex flex-col items-center justify-start'>
-				<h1
-					className='text-5xl text-gray-200'
-					style={{
-						textShadow: '-1px -1px 3px black, 3px 3px 3px black',
-					}}
-				>
-					Scrum Poker sous la Mer
-				</h1>
+				<h1 className='text-5xl text-gray-200'>Scrum Poker sous la Mer</h1>
 				{showNameInput && (
-					<h2
-						className='text-3xl text-gray-200 py-8'
-						style={{
-							textShadow: '-1px -1px 3px black, 3px 3px 3px black',
-						}}
-					>
+					<h2 className='text-3xl text-gray-200 py-8'>
 						Create a New Room
 						{/* {hostRoomUrl ? 'Use or Create a Room' : 'Create a New Room'} */}
 					</h2>
@@ -137,22 +125,12 @@ export default function CreateNewRoom() {
 							/>
 						) : (
 							<>
-								<div
-									className='flex flex-col sm:flex-row items-center justify-center pb-14 text-4xl text-gray-300 text-center'
-									style={{
-										textShadow: '-1px -1px 2px black, 3px 3px 3px black',
-									}}
-								>
+								<div className='flex flex-col sm:flex-row items-center justify-center pb-14 text-4xl text-gray-300 text-center'>
 									<span className='mr-[0.4em]'>Welcome back,</span>
 									<span className=''>{nameOfHost}!</span>
 								</div>
 								{hostRoomUrl && (
-									<div
-										className='flex flex-col items-center'
-										style={{
-											textShadow: '-1px -1px 2px black, 2px 2px 2px black',
-										}}
-									>
+									<div className='flex flex-col items-center'>
 										<div className='text-xl text-gray-300 tracking-wider pb-2'>
 											Your Last Room URL:
 										</div>
@@ -173,12 +151,7 @@ export default function CreateNewRoom() {
 						)}
 					</div>
 				) : (
-					<div
-						className='w-full h-full flex flex-col items-center justify-end animate-fade-in-300'
-						style={{
-							textShadow: '-1px -1px 2px black, 2px 2px 2px black',
-						}}
-					>
+					<div className='w-full h-full flex flex-col items-center justify-end animate-fade-in-300'>
 						<h3 className='pb-10 font-bold text-gray-200 text-3xl tracking-wide'>Room URL:</h3>
 						<span className='text-gray-200 font-mono text-xl pb-20'>{roomUrl}</span>
 						<div className='w-full h-[3.75rem] flex flex-col justify-center gap-1 items-center text-[1.2rem] ita text-gray-300 text-center pb-2'>
@@ -189,12 +162,7 @@ export default function CreateNewRoom() {
 								</>
 							)}
 							{createCopyGo === 'go' && (
-								<span
-									className='text-slate-200 text-2xl font-bold tracking-wide saturate-125 animate-fade-in-300'
-									style={{
-										textShadow: '-1px -1px 2px black, 3px 3px 3px black',
-									}}
-								>
+								<span className='text-slate-200 text-2xl font-bold tracking-wide saturate-125 animate-fade-in-300'>
 									URL Copied to Clipboard!
 								</span>
 							)}

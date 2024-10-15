@@ -13,9 +13,11 @@ export default function Host() {
 					width={2000}
 					height={1200}
 					priority
-					className='h-auto w-full animate-fade-in-500'
+					className='h-auto w-full animate-fade-in-1000'
 					sizes='(max-width: 768px) 100vw, (max-width: 1024px) 100vw, (max-width: 1280px) 100vw, (max-width: 1560px) 100vw, 100vw'
 					quality={90}
+					placeholder='blur'
+					blurDataURL='/school-fish/school-fish-2000x1200-blur.webp'
 				/>
 			</div>
 			<main className='p-24 w-full h-screen flex flex-col items-center relative z-20'>
