@@ -7,13 +7,21 @@ export type RoomData = {
 	roomId: string
 	userName: string
 	userId: string
+	showHostCard?: boolean
+	hostId: string
 }
 
-export default function RoomMainUi({ roomId, userName, userId }: RoomData) {
+export default function RoomMainUi({ roomId, userName, userId, showHostCard, hostId }: RoomData) {
 	return (
 		<div className='h-full w-full flex flex-col justify-start items-center gap-10'>
-			<div className='h-full w-full flex flex-col justify-center items-center gap-12 border-0 border-stone-800 '>
-				<StoryPointsContainer roomId={roomId} userName={userName} userId={userId} />
+			<div className='h-full w-full flex flex-col justify-center items-center gap-10 md:gap-12 border-0 border-stone-800 '>
+				<StoryPointsContainer
+					roomId={roomId}
+					userName={userName}
+					userId={userId}
+					showHostCard={showHostCard}
+					hostId={hostId}
+				/>
 				<CardsContainer />
 			</div>
 		</div>

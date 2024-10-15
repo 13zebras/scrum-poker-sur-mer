@@ -12,6 +12,9 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			screens: {
+				xs: '480px',
+			},
 			fontSize: {
 				md: '0.95rem',
 			},

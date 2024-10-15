@@ -6,10 +6,17 @@ import { useState } from 'react'
 import StoryPointButton from '@/components/StoryPointButton'
 import type { RoomData } from '@/components/RoomMainUi'
 
-export default function StoryPointsContainer({ roomId, userName, userId }: RoomData) {
+export default function StoryPointsContainer({
+	roomId,
+	userName,
+	userId,
+	showHostCard,
+	hostId,
+}: RoomData) {
 	const [selectedStoryPoint, setSelectedStoryPoint] = useState<number | null>(null)
 	const [isPointBtnDisabled, setIsPointBtnDisabled] = useState(false)
 
+	const isDisabledHost = userId === hostId && !showHostCard
 	useSocketListener('show-disable-reset-points', {
 		onChange: (showDisableReset) => {
 			const isButtonDisabled = showDisableReset.message as unknown as boolean
@@ -36,19 +43,24 @@ export default function StoryPointsContainer({ roomId, userName, userId }: RoomD
 		})
 	}
 
+	console.log('%c>>> isDisabledHost:', 'color: red', isDisabledHost)
+	console.log('%c>>> showHostCard:', 'color: yellow', showHostCard)
+	console.log('%c>>> userId:', 'color: #5f0', userId)
+	console.log('%c>>> hostId:', 'color: red', hostId)
+
 	return (
-		<div className='relative w-fit px-0 flex flex-row justify-center items-center gap-4 border-0 border-pink-800'>
-			<div className='flex flex-row flex-wrap gap-4 justify-center items-center border-0 border-stone-900'>
-				{allowedPointsArray.map((allowedPoint) => (
-					<StoryPointButton
-						key={allowedPoint}
-						allowedPointLabel={allowedPoint}
-						selectedStoryPoint={selectedStoryPoint}
-						handleSelectPoint={handleSelectPoint}
-						disabled={isPointBtnDisabled}
-					/>
-				))}
-			</div>
+		<div
+			className={`flex flex-row flex-wrap gap-4 justify-center items-center border-0 border-pink-800 ${isDisabledHost && 'scale-[0.85] py-2'}`}
+		>
+			{allowedPointsArray.map((allowedPoint) => (
+				<StoryPointButton
+					key={allowedPoint}
+					allowedPointLabel={allowedPoint}
+					selectedStoryPoint={selectedStoryPoint}
+					handleSelectPoint={handleSelectPoint}
+					disabled={isPointBtnDisabled || isDisabledHost}
+				/>
+			))}
 		</div>
 	)
 }

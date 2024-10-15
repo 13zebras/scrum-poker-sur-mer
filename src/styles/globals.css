@@ -16,6 +16,15 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+.main-background {
+  background-image: url('/school-fish/school-fish-1600x960-gradient-67.webp');
+  background-size: cover;
+  background-position: center 40vh;
+  background-repeat: no-repeat;
+}
+
+
+
 .card-points {
 	@apply bg-base-100 size-[7.5rem] shadow-xl rounded-lg border-2 border-gray-800 overflow-hidden 
 }

@@ -22,11 +22,12 @@ export default function RoomInfo({ roomUrl, nameOfHost, userName }: RoomInfoData
 	return (
 		<div className=' flex flex-row items-center justify-center font-mono text-gray-300 font-semibold text-sm'>
 			{isUser ? (
-				<span>
-					Your Name: {userName} | Host Name: {nameOfHost}
-				</span>
+				<div className='flex justify-center items-center flex-wrap gap-y-1'>
+					<span className='px-4'>Your Name: {userName} </span>
+					<span className='px-4'>Host Name: {nameOfHost}</span>
+				</div>
 			) : (
-				<div className='flex items-center'>
+				<div className='flex justify-center items-center flex-wrap'>
 					<button
 						type='button'
 						onClick={handleCopyUrl}

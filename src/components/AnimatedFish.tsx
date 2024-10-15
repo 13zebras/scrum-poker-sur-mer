@@ -101,7 +101,7 @@ export default function AnimatedFish() {
 	}, [controls, viewportWidth, viewportHeight, isFishSwimming, createFrames])
 
 	return (
-		<div className='absolute top-0 left-0 w-full h-full'>
+		<div className='absolute w-full h-full'>
 			<AnimatedFishButton isFishSwimming={isFishSwimming} setIsFishSwimming={setIsFishSwimming} />
 			<motion.div
 				style={{

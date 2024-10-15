@@ -15,9 +15,9 @@ export default function CardsContainer() {
 	// container width is need for the animation of the cards
 	const { viewportHeight, ref: containerRef, rect } = useResize('both')
 
-	console.log('%c>>> viewportHeight', 'color: yellow', viewportHeight)
-	console.log('%c>>> rect', 'color: red', rect)
-	console.log('%c>>> rect.bottom', 'color: red', rect?.bottom)
+	// console.log('%c>>> viewportHeight', 'color: yellow', viewportHeight)
+	// console.log('%c>>> rect', 'color: red', rect)
+	// console.log('%c>>> rect.bottom', 'color: red', rect?.bottom)
 
 	const allUsersStoryPoints = useSocketListener('all-users-story-points', {
 		onChange: (allPointsRes) => {

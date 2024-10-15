@@ -25,6 +25,7 @@ export default function UserRooms({ params }: { params: Params }) {
 
 	const hostRoomInfo = useSocketListener('host-room-info')
 	const nameOfHost = hostRoomInfo ? hostRoomInfo.userName : ''
+	const hostId = hostRoomInfo ? hostRoomInfo.userId : ''
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: no depenencies change, only runs on first render
 	useEffect(() => {
@@ -77,9 +78,9 @@ export default function UserRooms({ params }: { params: Params }) {
 	}
 
 	return (
-		<div className='w-full h-full max-w-[80rem] mx-auto'>
+		<div className='w-full h-full'>
 			<AnimatedFish />
-			<main className='px-16 py-12 flex flex-col items-center gap-8 w-full animate-fade-in-500'>
+			<main className='px-8 sm:px-12 py-16 md:px-16 md:py-12 relative flex flex-col justify-start items-center gap-8 w-full max-w-[80rem] mx-auto '>
 				<NewUserDialog
 					dialogRef={dialogRef}
 					user={user}
@@ -88,10 +89,12 @@ export default function UserRooms({ params }: { params: Params }) {
 					handleOnSubmit={handleOnSubmit}
 					displayError={displayErrorMessage}
 				/>
-				<h1 className='text-3xl text-gray-300'>Room: Scrum Poker sous la Mer</h1>
+				<h1 className='text-center text-2xl sm:text-3xl text-gray-300'>
+					Room: Scrum Poker sous la Mer
+				</h1>
 				<RoomInfo nameOfHost={nameOfHost} userName={user} />
-				<div className='h-full w-full pt-10 flex flex-col justify-start items-center'>
-					<RoomMainUi roomId={roomId} userName={user} userId={userId} />
+				<div className='h-full w-full pt-6 sm:pt-10 flex flex-col justify-start items-center'>
+					<RoomMainUi roomId={roomId} userName={user} userId={userId} hostId={hostId} />
 				</div>
 			</main>
 		</div>

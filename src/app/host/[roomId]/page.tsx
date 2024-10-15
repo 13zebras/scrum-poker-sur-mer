@@ -140,15 +140,17 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 	}
 
 	return (
-		<div className='w-full h-full relative animate-in fade-in-0 duration-1000'>
+		<div className='w-full h-full relative animate-in fade-in-0 duration-1000 '>
 			<AnimatedFish />
-			<main className='px-16 py-12 relative flex flex-col justify-start items-center gap-8 w-full max-w-[80rem] mx-auto '>
+			<main className='px-8 sm:px-12 py-16 md:px-16 md:py-12 relative flex flex-col justify-start items-center gap-8 w-full max-w-[80rem] mx-auto '>
 				<div className='flex flex-col justify-start items-center gap-6'>
-					<h1 className='text-3xl text-gray-300'>Host: Scrum Poker sous la Mer</h1>
+					<h1 className='text-center text-2xl sm:text-3xl text-gray-300'>
+						Host: Scrum Poker sous la Mer
+					</h1>
 					<RoomInfo roomUrl={roomUrl} nameOfHost={nameOfHost} />
 				</div>
-				<div className='pt-2 w-full flex flex-col justify-start items-center gap-12'>
-					<div className='flex flex-row justify-between items-start self-end gap-x-12'>
+				<div className='pt-2 w-full flex flex-col justify-start items-center gap-8 md:gap-12'>
+					<div className='flex flex-row justify-between items-start md:self-end gap-x-12'>
 						<div className='flex flex-row flex-wrap-reverse justify-end items-center gap-x-8 gap-y-4'>
 							<HostControlButton
 								handler={handleShowPoints}
@@ -166,10 +168,19 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 							</HostControlButton>
 						</div>
 					</div>
-					<RoomMainUi roomId={roomId} userName={nameOfHost} userId={userId} />
+					<RoomMainUi
+						roomId={roomId}
+						userName={nameOfHost}
+						userId={userId}
+						hostId={userId}
+						showHostCard={showHostCard}
+					/>
 				</div>
 
-				<div className='absolute top-4 right-16 tooltip tooltip-bottom' data-tip='Host Settings'>
+				<div
+					className='absolute top-4 right-4 sm:right-16 tooltip tooltip-bottom'
+					data-tip='Host Settings'
+				>
 					<HostSettingsButton
 						hostRoomUrl={hostRoomUrl}
 						roomUrl={roomUrl}
@@ -181,7 +192,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 						setShowHostCard={setShowHostCard}
 					/>
 				</div>
-				<div className='absolute top-4 left-12 flex flex-row flex-start items-center gap-8 scale-90'>
+				<div className='absolute top-4 left-4 sm:left-12 flex flex-row flex-start items-center gap-8 scale-90'>
 					<div className='tooltip tooltip-bottom text-xs' data-tip='Click to Create a New Room'>
 						<Link href='/host' className='btn btn-outline-gray h-6 min-h-6 w-28 px-1 text-xs'>
 							Create Room
