@@ -101,7 +101,7 @@ export default function CreateNewRoom() {
 	}
 
 	return (
-		<div className='w-full h-full flex flex-col items-center gap-6 animate-fade-in-600'>
+		<div className='w-full h-full flex flex-col items-center gap-6'>
 			<div className='w-full h-1/6 flex flex-col items-center justify-start'>
 				<h1 className='text-5xl text-gray-200'>Scrum Poker sous la Mer</h1>
 				{showNameInput && (
