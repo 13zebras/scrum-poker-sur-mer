@@ -93,13 +93,6 @@ export default function UserPointsCard({
 		containerBottomOffset = Math.floor(lastRowDistanceToViewportBottom / 3)
 	}
 
-	console.log(
-		'%c>>> lastRowDistanceToViewportBottom, containerBottomOffset',
-		'color: #f70',
-		lastRowDistanceToViewportBottom,
-		containerBottomOffset,
-	)
-
 	const scalingBottomOffset = -1 * (scalingPositionOffset + blankSize + containerBottomOffset)
 
 	// The right position of the blank card is determined by the

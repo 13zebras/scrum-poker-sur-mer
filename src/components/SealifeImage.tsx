@@ -6,7 +6,7 @@ type Props = {
 	alt: string
 }
 
-const totalImages = 35
+const totalImages = 33
 
 export function SealifeImage({ imageNum, alt }: Props) {
 	const pathName = usePathname()

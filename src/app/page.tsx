@@ -14,8 +14,7 @@ export default function Home() {
 					className='h-auto w-full animate-fade-in-1000'
 					sizes='(max-width: 768px) 100vw, (max-width: 1024px) 100vw, (max-width: 1280px) 100vw, (max-width: 1560px) 100vw, 100vw'
 					quality={90}
-					placeholder='blur'
-					blurDataURL='/school-fish/school-fish-2000x1200-gradient-67-blur-8-fade-90-low.webp'
+					placeholder='data:image/school-fish/school-fish-2000x1200-gradient-67-blur-8-fade-90-low.webp'
 				/>
 			</div>
 
