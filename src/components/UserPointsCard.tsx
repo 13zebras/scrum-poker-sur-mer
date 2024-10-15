@@ -1,6 +1,7 @@
 import JellyFishOutlineIcon from './icons/JellyFishOutlineIcon'
 import { SealifeImage } from './SealifeImage'
 import { motion, AnimatePresence } from 'framer-motion'
+import CardsContainer from './CardsContainer'
 
 type CardProps = {
 	name: string
@@ -11,6 +12,8 @@ type CardProps = {
 	numberOfBlanks: number
 	showPoints: boolean
 	containerWidth: number
+	containerBottom: number
+	viewportHeight: number
 }
 
 export default function UserPointsCard({
@@ -22,6 +25,8 @@ export default function UserPointsCard({
 	numberOfBlanks,
 	showPoints,
 	containerWidth,
+	containerBottom,
+	viewportHeight,
 }: CardProps) {
 	// '--' is a blank card
 	const isBlank = storyPoint === '--'
@@ -77,9 +82,25 @@ export default function UserPointsCard({
 	const scalingPositionOffset = ((cardSize - blankSize) * showHowMuchBlankCard) / 2
 	// const scalingPositionOffset = 0
 
-	const additionalBottomOffset = 0
+	const lastRowBottomNoOffset = Math.floor(
+		-1 * (numberOfRows - 1) * blankSize * showHowMuchBlankCard,
+	)
 
-	const scalingBottomOffset = -1 * (scalingPositionOffset + blankSize + additionalBottomOffset)
+	const lastRowDistanceToViewportBottom = viewportHeight + lastRowBottomNoOffset - containerBottom
+
+	let containerBottomOffset = 30
+	if (lastRowDistanceToViewportBottom > 100) {
+		containerBottomOffset = Math.floor(lastRowDistanceToViewportBottom / 3)
+	}
+
+	console.log(
+		'%c>>> lastRowDistanceToViewportBottom, containerBottomOffset',
+		'color: #f70',
+		lastRowDistanceToViewportBottom,
+		containerBottomOffset,
+	)
+
+	const scalingBottomOffset = -1 * (scalingPositionOffset + blankSize + containerBottomOffset)
 
 	// The right position of the blank card is determined by the
 	// number of cards from the last card in the row.
@@ -119,7 +140,7 @@ export default function UserPointsCard({
 
 	// blank cards are delayed so they slide left in a staggered sequence
 	const blankMoveDuration = 0.25
-	const baseBlankMoveDelay = 0.15
+	const baseBlankMoveDelay = 0.5
 	const blankMoveDelay = isMoveBlank
 		? baseBlankMoveDelay + (index - firstblankIndex) * blankMoveDuration
 		: 0
@@ -146,7 +167,7 @@ export default function UserPointsCard({
 					right: 0,
 					bottom: lastRowBottom,
 					rotateY: rotateY,
-					opacity: 0.5,
+					opacity: 0.1,
 				}}
 				animate={{
 					scale: scaleAnimate,
@@ -166,6 +187,7 @@ export default function UserPointsCard({
 					},
 					opacity: {
 						duration: animateDuration,
+						delay: 0.5,
 					},
 					scale: !isMoveBlank
 						? {
@@ -174,11 +196,13 @@ export default function UserPointsCard({
 								stiffness: 190,
 								mass: 5,
 								restDelta: 0.001,
+								delay: 0.5,
 							}
 						: {
 								type: 'tween',
 								duration: 0.5,
 								ease: 'easeInOut',
+								delay: 0.5,
 							},
 				}}
 				className={`card card-points ${blankPosition}`}

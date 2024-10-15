@@ -26,6 +26,8 @@ export function SealifeImage({ imageNum, alt }: Props) {
 			alt={alt}
 			width='256'
 			height='256'
+			priority
+			quality={80}
 		/>
 	)
 }

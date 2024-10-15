@@ -1,52 +1,97 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { RefObject } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
 
 type UseResizeReturn = {
-	width: number
-	height: number
+	viewportWidth?: number
+	viewportHeight?: number
 	ref?: RefObject<HTMLDivElement>
-	isReady: boolean
+	rect?: DOMRect | null
 }
 
-export default function useResize(
-	containerType = 'viewport',
-	debounceDelay = 300,
-): UseResizeReturn {
+export default function useResize(containerType = 'both', debounceDelay = 300): UseResizeReturn {
 	const containerRef = useRef<HTMLDivElement>(null)
 
-	const [debouncedWidth, setContainerWidth] = useDebounceValue(0, debounceDelay)
-	const [debouncedHeight, setContainerHeight] = useDebounceValue(0, debounceDelay)
-	const [isReady, setIsReady] = useState(false)
+	const [debouncedWidth, setViewportWidth] = useDebounceValue(0, debounceDelay)
+	const [debouncedHeight, setViewportHeight] = useDebounceValue(0, debounceDelay)
+	const [debouncedRect, setRect] = useDebounceValue<DOMRect | null>(null, debounceDelay)
+	// const [debouncedWidth, setViewportWidth] = useState(0)
+	// const [debouncedHeight, setViewportHeight] = useState(0)
+	// const [debouncedRect, setRect] = useState<DOMRect | null>(null)
+
+	const handleResize = useCallback(() => {
+		const isViewport = containerType === 'viewport'
+		const isContainer = containerType === 'container'
+		const isBoth = containerType === 'both'
+
+		let vpWidth = 0
+		let vpHeight = 0
+		let containerRect: DOMRect | null = null
+
+		if (isViewport || isBoth) {
+			vpWidth = window.innerWidth
+			vpHeight = window.innerHeight
+		}
+		if (isContainer || isBoth) {
+			containerRect = containerRef.current?.getBoundingClientRect() || null
+		}
+
+		setViewportWidth(vpWidth)
+		setViewportHeight(vpHeight)
+		setRect(containerRect)
+	}, [containerType])
 
 	useEffect(() => {
-		const handleResize = () => {
-			let newWidth = 0
-			let newHeight = 0
-			if (containerType === 'viewport') {
-				newWidth = window.innerWidth
-				newHeight = window.innerHeight
-			} else if (containerRef.current) {
-				newWidth = containerRef.current.getBoundingClientRect().width
-				newHeight = containerRef.current.getBoundingClientRect().height
-			}
-			setContainerWidth(newWidth)
-			setContainerHeight(newHeight)
-			setIsReady(newWidth > 0 && newHeight > 0)
+		handleResize() // Initial call
+
+		let resizeObserver: ResizeObserver | null = null
+		if (containerType !== 'viewport' && containerRef.current) {
+			resizeObserver = new ResizeObserver(handleResize)
+			resizeObserver.observe(containerRef.current)
 		}
-		handleResize()
 
 		window.addEventListener('resize', handleResize)
 
 		return () => {
 			window.removeEventListener('resize', handleResize)
+			if (resizeObserver) {
+				resizeObserver.disconnect()
+			}
 		}
-	}, [containerType, setContainerWidth, setContainerHeight])
+	}, [containerType, handleResize])
+
+	// useEffect(() => {
+	// 	const isViewport = containerType === 'viewport'
+	// 	const isContainer = containerType === 'container'
+	// 	const isBoth = containerType === 'both'
+	// 	const handleResize = () => {
+	// 		let vpWidth = 0
+	// 		let vpHeight = 0
+	// 		let containerRect: DOMRect | null = null
+	// 		if (isViewport || isBoth) {
+	// 			vpWidth = window.innerWidth
+	// 			vpHeight = window.innerHeight
+	// 		}
+	// 		if (isContainer || isBoth) {
+	// 			containerRect = containerRef.current?.getBoundingClientRect() || null
+	// 		}
+	// 		setViewportWidth(vpWidth)
+	// 		setViewportHeight(vpWidth)
+	// 		setDebouncedRect(containerRect)
+	// 	}
+	// 	handleResize()
+
+	// 	window.addEventListener('resize', handleResize)
+
+	// 	return () => {
+	// 		window.removeEventListener('resize', handleResize)
+	// 	}
+	// }, [containerType])
 
 	return {
-		width: debouncedWidth,
-		height: debouncedHeight,
-		ref: containerType === 'window' ? undefined : containerRef,
-		isReady,
+		viewportWidth: debouncedWidth,
+		viewportHeight: debouncedHeight,
+		ref: containerType === 'viewport' ? undefined : containerRef,
+		rect: debouncedRect,
 	}
 }

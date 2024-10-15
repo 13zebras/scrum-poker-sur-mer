@@ -1,7 +1,7 @@
 'use client'
 
 import UserPointsCard from './UserPointsCard'
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import useResize from '@/utils/hooks/useResize'
 
 import { useSocketListener } from '@/services/socket'
@@ -13,7 +13,11 @@ export default function CardsContainer() {
 	const [sortedUsersPoints, setSortedUsersPoints] = useState<ListenerRes[]>([])
 
 	// container width is need for the animation of the cards
-	const { width: containerWidth, ref: containerRef } = useResize('ref')
+	const { viewportHeight, ref: containerRef, rect } = useResize('both')
+
+	console.log('%c>>> viewportHeight', 'color: yellow', viewportHeight)
+	console.log('%c>>> rect', 'color: red', rect)
+	console.log('%c>>> rect.bottom', 'color: red', rect?.bottom)
 
 	const allUsersStoryPoints = useSocketListener('all-users-story-points', {
 		onChange: (allPointsRes) => {
@@ -44,10 +48,6 @@ export default function CardsContainer() {
 
 	const usersPointsForCards = showStoryPoints ? sortedUsersPoints : usersPointsData
 
-	// console.log('%c>>> containerWidth', 'color: yellow', containerWidth)
-	// console.log('%c>>> usersPointsForCards', 'color: red', usersPointsForCards)
-	// console.log('%c>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', 'color: gray')
-
 	// NOTE: the key needs to change when showStoryPoints changes and therefore
 	// the array changes to sortedUsersPoints. The timestamp makes each key unique, and
 	// showStoryPoints causes the key to change when the array changes. So:
@@ -55,7 +55,7 @@ export default function CardsContainer() {
 	return (
 		<div
 			ref={containerRef}
-			className='relative pb-[6vh] flex justify-center items-center flex-wrap text-center gap-4 text-gray-300 border-0 border-red-900 w-full z-10'
+			className='relative pb-2 flex justify-center items-center flex-wrap text-center gap-4 text-gray-300 border-0 border-red-900 w-full z-10'
 		>
 			{usersPointsForCards.map(({ message, userName, imageNumber, timeStamp }, index, array) => {
 				const storyPoint = makeStringPoints(message as number)
@@ -69,7 +69,9 @@ export default function CardsContainer() {
 						numberOfCards={array.length}
 						numberOfBlanks={numberOfBlankCards}
 						showPoints={showStoryPoints}
-						containerWidth={containerWidth}
+						containerWidth={rect?.width || 0}
+						containerBottom={rect?.bottom || 0}
+						viewportHeight={viewportHeight || 0}
 					/>
 				)
 			})}
