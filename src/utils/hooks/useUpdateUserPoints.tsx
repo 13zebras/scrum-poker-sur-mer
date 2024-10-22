@@ -10,25 +10,30 @@ export default function useUpdateUsersPoints({ allUsersPointsEmitter }: UpdateUs
 	const [allUsersPointsData, setAllUsersPointsData] = useState<ListenerRes[]>([])
 
 	const updateUsersPoints = (usersPointsUpdate: ListenerRes | ListenerRes[]) => {
+		console.log('%c>>> updateUsersPoints', 'color: #5f0', usersPointsUpdate)
 		if (Array.isArray(usersPointsUpdate)) {
+			console.log('%c>>> updateUsersPoints-ARRAY', 'color: #f0f', usersPointsUpdate)
 			setAllUsersPointsData(usersPointsUpdate)
 			allUsersPointsEmitter(usersPointsUpdate)
 		} else {
 			setAllUsersPointsData((prevUsersPoints: ListenerRes[]) => {
+				console.log('%c>>> updateUsersPoints-prevUsersPoints', 'color: yellow', prevUsersPoints)
 				const index = prevUsersPoints.findIndex((data) => data.userId === usersPointsUpdate.userId)
 				let newAllPointsState: ListenerRes[]
 
 				if (index !== -1) {
 					const noDuplicates = [...prevUsersPoints]
-					if (usersPointsUpdate.message === POINT_CODES.HIDE_HOST) {
-						noDuplicates.splice(index, 1)
-					} else {
-						noDuplicates[index].message = usersPointsUpdate.message
-						noDuplicates[index].userName = usersPointsUpdate.userName
+
+					console.log('%c>>> usersPointsUpdate.message', 'color: #f0f', usersPointsUpdate.message)
+					const message = usersPointsUpdate.message
+					if (typeof message === 'number' && message !== POINT_CODES.RESET) {
+						console.log('%c>>> message is a number and >= -1', 'color: #f0f', message)
+						noDuplicates[index].timeStamp = usersPointsUpdate.timeStamp
+						console.log('%c>>> new timestamp', 'color: #f0f', usersPointsUpdate.timeStamp)
 					}
+					noDuplicates[index].message = usersPointsUpdate.message
+					noDuplicates[index].userName = usersPointsUpdate.userName
 					newAllPointsState = noDuplicates
-				} else if (usersPointsUpdate.message === POINT_CODES.HIDE_HOST) {
-					return prevUsersPoints
 				} else {
 					newAllPointsState = [...prevUsersPoints, usersPointsUpdate]
 				}

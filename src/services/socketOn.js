@@ -5,10 +5,12 @@ module.exports = (io, socket) => {
 		const { roomId, message, userName, userId, timeStamp, ...otherOptions } = options
 		const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false })
 		console.log('\n********************************************************')
-		console.log('>>\n>> eventName:', eventName)
+		console.log('>>\n>> Socket.id:', socket.id)
+		console.log('>> EventName:', eventName)
 		console.log('>> Time:', currentTime, '\n>>')
 
-		console.log('>> options:', options)
+		console.log('>> Options:', options)
+		console.log('>> Server timestamp:', Date.now())
 		console.log('>>\n********************************************************\n')
 		if (eventName === 'join-room') {
 			socket.join(roomId)

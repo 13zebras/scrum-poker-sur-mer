@@ -12,7 +12,7 @@ type Props = {
 	allowedStoryPoints: string[]
 	setAllowedStoryPoints: (allowedStoryPoints: string[]) => void
 	showHostCard: boolean
-	setShowHostCard: (showHostCard: boolean) => void
+	handleShowHostCard: (isShow: boolean) => void
 }
 
 export default function HostSettingsButton({
@@ -23,15 +23,15 @@ export default function HostSettingsButton({
 	allowedStoryPoints,
 	setAllowedStoryPoints,
 	showHostCard,
-	setShowHostCard,
+	handleShowHostCard,
 }: Props) {
 	const dialogRef = useRef<HTMLDialogElement>(null)
 
 	function onSubmitForm(event: React.FormEvent<HTMLFormElement>) {
 		const formData = new FormData(event.currentTarget)
-		const showHideHostCard = formData.getAll('showHideHostCard')
+		// const showHideHostCard = formData.getAll('showHideHostCard')
 		const hostChosenPoints = formData.getAll('storyPoints') as string[]
-		setShowHostCard(showHideHostCard[0] === 'show')
+		// setShowHostCard(showHideHostCard[0] === 'show')
 		if (hostChosenPoints.length > 0) {
 			allowedPointsEmitter(hostChosenPoints, true)
 			setAllowedStoryPoints(hostChosenPoints)
@@ -74,7 +74,7 @@ export default function HostSettingsButton({
 								<div className='w-full flex flex-col items-center gap-5 pb-2'>
 									<RadioShowHide
 										selectedOption={showHostCard ? 'show' : 'hide'}
-										onChange={(value: 'show' | 'hide') => setShowHostCard(value === 'show')}
+										onChange={(value: 'show' | 'hide') => handleShowHostCard(value === 'show')}
 									/>
 									<div className='flex items-center text-md font-semibold self-start w-full'>
 										Select Allowed Story Points:

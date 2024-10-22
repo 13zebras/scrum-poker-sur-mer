@@ -43,10 +43,10 @@ export default function StoryPointsContainer({
 		})
 	}
 
-	console.log('%c>>> isDisabledHost:', 'color: red', isDisabledHost)
-	console.log('%c>>> showHostCard:', 'color: yellow', showHostCard)
-	console.log('%c>>> userId:', 'color: #5f0', userId)
-	console.log('%c>>> hostId:', 'color: red', hostId)
+	// console.log('%c>>> isDisabledHost:', 'color: red', isDisabledHost)
+	// console.log('%c>>> showHostCard:', 'color: yellow', showHostCard)
+	// console.log('%c>>> userId:', 'color: #5f0', userId)
+	// console.log('%c>>> hostId:', 'color: red', hostId)
 
 	return (
 		<div

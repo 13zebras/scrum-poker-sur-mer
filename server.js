@@ -25,7 +25,7 @@ app.prepare().then(() => {
 		console.log('\n*******************************************************')
 		console.log('>> server socket.id', socket.id)
 		console.log('*******************************************************\n')
-		// console.log('*******************************************************')
+
 		socketOnHandler(io, socket)
 	})
 

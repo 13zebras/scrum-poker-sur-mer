@@ -12,13 +12,25 @@ import RoomInfo from '@/components/RoomInfo'
 import HostDemoButtons from '@/components/socketIoDevTools/HostDemoButtons'
 import useUpdateUsersPoints from '@/utils/hooks/useUpdateUserPoints'
 import AnimatedFish from '@/components/AnimatedFish'
-import { POINT_CODES } from '@/utils/constants'
+import { POINT_CODES, DEFAULT_STORY_POINTS } from '@/utils/constants'
+
+type HostData = {
+	nameOfHost: string
+	userId: string
+	roomUrl: string
+	hostRoomUrl: string
+}
 
 export default function HostRoom({ params }: { params: { roomId: string } }) {
-	const hostCardLocalStorage = localStorage.getItem('scrumPokerLaMerShowHostCard')
-	const hostCardShow: boolean = hostCardLocalStorage && JSON.parse(hostCardLocalStorage)
 	const [disabledShowPointsButton, setDisabledShowPointsButton] = useState<boolean>(false)
-	const [showHostCard, setShowHostCard] = useState<boolean>(hostCardShow)
+	const [showHostCard, setShowHostCard] = useState<boolean>(false)
+	const [hostData, setHostData] = useState<HostData>({
+		nameOfHost: '',
+		userId: '',
+		roomUrl: '',
+		hostRoomUrl: '',
+	})
+	const [allowedStoryPoints, setAllowedStoryPoints] = useState<string[]>(DEFAULT_STORY_POINTS)
 	const { allUsersPointsData, updateUsersPoints } = useUpdateUsersPoints({
 		allUsersPointsEmitter,
 	})
@@ -26,54 +38,60 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const { roomId } = params
 
 	// NOTE: for demo mode, add '-DEMO-numberDemoUsers-percentDemoPoints'
-	// to the roomId
+	// to the roomId in the url
 	const demoMode = roomId.includes('DEMO')
 	const splitRoomId = roomId.split('-')
 	const demoNumberUsers = splitRoomId[2] ? Number.parseInt(splitRoomId[2]) : 0
 	const demoPointPercent = splitRoomId[3] ? Number.parseInt(splitRoomId[3]) : undefined
 
-	// NOTE: these values are passed to the story point buttons.
-	// The radio buttons will submit one of these values as strings.
-	const defaultStoryPointValues = ['?', '0', '1', '2', '3', '5', '8', '13', '20', '40', '100']
-	const allowedPointsLocalStorage = localStorage.getItem('scrumPokerLaMerAllowedStoryPoints')
-	const startingAllowedPoints = allowedPointsLocalStorage
-		? JSON.parse(allowedPointsLocalStorage)
-		: defaultStoryPointValues
-
-	const [allowedStoryPoints, setAllowedStoryPoints] = useState<string[]>(startingAllowedPoints)
-
-	const hostDataLocalStorage = localStorage.getItem('scrumPokerLaMerHostData')
-	const nameOfHost = hostDataLocalStorage && JSON.parse(hostDataLocalStorage)?.nameOfHost
-	const userId = hostDataLocalStorage && JSON.parse(hostDataLocalStorage)?.userId
-	const roomUrl: string = hostDataLocalStorage && JSON.parse(hostDataLocalStorage)?.roomUrl
-	const hostRoomUrl: string = hostDataLocalStorage && JSON.parse(hostDataLocalStorage)?.hostRoomUrl
-
-	// emitter for host joining room
+	// biome-ignore lint/correctness/useExhaustiveDependencies: no need to add updateUsersPoints or roomId to useEffect dependency array as this should only run once when the page loads
 	useEffect(() => {
-		const hostPoints = showHostCard ? POINT_CODES.JOIN : POINT_CODES.HIDE_HOST
+		const allPointsLocalStorage = localStorage.getItem('scrumPokerLaMerStoryPoints')
+		if (allPointsLocalStorage) {
+			updateUsersPoints(JSON.parse(allPointsLocalStorage))
+		}
+
+		const hostCardLocalStorage = localStorage.getItem('scrumPokerLaMerShowHostCard')
+		const hostCardShow: boolean = hostCardLocalStorage ? !!JSON.parse(hostCardLocalStorage) : false
+		// console.log('%c>>> hostCardShow', 'color: red', hostCardShow)
+		setShowHostCard(hostCardShow)
+		const hostPoints = hostCardShow ? POINT_CODES.JOIN : POINT_CODES.HIDE_HOST
+
+		// NOTE: these values are passed to the story point buttons.
+		// The radio buttons will submit one of these values as strings.
+
+		const allowedPointsLocalStorage = localStorage.getItem('scrumPokerLaMerAllowedStoryPoints')
+		allowedPointsLocalStorage && setAllowedStoryPoints(JSON.parse(allowedPointsLocalStorage))
+		let hostData: HostData = {
+			nameOfHost: '',
+			userId: '',
+			roomUrl: '',
+			hostRoomUrl: '',
+		}
+		const hostDataLocalStorage = localStorage.getItem('scrumPokerLaMerHostData')
+		if (hostDataLocalStorage) {
+			hostData = {
+				nameOfHost: JSON.parse(hostDataLocalStorage)?.nameOfHost,
+				userId: JSON.parse(hostDataLocalStorage)?.userId,
+				roomUrl: JSON.parse(hostDataLocalStorage)?.roomUrl,
+				hostRoomUrl: JSON.parse(hostDataLocalStorage)?.hostRoomUrl,
+			}
+			setHostData(hostData)
+		}
+
 		socketEmitter('join-room', {
 			roomId: roomId,
 			message: hostPoints,
-			userName: nameOfHost,
-			userId: userId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 		})
-		localStorage.setItem('scrumPokerLaMerShowHostCard', JSON.stringify(showHostCard))
-	}, [roomId, nameOfHost, showHostCard, userId])
+		// console.log('%c>>> host join room', 'color: red', hostPoints)
+		localStorage.setItem('scrumPokerLaMerShowHostCard', JSON.stringify(hostCardShow))
+	}, [])
 
 	useSocketListener('join-room', {
 		onChange: (joinRoomRes) => {
-			// add imageNumber to the user who joined the room
-
-			const maxImageNumber = allUsersPointsData.reduce(
-				(max, user) => (user.imageNumber > max ? user.imageNumber : max),
-				allUsersPointsData[0]?.imageNumber ?? 0,
-			)
-			const userJoinWithImageNumber = {
-				...joinRoomRes,
-				imageNumber: maxImageNumber + 1,
-			}
-
-			updateUsersPoints(userJoinWithImageNumber)
+			updateUsersPoints(joinRoomRes)
 
 			// when someone joins the room, emit allowedStoryPoints
 			allowedPointsEmitter(allowedStoryPoints)
@@ -81,9 +99,9 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 			// when someone joins the room, emit nameOfHost & roomUrl
 			socketEmitter('host-room-info', {
 				roomId: roomId,
-				message: roomUrl,
-				userName: nameOfHost,
-				userId: userId,
+				message: hostData.roomUrl,
+				userName: hostData.nameOfHost,
+				userId: hostData.userId,
 			})
 		},
 	})
@@ -99,8 +117,8 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		socketEmitter('allowed-story-points', {
 			roomId: roomId,
 			message: allowedPoints,
-			userName: nameOfHost,
-			userId: userId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 			localStorageName: localStorageValue,
 		})
 	}
@@ -109,8 +127,8 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		socketEmitter('all-users-story-points', {
 			roomId: roomId,
 			message: allUsersPointsData,
-			userName: nameOfHost,
-			userId: userId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 			localStorageName: 'scrumPokerLaMerStoryPoints',
 		})
 	}
@@ -119,24 +137,53 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		socketEmitter('show-disable-reset-points', {
 			roomId: roomId,
 			message: true as unknown as string,
-			userName: nameOfHost,
-			userId: userId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 		})
 		setDisabledShowPointsButton(!disabledShowPointsButton)
 	}
 
 	const handleClearPoints = () => {
 		const clearedPoints = allUsersPointsData.map((data: ListenerRes) => {
-			return { ...data, message: POINT_CODES.RESET }
+			return { ...data, message: data.message === -77 ? data.message : POINT_CODES.RESET }
 		})
 		updateUsersPoints(clearedPoints)
 		socketEmitter('show-disable-reset-points', {
 			roomId: roomId,
 			message: false as unknown as string,
-			userName: nameOfHost,
-			userId: userId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 		})
 		setDisabledShowPointsButton(!disabledShowPointsButton)
+	}
+
+	const handleShowHostCard = (isShow: boolean) => {
+		const hostPoints = isShow ? POINT_CODES.JOIN : POINT_CODES.HIDE_HOST
+		socketEmitter('user-story-point', {
+			roomId: roomId,
+			message: hostPoints,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
+		})
+		localStorage.setItem('scrumPokerLaMerShowHostCard', JSON.stringify(isShow))
+		setShowHostCard(isShow)
+	}
+
+	const handleInactiveUsers = () => {
+		const currentTimeStamp = Date.now()
+		const removeOldUsersAfter = 30 * 60 * 1000
+		const cleanedUpAllPointsState = allUsersPointsData
+			.map((user) => {
+				console.log('%c>>> user', 'color: red', user)
+				const userIsHost = user?.userId === hostData.userId
+				const userIsOld = currentTimeStamp - user?.timeStamp > removeOldUsersAfter
+				if (userIsOld && !userIsHost) {
+					return
+				}
+				return user
+			})
+			.filter((user): user is ListenerRes => user !== undefined)
+		allUsersPointsEmitter(cleanedUpAllPointsState)
 	}
 
 	return (
@@ -147,7 +194,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					<h1 className='text-center text-2xl sm:text-3xl text-gray-300'>
 						Host: Scrum Poker sous la Mer
 					</h1>
-					<RoomInfo roomUrl={roomUrl} nameOfHost={nameOfHost} />
+					<RoomInfo roomUrl={hostData.roomUrl} nameOfHost={hostData.nameOfHost} />
 				</div>
 				<div className='pt-2 w-full flex flex-col justify-start items-center gap-8 md:gap-12'>
 					<div className='flex flex-row justify-between items-start md:self-end gap-x-12'>
@@ -170,9 +217,9 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					</div>
 					<RoomMainUi
 						roomId={roomId}
-						userName={nameOfHost}
-						userId={userId}
-						hostId={userId}
+						userName={hostData.nameOfHost}
+						userId={hostData.userId}
+						hostId={hostData.userId}
 						showHostCard={showHostCard}
 					/>
 				</div>
@@ -182,14 +229,14 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					data-tip='Host Settings'
 				>
 					<HostSettingsButton
-						hostRoomUrl={hostRoomUrl}
-						roomUrl={roomUrl}
+						hostRoomUrl={hostData.hostRoomUrl}
+						roomUrl={hostData.roomUrl}
 						allowedPointsEmitter={allowedPointsEmitter}
-						defaultStoryPointValues={defaultStoryPointValues}
+						defaultStoryPointValues={DEFAULT_STORY_POINTS}
 						allowedStoryPoints={allowedStoryPoints}
 						setAllowedStoryPoints={setAllowedStoryPoints}
 						showHostCard={showHostCard}
-						setShowHostCard={setShowHostCard}
+						handleShowHostCard={handleShowHostCard}
 					/>
 				</div>
 				<div className='absolute top-4 left-4 sm:left-12 flex flex-row flex-start items-center gap-8 scale-90'>

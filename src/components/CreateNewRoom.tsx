@@ -53,6 +53,14 @@ export default function CreateNewRoom() {
 		}
 	}
 
+	function handleClearLocalStorage() {
+		// localStorage.removeItem('scrumPokerLaMerAllowedStoryPoints')
+		localStorage.removeItem('scrumPokerLaMerStoryPoints')
+		// localStorage.removeItem('scrumPokerLaMerShowHostCard')
+		localStorage.removeItem('scrumPokerLaMerUser')
+		// window.location.reload()
+	}
+
 	function handleUseLastRoom() {
 		setCreateCopyGo('copy')
 		localStorage.setItem(
@@ -65,6 +73,7 @@ export default function CreateNewRoom() {
 				userId: userId,
 			}),
 		)
+		handleClearLocalStorage()
 	}
 
 	function handleCreateRoom() {
@@ -91,7 +100,7 @@ export default function CreateNewRoom() {
 				userId: newUserId,
 			}),
 		)
-
+		handleClearLocalStorage()
 		setCreateCopyGo('copy')
 
 		if (hostRef.current) hostRef.current.value = ''

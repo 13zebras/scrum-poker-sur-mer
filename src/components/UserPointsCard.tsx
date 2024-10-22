@@ -6,7 +6,8 @@ import CardsContainer from './CardsContainer'
 type CardProps = {
 	name: string
 	storyPoint: string
-	imageNumber: number
+	// imageNumber: number
+	userId: string
 	index: number
 	numberOfCards: number
 	numberOfBlanks: number
@@ -19,7 +20,8 @@ type CardProps = {
 export default function UserPointsCard({
 	name,
 	storyPoint,
-	imageNumber,
+	// imageNumber,
+	userId,
 	index,
 	numberOfCards,
 	numberOfBlanks,
@@ -202,7 +204,8 @@ export default function UserPointsCard({
 				style={{ zIndex: blankZIndex }}
 			>
 				<figure className='size-[7.5rem] object-cover absolute -inset-[2px]'>
-					<SealifeImage imageNum={imageNumber} alt={`${name} avatar profile`} />
+					<SealifeImage userId={userId} alt={`${name} avatar profile`} />
+					{/* <SealifeImage imageNum={imageNumber} alt={`${name} avatar profile`} /> */}
 				</figure>
 				<motion.div
 					initial={{ opacity: 0 }}
@@ -212,7 +215,7 @@ export default function UserPointsCard({
 				>
 					{showPoints || isBlank ? (
 						<h2
-							className='card-title text-[2.5rem] h-12 tracking-wide'
+							className='card-title text-[3rem] h-12 tracking-wide'
 							style={{
 								textShadow: '1px 1px 1px black, 3px 3px 1px black',
 							}}
@@ -220,16 +223,11 @@ export default function UserPointsCard({
 							{storyPoint}
 						</h2>
 					) : (
-						<JellyFishOutlineIcon
-							className='animate-fade-in-500 text-[3rem] h-12 font-bold'
-							style={{
-								textShadow: '1px 1px 1px black, 3px 3px 1px black',
-							}}
-						/>
+						<JellyFishOutlineIcon className='animate-fade-in-500 text-[3rem] h-12' />
 					)}
 
 					<div
-						className='text-[1.1rem] leading-5 h-10 flex items-center'
+						className='text-[1.15rem] font-bold leading-5 h-10 flex items-center'
 						style={{
 							textShadow: '1px 1px 1px black, 2px 2px 1px black',
 						}}

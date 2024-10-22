@@ -37,7 +37,7 @@ export default function HostDemoButtons({
 			// console.log('%c>>> storyPoint', 'color: yellow', storyPoint)
 			const userName = `*${name}`
 			const userId = crypto.randomUUID()
-			const imageNum = allUsersPoints.length + index + 1
+			// const imageNum = allUsersPoints.length + index + 1
 			const timeStamp = Date.now() + Math.floor(Math.random() * 60000) - 60000
 			// NOTE: 60000ms = 1 minute. Each sample user would get
 			// a random time stamp between 1 minute ago and now.
@@ -45,7 +45,7 @@ export default function HostDemoButtons({
 				message: storyPoint,
 				userName: userName,
 				userId: userId,
-				imageNumber: imageNum,
+				// imageNumber: imageNum,
 				timeStamp: timeStamp,
 			}
 		})

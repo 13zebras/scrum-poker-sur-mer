@@ -32,6 +32,7 @@ export default function CardsContainer() {
 		},
 	})
 	const usersPointsData = (allUsersStoryPoints?.message as unknown as ListenerRes[]) || []
+	// console.log('%c>>> usersPointsData[0].userId', 'color: red', usersPointsData[0]?.userId)
 
 	const showDisableReset = useSocketListener('show-disable-reset-points')
 	const showStoryPoints = !!showDisableReset?.message as unknown as boolean
@@ -57,14 +58,18 @@ export default function CardsContainer() {
 			ref={containerRef}
 			className='relative pb-2 flex justify-center items-center flex-wrap text-center gap-4 text-gray-300 border-0 border-red-900 w-full z-10'
 		>
-			{usersPointsForCards.map(({ message, userName, imageNumber, timeStamp }, index, array) => {
+			{usersPointsForCards.map(({ message, userName, userId, timeStamp }, index, array) => {
 				const storyPoint = makeStringPoints(message as number)
+
+				if (message === POINT_CODES.HIDE_HOST) return null
+
 				return (
 					<UserPointsCard
 						key={`${timeStamp.toString()}-${showStoryPoints.toString()}`}
 						name={userName}
 						storyPoint={storyPoint}
-						imageNumber={imageNumber}
+						// imageNumber={imageNumber}
+						userId={userId}
 						index={index}
 						numberOfCards={array.length}
 						numberOfBlanks={numberOfBlankCards}
