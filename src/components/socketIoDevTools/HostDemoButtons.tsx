@@ -2,12 +2,13 @@ import { useState } from 'react'
 import type { ListenerRes } from '@/services/socket'
 import { sampleNamesArray } from '@/utils/sampleData'
 import { POINT_CODES } from '@/utils/constants'
+import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
 
 type HostDemoButtonsProps = {
 	allUsersPoints: ListenerRes[]
 	allowedStoryPoints: string[]
 	updateUsersPoints: (allUsersPoints: ListenerRes[]) => void
-	demoNumberUsers: number
+	demoNumberUsers: number | undefined
 	demoPointPercent: number | undefined
 }
 
@@ -38,9 +39,8 @@ export default function HostDemoButtons({
 			const userName = `*${name}`
 			const userId = crypto.randomUUID()
 			// const imageNum = allUsersPoints.length + index + 1
-			const timeStamp = Date.now() + Math.floor(Math.random() * 60000) - 60000
-			// NOTE: 60000ms = 1 minute. Each sample user would get
-			// a random time stamp between 1 minute ago and now.
+			const timeStamp = Date.now() - Math.ceil(Math.random() * 30 * 60 * 1000)
+			// NOTE: Each sample user gets a random timeStamp between 30 mins ago and now.
 			return {
 				message: storyPoint,
 				userName: userName,
@@ -59,23 +59,35 @@ export default function HostDemoButtons({
 		updateUsersPoints(realUsers)
 	}
 
+	function onRemoveLocalStorage() {
+		removeAllLocalStorageData()
+		window.location.reload()
+	}
+
 	return (
 		<div className='flex flex-row justify-start items-center gap-2'>
 			<button
 				type='button'
 				onClick={onAddRandomUsers}
-				className='btn btn-outline btn-accent h-6 min-h-6 w-24 px-1 text-xs'
+				className='btn btn-outline btn-accent h-6 min-h-6 w-16 px-1 text-xs'
 				disabled={wasAdded}
 			>
-				Add Users
+				Add
 			</button>
 			<button
 				type='button'
 				onClick={onRemoveRandomUsers}
-				className='btn btn-outline btn-accent h-6 min-h-6 w-24 px-1 text-xs'
+				className='btn btn-outline btn-accent h-6 min-h-6 w-16 px-1 text-xs'
 				disabled={!wasAdded}
 			>
-				Del Users
+				Delete
+			</button>
+			<button
+				type='button'
+				onClick={onRemoveLocalStorage}
+				className='btn btn-outline btn-neutral h-6 min-h-6 w-24 px-1 text-xs'
+			>
+				Clear Data
 			</button>
 		</div>
 	)

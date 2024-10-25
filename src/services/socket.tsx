@@ -7,7 +7,6 @@ export type ListenerRes = {
 	message: string | number
 	userName: string
 	userId: string
-	// imageNumber: number
 	timeStamp: number
 }
 
@@ -24,8 +23,6 @@ type EmitterOptions = {
 	message: string | number | ListenerRes[] | string[]
 	userName: string
 	userId: string
-	// imageNumber?: number
-	localStorageName?: string
 }
 
 const socket = io()
@@ -41,10 +38,7 @@ export function socketEmitter(eventName: string, options: EmitterOptions) {
 		userName: options.userName,
 		userId: options.userId,
 		timeStamp: timeStamp,
-		// imageNumber: options.imageNumber,
 	})
-	if (options.localStorageName)
-		localStorage.setItem(options.localStorageName, JSON.stringify(options.message))
 }
 
 type Config = {
@@ -55,21 +49,10 @@ export function useSocketListener(eventName: EventName, config?: Config) {
 	const [listenerRes, setListenerRes] = useState<ListenerRes>()
 	useEffect(() => {
 		function onListenerRes(options: ListenerRes) {
-			// const { message, userName, userId, imageNumber, timeStamp } = options
 			const { message, userName, userId, timeStamp } = options
-			console.log(
-				'%c>>> onListenerRes socket.id, event, options:\n',
-				'color: red',
-				eventName,
-				'\n',
-				socket.id,
-				options,
-			)
 
-			// setListenerRes({ message, userName, userId, imageNumber, timeStamp })
 			setListenerRes({ message, userName, userId, timeStamp })
 
-			// config?.onChange({ message, userName, userId, imageNumber, timeStamp })
 			config?.onChange({ message, userName, userId, timeStamp })
 		}
 		socket.on(eventName, onListenerRes)

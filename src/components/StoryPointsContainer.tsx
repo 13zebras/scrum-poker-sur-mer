@@ -43,11 +43,6 @@ export default function StoryPointsContainer({
 		})
 	}
 
-	// console.log('%c>>> isDisabledHost:', 'color: red', isDisabledHost)
-	// console.log('%c>>> showHostCard:', 'color: yellow', showHostCard)
-	// console.log('%c>>> userId:', 'color: #5f0', userId)
-	// console.log('%c>>> hostId:', 'color: red', hostId)
-
 	return (
 		<div
 			className={`flex flex-row flex-wrap gap-4 justify-center items-center border-0 border-pink-800 ${isDisabledHost && 'scale-[0.85] py-2'}`}

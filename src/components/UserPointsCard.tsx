@@ -43,14 +43,6 @@ export default function UserPointsCard({
 	const blankSize = Math.floor(cardSize * blankScale)
 	const showHowMuchBlankCard = 0.42
 
-	// when showing points, the opacity of the black "cover" is 35%
-	const showPointsOpacity = showPoints ? '35' : '20'
-
-	// blank cards have a few different css properties
-	const bgTextColorGap = isMoveBlank
-		? 'bg-black/40 text-gray-350'
-		: `bg-black/${showPointsOpacity} text-gray-100`
-
 	const blankPosition = isMoveBlank ? 'absolute' : 'relative'
 
 	// need the index of the first blank card to get the proper seuquence and delay
@@ -131,7 +123,7 @@ export default function UserPointsCard({
 	// )
 	// blank cards do not turn around the y axis.
 	// Cards with points turn but in a random direction, to the left or to the right
-	const rotateY = isMoveBlank ? 0 : (Math.random() < 0.5 ? -1 : 1) * 180
+	const rotateY = isMoveBlank || !showPoints ? 0 : (Math.random() < 0.5 ? -1 : 1) * 180
 
 	// blank cards are delayed so they slide left in a staggered sequence
 	const blankMoveDuration = 0.25
@@ -182,36 +174,39 @@ export default function UserPointsCard({
 					},
 					opacity: {
 						duration: animateDuration,
-						delay: 0.5,
+						delay: 0,
 					},
 					scale: !isMoveBlank
 						? {
 								type: 'spring',
-								damping: 34,
-								stiffness: 190,
-								mass: 5,
+								damping: 13,
+								stiffness: 80,
+								mass: 2,
 								restDelta: 0.001,
-								delay: 0.5,
+								delay: 0,
 							}
 						: {
 								type: 'tween',
 								duration: 0.5,
 								ease: 'easeInOut',
-								delay: 0.5,
+								delay: 0,
 							},
 				}}
 				className={`card card-points ${blankPosition}`}
 				style={{ zIndex: blankZIndex }}
 			>
-				<figure className='size-[7.5rem] object-cover absolute -inset-[2px]'>
+				<figure
+					className={`size-[7.5rem] object-cover absolute -inset-[2px] ${showPoints ? 'opacity-60' : 'opacity-80'}`}
+				>
 					<SealifeImage userId={userId} alt={`${name} avatar profile`} />
-					{/* <SealifeImage imageNum={imageNumber} alt={`${name} avatar profile`} /> */}
 				</figure>
 				<motion.div
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ duration: animateDuration, delay: animateDelay, ease: 'easeInOut' }}
-					className={`card-body card-body-points ${bgTextColorGap}`}
+					className={`card-body card-body-points ${
+						isMoveBlank ? 'text-gray-300' : 'text-gray-100'
+					}`}
 				>
 					{showPoints || isBlank ? (
 						<h2
@@ -223,7 +218,7 @@ export default function UserPointsCard({
 							{storyPoint}
 						</h2>
 					) : (
-						<JellyFishOutlineIcon className='animate-fade-in-500 text-[3rem] h-12' />
+						<JellyFishOutlineIcon className='text-[3rem] h-12' />
 					)}
 
 					<div

@@ -3,7 +3,7 @@
 import GearIcon from './icons/GearIcon'
 import RadioShowHide from './RadioShowHide'
 import { useRef } from 'react'
-
+import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
 type Props = {
 	hostRoomUrl: string
 	roomUrl: string
@@ -29,13 +29,17 @@ export default function HostSettingsButton({
 
 	function onSubmitForm(event: React.FormEvent<HTMLFormElement>) {
 		const formData = new FormData(event.currentTarget)
-		// const showHideHostCard = formData.getAll('showHideHostCard')
+
 		const hostChosenPoints = formData.getAll('storyPoints') as string[]
-		// setShowHostCard(showHideHostCard[0] === 'show')
+
 		if (hostChosenPoints.length > 0) {
 			allowedPointsEmitter(hostChosenPoints, true)
 			setAllowedStoryPoints(hostChosenPoints)
 		}
+	}
+
+	function handleClearAllUsersData() {
+		removeAllLocalStorageData()
 	}
 
 	return (
@@ -52,8 +56,8 @@ export default function HostSettingsButton({
 				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' />
 			</button>
 			<dialog ref={dialogRef} className='modal bg-black/60'>
-				<div className='modal-box flex justify-center w-full max-w-[46rem] relative bg-slate-950 border-2 border-slate-700 text-gray-300'>
-					<div className='flex flex-col justify-start items-start gap-8 py-4'>
+				<div className='modal-box flex flex-col items-center justify-center gap-8 w-full max-w-[42rem] relative bg-slate-950 border-2 border-slate-700 text-gray-300'>
+					<div className='flex flex-col justify-start items-start gap-6 py-4 px-1 max-w-[36rem] w-full'>
 						<h3 className='font-bold text-3xl self-center text-center pb-4'>Host Settings</h3>
 
 						<div className='text-md font-semibold inline-flex items-center'>
@@ -65,13 +69,13 @@ export default function HostSettingsButton({
 							<span className='font-mono ml-4 font-normal'>{roomUrl}</span>
 						</div>
 
-						<div className='modal-action w-full m-0 pb-2'>
+						<div className='modal-action w-full m-0'>
 							<form
 								method='dialog'
-								className='w-full flex flex-col items-center gap-16'
+								className='w-full flex flex-col items-center gap-8'
 								onSubmit={onSubmitForm}
 							>
-								<div className='w-full flex flex-col items-center gap-5 pb-2'>
+								<div className='w-full flex flex-col items-center gap-6 pb-2'>
 									<RadioShowHide
 										selectedOption={showHostCard ? 'show' : 'hide'}
 										onChange={(value: 'show' | 'hide') => handleShowHostCard(value === 'show')}
@@ -109,11 +113,36 @@ export default function HostSettingsButton({
 									</fieldset>
 								</div>
 
-								<button type='submit' className='btn btn-accent w-80 h-10 text-xl'>
+								<button type='submit' className='btn btn-accent w-72 min-h-9 h-9 text-xl'>
 									Save & Close
 								</button>
 							</form>
 						</div>
+					</div>
+					<div className='w-5/6 h-px bg-slate-600' />
+					<div className='flex flex-col justify-center items-center gap-4 pt-1 pb-3 max-w-[32rem] w-full'>
+						<div className='flex justify-center items-center gap-6'>
+							<span className='font-semibold text-sm tracking-wider'>
+								<span className='text-error font-bold text-base mr-2'>Caution!</span>
+								This action cannot be undone:
+							</span>
+							<button
+								type='button'
+								className='btn btn-outline btn-info text-xs h-5 min-h-5 w-40'
+								onClick={handleClearAllUsersData}
+							>
+								Clear All Users Data
+							</button>
+						</div>
+						{/* <div className='w-full flex justify-center items-center gap-6'>
+							<button
+								type='button'
+								className='btn btn-outline btn-info text-xs h-6 min-h-6 w-44'
+								onClick={handleClearAllUsersData}
+							>
+								Clear All Users Data
+							</button>
+						</div> */}
 					</div>
 				</div>
 			</dialog>

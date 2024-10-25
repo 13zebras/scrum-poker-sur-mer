@@ -52,17 +52,17 @@ export default function NewUserDialog({
 
 	return (
 		<dialog ref={dialogRef} className='modal bg-black/50' {...otherProps}>
-			<div className='relative py-10 flex flex-col justify-start items-center w-full max-w-md h-96 bg-dkblue-700 border border-blue-700 rounded-2xl gap-0'>
+			<div className='relative py-8 px-4 flex flex-col justify-start items-center w-[90%] max-w-md h-[25rem] bg-dkblue-700 border border-blue-700 rounded-2xl gap-0'>
 				{returningUser ? (
 					<div className='mt-4 h-32 flex flex-col justify-end items-center gap-4'>
 						<h3 className='font-bold text-3xl text-center'>Welcome back</h3>
 						<h3 className='font-bold text-3xl text-center'>{user}!</h3>
 					</div>
 				) : (
-					<div className='h-32 mb-4 flex flex-col justify-center items-center gap-0'>
-						<h3 className='mb-4 font-bold text-3xl text-center'>Greetings!</h3>
-						<p className='text-center'>Please enter your first name,</p>
-						<p className='text-center'>then click Join Room!</p>
+					<div className='h-32 my-4 flex flex-col justify-center items-center gap-0 font-bold text-center'>
+						<h3 className='mb-4 text-3xl'>Greetings!</h3>
+						<p className=''>Please enter your first name,</p>
+						<p className=''>then click Join Room!</p>
 					</div>
 				)}
 
@@ -72,7 +72,7 @@ export default function NewUserDialog({
 							type='text'
 							placeholder='Your First Name'
 							name='userName'
-							className='input input-bordered input-primary h-10 w-72 text-gray-200 placeholder:italic placeholder:text-primary/80 shadow-lg shadow-black/70'
+							className='input input-bordered input-primary h-10 max-w-72 w-full text-gray-200 placeholder:italic placeholder:text-primary/80 shadow-lg shadow-black/70'
 							aria-label='your first name input'
 							onChange={handleOnChange}
 							onKeyDown={handleKeyDown}
@@ -82,7 +82,7 @@ export default function NewUserDialog({
 				<button
 					type='button'
 					onClick={() => handleOnSubmit(newUserName, userId)}
-					className='btn btn-accent w-72 h-10 min-h-10 text-xl shadow-lg shadow-black/70'
+					className='btn btn-accent max-w-72 w-full h-10 min-h-10 text-xl shadow-lg shadow-black/70'
 					disabled={!newUserName && !returningUser}
 				>
 					Join Room
@@ -90,14 +90,14 @@ export default function NewUserDialog({
 				</button>
 
 				{returningUser && (
-					<div className='absolute bottom-4 flex flex-row justify-center items-center gap-4'>
-						<p className='italic text-sm text-gray-400'>Or enter New Name?</p>
+					<div className='absolute bottom-6 flex flex-row flex-wrap justify-center items-center gap-x-4 gap-y-2 px-4'>
+						<span className='italic text-base text-gray-300'>Want to change your name:</span>
 						<button
 							type='button'
 							onClick={handleOnClickNewName}
-							className='btn btn-outline-gray h-5 min-h-5 text-xs px-3'
+							className='btn btn-outline btn-primary h-6 min-h-6 text-sm px-3'
 						>
-							New Name
+							Change Name
 						</button>
 					</div>
 				)}

@@ -1,35 +1,34 @@
 import { useState } from 'react'
 import type { ListenerRes } from '@/services/socket'
 import { POINT_CODES } from '@/utils/constants'
+import removeInactiveUsers from '@/utils/helpers/removeInactiveUsers'
 
 type UpdateUsersPointsProps = {
 	allUsersPointsEmitter: (newPoints: ListenerRes[]) => void
+	hostId: string
 }
 
-export default function useUpdateUsersPoints({ allUsersPointsEmitter }: UpdateUsersPointsProps) {
+export default function useUpdateUsersPoints({
+	allUsersPointsEmitter,
+	hostId,
+}: UpdateUsersPointsProps) {
 	const [allUsersPointsData, setAllUsersPointsData] = useState<ListenerRes[]>([])
 
 	const updateUsersPoints = (usersPointsUpdate: ListenerRes | ListenerRes[]) => {
-		console.log('%c>>> updateUsersPoints', 'color: #5f0', usersPointsUpdate)
 		if (Array.isArray(usersPointsUpdate)) {
-			console.log('%c>>> updateUsersPoints-ARRAY', 'color: #f0f', usersPointsUpdate)
 			setAllUsersPointsData(usersPointsUpdate)
 			allUsersPointsEmitter(usersPointsUpdate)
 		} else {
 			setAllUsersPointsData((prevUsersPoints: ListenerRes[]) => {
-				console.log('%c>>> updateUsersPoints-prevUsersPoints', 'color: yellow', prevUsersPoints)
 				const index = prevUsersPoints.findIndex((data) => data.userId === usersPointsUpdate.userId)
 				let newAllPointsState: ListenerRes[]
 
 				if (index !== -1) {
 					const noDuplicates = [...prevUsersPoints]
 
-					console.log('%c>>> usersPointsUpdate.message', 'color: #f0f', usersPointsUpdate.message)
 					const message = usersPointsUpdate.message
 					if (typeof message === 'number' && message !== POINT_CODES.RESET) {
-						console.log('%c>>> message is a number and >= -1', 'color: #f0f', message)
 						noDuplicates[index].timeStamp = usersPointsUpdate.timeStamp
-						console.log('%c>>> new timestamp', 'color: #f0f', usersPointsUpdate.timeStamp)
 					}
 					noDuplicates[index].message = usersPointsUpdate.message
 					noDuplicates[index].userName = usersPointsUpdate.userName
@@ -37,8 +36,9 @@ export default function useUpdateUsersPoints({ allUsersPointsEmitter }: UpdateUs
 				} else {
 					newAllPointsState = [...prevUsersPoints, usersPointsUpdate]
 				}
-				allUsersPointsEmitter(newAllPointsState)
-				return newAllPointsState
+				const currentUsersPointsState = removeInactiveUsers(newAllPointsState, hostId)
+				allUsersPointsEmitter(currentUsersPointsState)
+				return currentUsersPointsState
 			})
 		}
 	}
