@@ -1,19 +1,18 @@
 'use client'
 
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { socketEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
-import HostControlButton from '@/components/HostControlButton'
+import HostControlsContainer from '@/components/HostControlsContainer'
 import HostSettingsButton from '@/components/HostSettingsButton'
 import RoomMainUi from '@/components/RoomMainUi'
 import RoomInfo from '@/components/RoomInfo'
-import HostDemoButtons from '@/components/socketIoDevTools/HostDemoButtons'
 import useUpdateUsersPoints from '@/utils/hooks/useUpdateUserPoints'
 import AnimatedFish from '@/components/AnimatedFish'
 import { POINT_CODES, DEFAULT_STORY_POINTS } from '@/utils/constants'
 import { useLocalStorage } from 'usehooks-ts'
+import HostToolsContainer from '@/components/HostToolsContainer'
 
 type HostData = {
 	nameOfHost: string
@@ -22,16 +21,9 @@ type HostData = {
 	hostRoomUrl: string
 }
 
-type DemoData = {
-	demoMode: boolean
-	demoNumberUsers: number | undefined
-	demoPointPercent: number | undefined
-}
-
 export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const { roomId } = params
 	const [disabledShowPointsButton, setDisabledShowPointsButton] = useState<boolean>(false)
-
 	const [{ nameOfHost, userId: hostId, roomUrl, hostRoomUrl }, setHostData] =
 		useLocalStorage<HostData>('scrumPokerLaMerHostData', {
 			nameOfHost: '',
@@ -39,12 +31,10 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 			roomUrl: '',
 			hostRoomUrl: '',
 		})
-
 	const demoMode = nameOfHost.toLowerCase().includes('demo')
 	const splitNameOfHost = nameOfHost.split('-')
 	const demoNumberUsers = splitNameOfHost[1] ? Number.parseInt(splitNameOfHost[1]) : undefined
 	const demoPointPercent = splitNameOfHost[2] ? Number.parseInt(splitNameOfHost[2]) : undefined
-
 	const [showHostCard, setShowHostCard] = useLocalStorage<boolean>(
 		'scrumPokerLaMerShowHostCard',
 		false,
@@ -54,12 +44,10 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		'scrumPokerLaMerAllowedStoryPoints',
 		DEFAULT_STORY_POINTS,
 	)
-
 	const [allUsersPoints, setAllUsersPoints] = useLocalStorage<ListenerRes[]>(
 		'scrumPokerLaMerStoryPoints',
 		[],
 	)
-
 	const { allUsersPointsData, updateUsersPoints } = useUpdateUsersPoints({
 		allUsersPointsEmitter,
 		hostId: hostId,
@@ -67,7 +55,9 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: no need to add updateUsersPoints or roomId to useEffect dependency array as this should only run once when the page loads
 	useEffect(() => {
-		allUsersPoints && updateUsersPoints(allUsersPoints)
+		if (allUsersPoints) {
+			updateUsersPoints(allUsersPoints)
+		}
 
 		socketEmitter('join-room', {
 			roomId: roomId,
@@ -166,24 +156,11 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					<RoomInfo roomUrl={roomUrl} nameOfHost={nameOfHost} />
 				</div>
 				<div className='pt-2 w-full flex flex-col justify-start items-center gap-8 md:gap-12'>
-					<div className='flex flex-row justify-between items-start md:self-end gap-x-12'>
-						<div className='flex flex-row flex-wrap-reverse justify-end items-center gap-x-8 gap-y-4'>
-							<HostControlButton
-								handler={handleShowPoints}
-								color='success'
-								disabled={disabledShowPointsButton}
-							>
-								Show points
-							</HostControlButton>
-							<HostControlButton
-								handler={handleClearPoints}
-								color='error'
-								disabled={!disabledShowPointsButton}
-							>
-								Clear Points
-							</HostControlButton>
-						</div>
-					</div>
+					<HostControlsContainer
+						handleShowPoints={handleShowPoints}
+						disabledShowPointsButton={disabledShowPointsButton}
+						handleClearPoints={handleClearPoints}
+					/>
 					<RoomMainUi
 						roomId={roomId}
 						userName={nameOfHost}
@@ -193,37 +170,25 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					/>
 				</div>
 
-				<div
-					className='absolute top-4 right-4 sm:right-16 tooltip tooltip-bottom'
-					data-tip='Host Settings'
-				>
-					<HostSettingsButton
-						hostRoomUrl={hostRoomUrl}
-						roomUrl={roomUrl}
-						allowedPointsEmitter={allowedPointsEmitter}
-						defaultStoryPointValues={DEFAULT_STORY_POINTS}
-						allowedStoryPoints={allowedStoryPoints}
-						setAllowedStoryPoints={setAllowedStoryPoints}
-						showHostCard={showHostCard}
-						handleShowHostCard={handleShowHostCard}
-					/>
-				</div>
-				<div className='absolute top-4 left-4 sm:left-12 flex flex-row flex-start items-center gap-8 scale-90'>
-					<div className='tooltip tooltip-bottom text-xs' data-tip='Click to Create a New Room'>
-						<Link href='/host' className='btn btn-outline-gray h-6 min-h-6 w-28 px-1 text-xs'>
-							Create Room
-						</Link>
-					</div>
-					{demoMode && (
-						<HostDemoButtons
-							allUsersPoints={allUsersPointsData}
-							allowedStoryPoints={allowedStoryPoints}
-							updateUsersPoints={updateUsersPoints}
-							demoNumberUsers={demoNumberUsers}
-							demoPointPercent={demoPointPercent}
-						/>
-					)}
-				</div>
+				<HostSettingsButton
+					hostRoomUrl={hostRoomUrl}
+					roomUrl={roomUrl}
+					allowedPointsEmitter={allowedPointsEmitter}
+					defaultStoryPointValues={DEFAULT_STORY_POINTS}
+					allowedStoryPoints={allowedStoryPoints}
+					setAllowedStoryPoints={setAllowedStoryPoints}
+					showHostCard={showHostCard}
+					handleShowHostCard={handleShowHostCard}
+				/>
+
+				<HostToolsContainer
+					allUsersPointsData={allUsersPointsData}
+					allowedStoryPoints={allowedStoryPoints}
+					updateUsersPoints={updateUsersPoints}
+					demoMode={demoMode}
+					demoNumberUsers={demoNumberUsers}
+					demoPointPercent={demoPointPercent}
+				/>
 			</main>
 		</div>
 	)

@@ -195,11 +195,18 @@ export default function UserPointsCard({
 				className={`card card-points ${blankPosition}`}
 				style={{ zIndex: blankZIndex }}
 			>
-				<figure
-					className={`size-[7.5rem] object-cover absolute -inset-[2px] ${showPoints ? 'opacity-60' : 'opacity-80'}`}
+				<motion.figure
+					initial={{ opacity: showPoints ? 1 : 0.8 }}
+					animate={{ opacity: showPoints ? 0.5 : 0.8 }}
+					transition={{
+						duration: showPoints ? 0.2 : 0,
+						delay: showPoints ? animateDelay : 0,
+						ease: 'linear',
+					}}
+					className='size-[7.5rem] object-cover absolute -inset-[2px]'
 				>
 					<SealifeImage userId={userId} alt={`${name} avatar profile`} />
-				</figure>
+				</motion.figure>
 				<motion.div
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}

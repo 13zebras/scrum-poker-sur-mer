@@ -4,5 +4,4 @@ export default function removeAllLocalStorageData() {
 	localStorage.removeItem('scrumPokerLaMerStoryPoints')
 	localStorage.removeItem('scrumPokerLaMerShowHostCard')
 	localStorage.removeItem('scrumPokerLaMerUser')
-	window.location.reload()
 }

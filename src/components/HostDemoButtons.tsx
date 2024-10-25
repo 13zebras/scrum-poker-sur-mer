@@ -3,6 +3,7 @@ import type { ListenerRes } from '@/services/socket'
 import { sampleNamesArray } from '@/utils/sampleData'
 import { POINT_CODES } from '@/utils/constants'
 import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
+import { useRouter } from 'next/navigation'
 
 type HostDemoButtonsProps = {
 	allUsersPoints: ListenerRes[]
@@ -21,6 +22,7 @@ export default function HostDemoButtons({
 }: HostDemoButtonsProps) {
 	const [realUsers, setRealUsers] = useState<ListenerRes[]>([])
 	const [wasAdded, setWasAdded] = useState(false)
+	const router = useRouter()
 
 	function onAddRandomUsers() {
 		if (wasAdded) return
@@ -45,7 +47,6 @@ export default function HostDemoButtons({
 				message: storyPoint,
 				userName: userName,
 				userId: userId,
-				// imageNumber: imageNum,
 				timeStamp: timeStamp,
 			}
 		})
@@ -61,7 +62,7 @@ export default function HostDemoButtons({
 
 	function onRemoveLocalStorage() {
 		removeAllLocalStorageData()
-		window.location.reload()
+		router.push('/host')
 	}
 
 	return (
@@ -87,7 +88,7 @@ export default function HostDemoButtons({
 				onClick={onRemoveLocalStorage}
 				className='btn btn-outline btn-neutral h-6 min-h-6 w-24 px-1 text-xs'
 			>
-				Clear Data
+				End Demo
 			</button>
 		</div>
 	)

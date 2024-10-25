@@ -40,10 +40,14 @@ export default function HostSettingsButton({
 
 	function handleClearAllUsersData() {
 		removeAllLocalStorageData()
+		window.location.reload()
 	}
 
 	return (
-		<>
+		<div
+			className='absolute top-4 right-4 sm:right-16 tooltip tooltip-bottom'
+			data-tip='Host Settings'
+		>
 			<button
 				type='button'
 				onClick={() => {
@@ -146,6 +150,6 @@ export default function HostSettingsButton({
 					</div>
 				</div>
 			</dialog>
-		</>
+		</div>
 	)
 }

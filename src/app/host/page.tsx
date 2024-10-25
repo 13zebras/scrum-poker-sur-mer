@@ -1,6 +1,6 @@
 import CreateNewRoom from '@/components/CreateNewRoom'
 
-import ClearLocalStorageButton from '@/components/socketIoDevTools/ClearLocalStorageButton'
+import ClearLocalStorageButton from '@/components/ClearLocalStorageButton'
 
 export default function Host() {
 	return (
