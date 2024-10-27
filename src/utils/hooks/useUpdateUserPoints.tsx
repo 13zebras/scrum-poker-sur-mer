@@ -12,14 +12,14 @@ export default function useUpdateUsersPoints({
 	allUsersPointsEmitter,
 	hostId,
 }: UpdateUsersPointsProps) {
-	const [allUsersPointsData, setAllUsersPointsData] = useState<ListenerRes[]>([])
+	const [allUsersPoints, setAllUsersPoints] = useState<ListenerRes[]>([])
 
 	const updateUsersPoints = (usersPointsUpdate: ListenerRes | ListenerRes[]) => {
 		if (Array.isArray(usersPointsUpdate)) {
-			setAllUsersPointsData(usersPointsUpdate)
+			setAllUsersPoints(usersPointsUpdate)
 			allUsersPointsEmitter(usersPointsUpdate)
 		} else {
-			setAllUsersPointsData((prevUsersPoints: ListenerRes[]) => {
+			setAllUsersPoints((prevUsersPoints: ListenerRes[]) => {
 				const index = prevUsersPoints.findIndex((data) => data.userId === usersPointsUpdate.userId)
 				let newAllPointsState: ListenerRes[]
 
@@ -42,5 +42,5 @@ export default function useUpdateUsersPoints({
 			})
 		}
 	}
-	return { allUsersPointsData, updateUsersPoints }
+	return { allUsersPoints, updateUsersPoints }
 }

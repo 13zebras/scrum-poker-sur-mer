@@ -12,7 +12,7 @@ import useUpdateUsersPoints from '@/utils/hooks/useUpdateUserPoints'
 import AnimatedFish from '@/components/AnimatedFish'
 import { POINT_CODES, DEFAULT_STORY_POINTS } from '@/utils/constants'
 import { useLocalStorage } from 'usehooks-ts'
-import HostToolsContainer from '@/components/HostToolsContainer'
+import HostTools from '@/components/HostTools'
 
 type HostData = {
 	nameOfHost: string
@@ -44,19 +44,19 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		'scrumPokerLaMerAllowedStoryPoints',
 		DEFAULT_STORY_POINTS,
 	)
-	const [allUsersPoints, setAllUsersPoints] = useLocalStorage<ListenerRes[]>(
+	const [allUsersPointsLocal, setAllUsersPointsLocal] = useLocalStorage<ListenerRes[]>(
 		'scrumPokerLaMerStoryPoints',
 		[],
 	)
-	const { allUsersPointsData, updateUsersPoints } = useUpdateUsersPoints({
+	const { allUsersPoints, updateUsersPoints } = useUpdateUsersPoints({
 		allUsersPointsEmitter,
 		hostId: hostId,
 	})
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: no need to add updateUsersPoints or roomId to useEffect dependency array as this should only run once when the page loads
 	useEffect(() => {
-		if (allUsersPoints) {
-			updateUsersPoints(allUsersPoints)
+		if (allUsersPointsLocal) {
+			updateUsersPoints(allUsersPointsLocal)
 		}
 
 		socketEmitter('join-room', {
@@ -101,7 +101,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 	}
 
 	function allUsersPointsEmitter(allUsersPointsData: ListenerRes[]) {
-		setAllUsersPoints(allUsersPointsData)
+		setAllUsersPointsLocal(allUsersPointsData)
 		socketEmitter('all-users-story-points', {
 			roomId: roomId,
 			message: allUsersPointsData,
@@ -121,7 +121,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 	}
 
 	const handleClearPoints = () => {
-		const clearedPoints = allUsersPointsData.map((data: ListenerRes) => {
+		const clearedPoints = allUsersPoints.map((data: ListenerRes) => {
 			return { ...data, message: data.message === -77 ? data.message : POINT_CODES.RESET }
 		})
 		updateUsersPoints(clearedPoints)
@@ -146,9 +146,9 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 	}
 
 	return (
-		<div className='w-full h-full relative animate-in fade-in-0 duration-1000 '>
+		<div className='w-full h-full relative animate-in fade-in-0 duration-500'>
 			<AnimatedFish />
-			<main className='px-8 sm:px-12 py-16 md:px-16 md:py-12 relative flex flex-col justify-start items-center gap-8 w-full max-w-[80rem] mx-auto '>
+			<main className='px-8 sm:px-12 py-16 md:px-16 md:py-12 relative flex flex-col justify-start items-center gap-8 w-full max-w-[80rem] mx-auto'>
 				<div className='flex flex-col justify-start items-center gap-6'>
 					<h1 className='text-center text-2xl sm:text-3xl text-gray-300'>
 						Host: Scrum Poker sous la Mer
@@ -181,8 +181,8 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					handleShowHostCard={handleShowHostCard}
 				/>
 
-				<HostToolsContainer
-					allUsersPointsData={allUsersPointsData}
+				<HostTools
+					allUsersPoints={allUsersPoints}
 					allowedStoryPoints={allowedStoryPoints}
 					updateUsersPoints={updateUsersPoints}
 					demoMode={demoMode}

@@ -1,4 +1,9 @@
-import CreateNewRoom from '@/components/CreateNewRoom'
+import dynamic from 'next/dynamic'
+// import CreateNewRoom from '@/components/CreateNewRoom'
+
+const CreateNewRoom = dynamic(() => import('@/components/create-new-room/CreateNewRoom'), {
+	ssr: false,
+})
 
 import ClearLocalStorageButton from '@/components/ClearLocalStorageButton'
 

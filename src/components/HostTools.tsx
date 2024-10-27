@@ -1,25 +1,28 @@
 import { useState } from 'react'
+import Link from 'next/link'
 import type { ListenerRes } from '@/services/socket'
 import { sampleNamesArray } from '@/utils/sampleData'
 import { POINT_CODES } from '@/utils/constants'
 import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
 import { useRouter } from 'next/navigation'
 
-type HostDemoButtonsProps = {
+type HostToolsProps = {
 	allUsersPoints: ListenerRes[]
 	allowedStoryPoints: string[]
-	updateUsersPoints: (allUsersPoints: ListenerRes[]) => void
+	updateUsersPoints: (points: ListenerRes[]) => void
+	demoMode: boolean
 	demoNumberUsers: number | undefined
 	demoPointPercent: number | undefined
 }
 
-export default function HostDemoButtons({
+export default function HostTools({
 	allUsersPoints,
 	allowedStoryPoints,
 	updateUsersPoints,
+	demoMode,
 	demoNumberUsers = 10,
 	demoPointPercent = 50,
-}: HostDemoButtonsProps) {
+}: HostToolsProps) {
 	const [realUsers, setRealUsers] = useState<ListenerRes[]>([])
 	const [wasAdded, setWasAdded] = useState(false)
 	const router = useRouter()
@@ -40,7 +43,7 @@ export default function HostDemoButtons({
 			// console.log('%c>>> storyPoint', 'color: yellow', storyPoint)
 			const userName = `*${name}`
 			const userId = crypto.randomUUID()
-			// const imageNum = allUsersPoints.length + index + 1
+
 			const timeStamp = Date.now() - Math.ceil(Math.random() * 30 * 60 * 1000)
 			// NOTE: Each sample user gets a random timeStamp between 30 mins ago and now.
 			return {
@@ -66,30 +69,39 @@ export default function HostDemoButtons({
 	}
 
 	return (
-		<div className='flex flex-row justify-start items-center gap-2'>
-			<button
-				type='button'
-				onClick={onAddRandomUsers}
-				className='btn btn-outline btn-accent h-6 min-h-6 w-16 px-1 text-xs'
-				disabled={wasAdded}
-			>
-				Add
-			</button>
-			<button
-				type='button'
-				onClick={onRemoveRandomUsers}
-				className='btn btn-outline btn-accent h-6 min-h-6 w-16 px-1 text-xs'
-				disabled={!wasAdded}
-			>
-				Delete
-			</button>
-			<button
-				type='button'
-				onClick={onRemoveLocalStorage}
-				className='btn btn-outline btn-neutral h-6 min-h-6 w-24 px-1 text-xs'
-			>
-				End Demo
-			</button>
+		<div className='absolute top-4 left-4 sm:left-12 flex flex-row flex-start items-center gap-8 scale-90'>
+			<div className='tooltip tooltip-bottom text-xs' data-tip='Click to Create a New Room'>
+				<Link href='/host' className='btn btn-outline-gray h-6 min-h-6 w-28 px-1 text-xs'>
+					Create Room
+				</Link>
+			</div>
+			{demoMode && (
+				<div className='flex flex-row justify-start items-center gap-2'>
+					<button
+						type='button'
+						onClick={onAddRandomUsers}
+						className='btn btn-outline btn-accent h-6 min-h-6 w-16 px-1 text-xs'
+						disabled={wasAdded}
+					>
+						Add
+					</button>
+					<button
+						type='button'
+						onClick={onRemoveRandomUsers}
+						className='btn btn-outline btn-accent h-6 min-h-6 w-16 px-1 text-xs'
+						disabled={!wasAdded}
+					>
+						Delete
+					</button>
+					<button
+						type='button'
+						onClick={onRemoveLocalStorage}
+						className='btn btn-outline btn-neutral h-6 min-h-6 w-24 px-1 text-xs'
+					>
+						End Demo
+					</button>
+				</div>
+			)}
 		</div>
 	)
 }
