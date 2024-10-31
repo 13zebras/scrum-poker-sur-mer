@@ -8,12 +8,13 @@ import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 
 import { POINT_CODES } from '@/utils/constants'
+import type { AnimationType } from '@/components/RadioAnimationSetting'
 
 export default function CardsContainer() {
 	const [sortedUsersPoints, setSortedUsersPoints] = useState<ListenerRes[]>([])
 
 	// container width is need for the animation of the cards
-	const { viewportHeight, ref: containerRef, rect } = useResize('both')
+	const { viewportHeight, ref: containerRef, rect } = useResize('both', 50)
 
 	// console.log('%c>>> viewportHeight', 'color: yellow', viewportHeight)
 	// console.log('%c>>> rect', 'color: red', rect)
@@ -43,6 +44,10 @@ export default function CardsContainer() {
 		return message.toString()
 	}
 
+	const animationSettingListener = useSocketListener('animation-setting')
+	const animationSetting = animationSettingListener?.message as AnimationType
+	// console.log('%c>>> animationSetting CardsContainer', 'color: #5f0', animationSetting)
+
 	const numberOfBlankCards = usersPointsData.filter(
 		({ message }) => message === POINT_CODES.JOIN || message === POINT_CODES.RESET,
 	).length
@@ -68,7 +73,7 @@ export default function CardsContainer() {
 						key={`${timeStamp.toString()}-${showStoryPoints.toString()}`}
 						name={userName}
 						storyPoint={storyPoint}
-						// imageNumber={imageNumber}
+						animationSetting={animationSetting}
 						userId={userId}
 						index={index}
 						numberOfCards={array.length}

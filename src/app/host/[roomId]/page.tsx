@@ -5,16 +5,20 @@ import { socketEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 import HostControlsContainer from '@/components/HostControlsContainer'
-import HostSettingsButton from '@/components/HostSettingsButton'
+// import HostSettingsButton from '@/components/HostSettingsButton'
 import RoomMainUi from '@/components/RoomMainUi'
-import RoomInfo from '@/components/RoomInfo'
+// import RoomInfo from '@/components/RoomInfo'
 import useUpdateUsersPoints from '@/utils/hooks/useUpdateUserPoints'
 import AnimatedFish from '@/components/AnimatedFish'
 import { POINT_CODES, DEFAULT_STORY_POINTS } from '@/utils/constants'
 import { useLocalStorage } from 'usehooks-ts'
 import HostTools from '@/components/HostTools'
+import dynamic from 'next/dynamic'
 
-type HostData = {
+const RoomInfo = dynamic(() => import('@/components/RoomInfo'), { ssr: false })
+const HostSettingsButton = dynamic(() => import('@/components/HostSettingsButton'), { ssr: false })
+
+export type HostData = {
 	nameOfHost: string
 	userId: string
 	roomUrl: string
@@ -24,15 +28,15 @@ type HostData = {
 export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const { roomId } = params
 	const [disabledShowPointsButton, setDisabledShowPointsButton] = useState<boolean>(false)
-	const [{ nameOfHost, userId: hostId, roomUrl, hostRoomUrl }, setHostData] =
-		useLocalStorage<HostData>('scrumPokerLaMerHostData', {
-			nameOfHost: '',
-			userId: '',
-			roomUrl: '',
-			hostRoomUrl: '',
-		})
-	const demoMode = nameOfHost.toLowerCase().includes('demo')
-	const splitNameOfHost = nameOfHost.split('-')
+	// const [{ nameOfHost, userId: hostId, roomUrl, hostRoomUrl }, setHostData] =
+	const [hostData, setHostData] = useLocalStorage<HostData>('scrumPokerLaMerHostData', {
+		nameOfHost: '',
+		userId: '',
+		roomUrl: '',
+		hostRoomUrl: '',
+	})
+	const demoMode = hostData.nameOfHost.toLowerCase().includes('demo')
+	const splitNameOfHost = hostData.nameOfHost.split('-')
 	const demoNumberUsers = splitNameOfHost[1] ? Number.parseInt(splitNameOfHost[1]) : undefined
 	const demoPointPercent = splitNameOfHost[2] ? Number.parseInt(splitNameOfHost[2]) : undefined
 	const [showHostCard, setShowHostCard] = useLocalStorage<boolean>(
@@ -50,8 +54,10 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 	)
 	const { allUsersPoints, updateUsersPoints } = useUpdateUsersPoints({
 		allUsersPointsEmitter,
-		hostId: hostId,
+		hostId: hostData.userId,
 	})
+
+	const [animationSetting] = useLocalStorage<string>('scrumPokerLaMerAnimationSetting', 'medium')
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: no need to add updateUsersPoints or roomId to useEffect dependency array as this should only run once when the page loads
 	useEffect(() => {
@@ -62,8 +68,8 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		socketEmitter('join-room', {
 			roomId: roomId,
 			message: hostPoints,
-			userName: nameOfHost,
-			userId: hostId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 		})
 	}, [])
 
@@ -77,9 +83,15 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 			// when someone joins the room, emit nameOfHost & roomUrl
 			socketEmitter('host-room-info', {
 				roomId: roomId,
-				message: roomUrl,
-				userName: nameOfHost,
-				userId: hostId,
+				message: hostData.roomUrl,
+				userName: hostData.nameOfHost,
+				userId: hostData.userId,
+			})
+			socketEmitter('animation-setting', {
+				roomId: roomId,
+				message: animationSetting,
+				userName: hostData.nameOfHost,
+				userId: hostData.userId,
 			})
 		},
 	})
@@ -95,8 +107,8 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		socketEmitter('allowed-story-points', {
 			roomId: roomId,
 			message: allowedPoints,
-			userName: nameOfHost,
-			userId: hostId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 		})
 	}
 
@@ -105,8 +117,8 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		socketEmitter('all-users-story-points', {
 			roomId: roomId,
 			message: allUsersPointsData,
-			userName: nameOfHost,
-			userId: hostId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 		})
 	}
 
@@ -114,8 +126,8 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		socketEmitter('show-disable-reset-points', {
 			roomId: roomId,
 			message: true as unknown as string,
-			userName: nameOfHost,
-			userId: hostId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 		})
 		setDisabledShowPointsButton(!disabledShowPointsButton)
 	}
@@ -128,8 +140,8 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		socketEmitter('show-disable-reset-points', {
 			roomId: roomId,
 			message: false as unknown as string,
-			userName: nameOfHost,
-			userId: hostId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 		})
 		setDisabledShowPointsButton(!disabledShowPointsButton)
 	}
@@ -139,21 +151,21 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		socketEmitter('user-story-point', {
 			roomId: roomId,
 			message: hostPoints,
-			userName: nameOfHost,
-			userId: hostId,
+			userName: hostData.nameOfHost,
+			userId: hostData.userId,
 		})
 		setShowHostCard(isShow)
 	}
 
 	return (
-		<div className='w-full h-full relative animate-in fade-in-0 duration-500'>
+		<div className='w-full h-full relative duration-500'>
 			<AnimatedFish />
 			<main className='px-8 sm:px-12 py-16 md:px-16 md:py-12 relative flex flex-col justify-start items-center gap-8 w-full max-w-[80rem] mx-auto'>
 				<div className='flex flex-col justify-start items-center gap-6'>
-					<h1 className='text-center text-2xl sm:text-3xl text-gray-300'>
+					<h1 className='text-center text-2xl md:text-3xl text-gray-300'>
 						Host: Scrum Poker sous la Mer
 					</h1>
-					<RoomInfo roomUrl={roomUrl} nameOfHost={nameOfHost} />
+					<RoomInfo roomUrl={hostData.roomUrl} nameOfHost={hostData.nameOfHost} />
 				</div>
 				<div className='pt-2 w-full flex flex-col justify-start items-center gap-8 md:gap-12'>
 					<HostControlsContainer
@@ -163,16 +175,15 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					/>
 					<RoomMainUi
 						roomId={roomId}
-						userName={nameOfHost}
-						userId={hostId}
-						hostId={hostId}
+						userName={hostData.nameOfHost}
+						userId={hostData.userId}
+						hostId={hostData.userId}
 						showHostCard={showHostCard}
 					/>
 				</div>
 
 				<HostSettingsButton
-					hostRoomUrl={hostRoomUrl}
-					roomUrl={roomUrl}
+					hostData={hostData}
 					allowedPointsEmitter={allowedPointsEmitter}
 					defaultStoryPointValues={DEFAULT_STORY_POINTS}
 					allowedStoryPoints={allowedStoryPoints}

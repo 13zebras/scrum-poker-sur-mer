@@ -11,7 +11,7 @@ export default function RadioShowHide({ selectedOption, onChange }: Props): JSX.
 	}
 
 	return (
-		<fieldset className='flex items-center gap-10 w-full text-md font-semibold'>
+		<fieldset className='flex items-center gap-8 w-full text-md font-semibold'>
 			<span>Show / Hide Host Card?</span>
 			<label className='flex items-center px-1'>
 				<input

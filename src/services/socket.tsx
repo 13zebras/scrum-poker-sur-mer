@@ -17,6 +17,7 @@ type EventName =
 	| 'show-disable-reset-points'
 	| 'all-users-story-points'
 	| 'allowed-story-points'
+	| 'animation-setting'
 
 type EmitterOptions = {
 	roomId: string

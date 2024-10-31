@@ -1,12 +1,12 @@
 import JellyFishOutlineIcon from './icons/JellyFishOutlineIcon'
 import { SealifeImage } from './SealifeImage'
 import { motion, AnimatePresence } from 'framer-motion'
-import CardsContainer from './CardsContainer'
+import type { AnimationType } from '@/components/RadioAnimationSetting'
 
 type CardProps = {
 	name: string
 	storyPoint: string
-	// imageNumber: number
+	animationSetting: AnimationType
 	userId: string
 	index: number
 	numberOfCards: number
@@ -20,7 +20,7 @@ type CardProps = {
 export default function UserPointsCard({
 	name,
 	storyPoint,
-	// imageNumber,
+	animationSetting,
 	userId,
 	index,
 	numberOfCards,
@@ -30,6 +30,11 @@ export default function UserPointsCard({
 	containerBottom,
 	viewportHeight,
 }: CardProps) {
+	// animation intensity settings
+	const isHigh = animationSetting === 'high'
+	const isMedium = animationSetting === 'medium'
+	const isMinimum = animationSetting === 'minimum'
+
 	// '--' is a blank card
 	const isBlank = storyPoint === '--'
 
@@ -53,6 +58,11 @@ export default function UserPointsCard({
 
 	// blank cards are 80% of the size of the other cards
 	const scaleAnimate = isMoveBlank ? blankScale : 1
+	const scaleInitial = isMinimum ? scaleAnimate : 0
+
+	// scalingPositionOffset is shifting rows down due to scaling of cards.
+	const scalingPositionOffset = ((cardSize - blankSize) * showHowMuchBlankCard) / 2
+	// const scalingPositionOffset = 0
 
 	// How many blank cards can fit in the Card Container width?
 	const maxBlanksPerRow = Math.floor(containerWidth / (blankSize + blankGap))
@@ -72,16 +82,13 @@ export default function UserPointsCard({
 
 	const numberOfBlanksPerRow = Math.ceil(numberOfBlanks / numberOfRows)
 
-	// scalingPositionOffset is shifting rows down due to scaling of cards.
-	const scalingPositionOffset = ((cardSize - blankSize) * showHowMuchBlankCard) / 2
-	// const scalingPositionOffset = 0
-
 	const lastRowBottomNoOffset = Math.floor(
 		-1 * (numberOfRows - 1) * blankSize * showHowMuchBlankCard,
 	)
 
 	const lastRowDistanceToViewportBottom = viewportHeight + lastRowBottomNoOffset - containerBottom
 
+	// const containerBottomOffset = 30
 	let containerBottomOffset = 30
 	if (lastRowDistanceToViewportBottom > 100) {
 		containerBottomOffset = Math.floor(lastRowDistanceToViewportBottom / 3)
@@ -92,13 +99,16 @@ export default function UserPointsCard({
 	// The right position of the blank card is determined by the
 	// number of cards from the last card in the row.
 	const rightAdjustment = 6 // the cards are consistently -6px outside the container
-	const blankRightAnimate = isMoveBlank
+	const rightAnimate = isMoveBlank
 		? Math.floor(
 				(numberFromLastCard % numberOfBlanksPerRow) * (blankSize + blankGap) -
 					scalingPositionOffset +
 					rightAdjustment,
 			)
 		: 0
+
+	// move from far right ONLY on high
+	const rightInitial = isHigh ? 0 : rightAnimate
 
 	// What row is this card in? Top row is 0.
 	const thisCardRow = isMoveBlank ? Math.floor(numberFromLastCard / numberOfBlanksPerRow) : 0
@@ -113,24 +123,19 @@ export default function UserPointsCard({
 	const lastRowBottom = isMoveBlank
 		? Math.floor(-1 * (numberOfRows - 1) * blankSize * showHowMuchBlankCard + scalingBottomOffset)
 		: 0
-	// console.log(
-	// 	'%c>>> thisCardRow, thisCardRowBottom, lastRowBottom, blankRightAnimate',
-	// 	'color: #0f3',
-	// 	thisCardRow,
-	// 	thisCardRowBottom,
-	// 	lastRowBottom,
-	// 	blankRightAnimate,
-	// )
-	// blank cards do not turn around the y axis.
-	// Cards with points turn but in a random direction, to the left or to the right
+	const initialBottom = isHigh ? lastRowBottom : thisCardRowBottom
+
 	const rotateY = isMoveBlank || !showPoints ? 0 : (Math.random() < 0.5 ? -1 : 1) * 180
+	const rotateYInitial = isMinimum ? 0 : rotateY
 
 	// blank cards are delayed so they slide left in a staggered sequence
-	const blankMoveDuration = 0.25
-	const baseBlankMoveDelay = 0.5
-	const blankMoveDelay = isMoveBlank
-		? baseBlankMoveDelay + (index - firstblankIndex) * blankMoveDuration
-		: 0
+	const blankMoveDuration = isHigh ? 0.2 : 0
+	const slowInternetDelay = 0.5
+	const baseBlankMoveDelay = 0.5 + slowInternetDelay
+	const blankMoveDelay =
+		isMoveBlank && isHigh
+			? baseBlankMoveDelay + (index - firstblankIndex) * blankMoveDuration
+			: slowInternetDelay
 
 	// first blank card ends it's movement from beginning of animation
 	const totalblankMoveTime = baseBlankMoveDelay + numberOfBlanks * blankMoveDuration
@@ -138,8 +143,12 @@ export default function UserPointsCard({
 	// cards with points take 0.5s to flip and show their points
 	const animateDuration = 0.5
 
+	const opacityDuration = isHigh ? animateDuration : 0.75
+
+	const mediumAnimateDelay = isMedium ? 0.3 : 0
 	// flip occurs 0.1s after the last blankcard has finished moving
-	const animateDelay = isMoveBlank || !showPoints ? 0 : 0.4 + totalblankMoveTime
+	const animateDelay =
+		isMoveBlank || !showPoints ? 0 : 0.4 + totalblankMoveTime + mediumAnimateDelay
 
 	// blank cards rows are stacked on top of each other so z-index needs to
 	// increase from top card row to bottom card row going down..
@@ -150,15 +159,15 @@ export default function UserPointsCard({
 		<AnimatePresence>
 			<motion.div
 				initial={{
-					scale: 0,
-					right: 0,
-					bottom: lastRowBottom,
-					rotateY: rotateY,
+					scale: scaleInitial,
+					right: rightInitial,
+					bottom: initialBottom,
+					rotateY: rotateYInitial,
 					opacity: 0.1,
 				}}
 				animate={{
 					scale: scaleAnimate,
-					right: blankRightAnimate,
+					right: rightAnimate,
 					bottom: thisCardRowBottom,
 					rotateY: 0,
 					opacity: 1,
@@ -173,8 +182,9 @@ export default function UserPointsCard({
 						delay: animateDelay,
 					},
 					opacity: {
-						duration: animateDuration,
-						delay: 0,
+						duration: opacityDuration,
+						delay: slowInternetDelay,
+						ease: 'easeInOut',
 					},
 					scale: !isMoveBlank
 						? {
@@ -183,13 +193,13 @@ export default function UserPointsCard({
 								stiffness: 80,
 								mass: 2,
 								restDelta: 0.001,
-								delay: 0,
+								delay: slowInternetDelay,
 							}
 						: {
 								type: 'tween',
 								duration: 0.5,
 								ease: 'easeInOut',
-								delay: 0,
+								delay: slowInternetDelay,
 							},
 				}}
 				className={`card card-points ${blankPosition}`}

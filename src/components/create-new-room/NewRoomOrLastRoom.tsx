@@ -22,7 +22,7 @@ export default function NewRoomOrLastRoom({
 
 	if (!nameOfHost) {
 		return (
-			<div className='w-full h-60 sm:h-80 flex flex-col items-center justify-start animate-fade-in-300'>
+			<div className='w-full h-60 sm:h-80 flex flex-col items-center justify-start motion-safe:animate-fade-in-300'>
 				<div className='w-full h-full flex flex-col justify-end items-center'>
 					<input
 						type='text'
@@ -37,7 +37,7 @@ export default function NewRoomOrLastRoom({
 	}
 
 	return (
-		<div className='w-full h-60 sm:h-80 flex flex-col items-center justify-start animate-fade-in-300'>
+		<div className='w-full h-60 sm:h-80 flex flex-col items-center justify-start -fade-in-300'>
 			<div className='w-full h-full flex flex-col justify-end items-center'>
 				<div
 					className='flex flex-col sm:flex-row items-center justify-center pb-14 text-2xl xs:text-3xl sm:text-4xl text-gray-300 text-center'

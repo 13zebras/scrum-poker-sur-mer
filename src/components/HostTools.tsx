@@ -69,7 +69,7 @@ export default function HostTools({
 	}
 
 	return (
-		<div className='absolute top-4 left-4 sm:left-12 flex flex-row flex-start items-center gap-8 scale-90'>
+		<div className='absolute top-6 left-6 sm:left-12 flex flex-row flex-start items-center gap-8 scale-90'>
 			<div className='tooltip tooltip-bottom text-xs' data-tip='Click to Create a New Room'>
 				<Link href='/host' className='btn btn-outline-gray h-6 min-h-6 w-28 px-1 text-xs'>
 					Create Room

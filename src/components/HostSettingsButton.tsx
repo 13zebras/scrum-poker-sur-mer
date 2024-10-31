@@ -2,11 +2,13 @@
 
 import GearIcon from './icons/GearIcon'
 import RadioShowHide from './RadioShowHide'
+import RadioAnimationSetting from './RadioAnimationSetting'
 import { useRef } from 'react'
+import type { HostData } from '@/app/host/[roomId]/page'
 import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
+
 type Props = {
-	hostRoomUrl: string
-	roomUrl: string
+	hostData: HostData
 	defaultStoryPointValues: string[]
 	allowedPointsEmitter: (allowedStoryPoints: string[], localStorage: boolean) => void
 	allowedStoryPoints: string[]
@@ -16,8 +18,7 @@ type Props = {
 }
 
 export default function HostSettingsButton({
-	hostRoomUrl,
-	roomUrl,
+	hostData,
 	defaultStoryPointValues,
 	allowedPointsEmitter,
 	allowedStoryPoints,
@@ -45,7 +46,7 @@ export default function HostSettingsButton({
 
 	return (
 		<div
-			className='absolute top-4 right-4 sm:right-16 tooltip tooltip-bottom'
+			className='absolute top-6 right-10 sm:right-16 tooltip tooltip-bottom'
 			data-tip='Host Settings'
 		>
 			<button
@@ -60,17 +61,17 @@ export default function HostSettingsButton({
 				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' />
 			</button>
 			<dialog ref={dialogRef} className='modal bg-black/60'>
-				<div className='modal-box flex flex-col items-center justify-center gap-8 w-full max-w-[42rem] relative bg-slate-950 border-2 border-slate-700 text-gray-300'>
-					<div className='flex flex-col justify-start items-start gap-6 py-4 px-1 max-w-[36rem] w-full'>
+				<div className='modal-box flex flex-col items-center justify-center gap-8 w-full max-w-[44rem] relative bg-slate-950 border-2 border-slate-700 text-gray-300'>
+					<div className='flex flex-col justify-start items-start gap-6 py-4'>
 						<h3 className='font-bold text-3xl self-center text-center pb-4'>Host Settings</h3>
 
 						<div className='text-md font-semibold inline-flex items-center'>
 							Host Room URL:
-							<span className='font-mono ml-4 font-normal'>{hostRoomUrl}</span>
+							<span className='font-mono ml-4 font-normal'>{hostData.hostRoomUrl}</span>
 						</div>
 						<div className='text-md font-semibold'>
 							Users Room URL:
-							<span className='font-mono ml-4 font-normal'>{roomUrl}</span>
+							<span className='font-mono ml-4 font-normal'>{hostData.roomUrl}</span>
 						</div>
 
 						<div className='modal-action w-full m-0'>
@@ -80,6 +81,7 @@ export default function HostSettingsButton({
 								onSubmit={onSubmitForm}
 							>
 								<div className='w-full flex flex-col items-center gap-6 pb-2'>
+									<RadioAnimationSetting hostData={hostData} />
 									<RadioShowHide
 										selectedOption={showHostCard ? 'show' : 'hide'}
 										onChange={(value: 'show' | 'hide') => handleShowHostCard(value === 'show')}

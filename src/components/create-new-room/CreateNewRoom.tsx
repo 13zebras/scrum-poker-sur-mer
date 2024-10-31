@@ -67,9 +67,9 @@ export default function CreateNewRoom() {
 	}
 
 	return (
-		<div className='w-full h-full flex flex-col items-center gap-6 animate-fade-in-500'>
+		<div className='w-full h-full flex flex-col items-center gap-6 motion-safe:animate-fade-in-300'>
 			<div
-				className='w-full h-1/6 flex flex-col items-center justify-start animate-fade-in-300'
+				className='w-full h-1/6 flex flex-col items-center justify-start '
 				style={{
 					textShadow: '1px 1px 1px black, 3px 3px 1px black',
 				}}
@@ -79,9 +79,7 @@ export default function CreateNewRoom() {
 					<span className='md:pl-3'>sous la Mer</span>
 				</h1>
 				{!nameOfHost && (
-					<h2 className='text-2xl sm:text-3xl text-gray-200 py-8 animate-fade-in-300'>
-						Create a New Room
-					</h2>
+					<h2 className='text-2xl sm:text-3xl text-gray-200 py-8'>Create a New Room</h2>
 				)}
 			</div>
 
@@ -95,7 +93,7 @@ export default function CreateNewRoom() {
 						handleUseLastRoom={handleUseLastRoom}
 						setNewName={setNewName}
 					/>
-					<div className='w-full max-w-[22rem] animate-fade-in-300'>
+					<div className='w-full max-w-[22rem] motion-safe:animate-fade-in-300'>
 						<CreateNewRoomButton handleCreateRoom={handleCreateRoom} newName={newName} />
 					</div>
 				</>

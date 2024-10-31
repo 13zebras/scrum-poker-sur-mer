@@ -9,9 +9,9 @@ type GoToNewRoomProps = {
 export default function GoToNewRoom({ roomUrl, hostRoomUrl }: GoToNewRoomProps) {
 	return (
 		<>
-			<div className='w-full h-60 sm:h-80 flex flex-col items-center justify-start animate-fade-in-300'>
+			<div className='w-full h-60 sm:h-80 flex flex-col items-center justify-start motion-safe:animate-fade-in-300'>
 				<div
-					className='w-full h-full flex flex-col items-center justify-end animate-fade-in-300'
+					className='w-full h-full flex flex-col items-center justify-end'
 					style={{
 						textShadow: '1px 1px 1px black, 2px 2px 1px black',
 					}}
@@ -27,10 +27,10 @@ export default function GoToNewRoom({ roomUrl, hostRoomUrl }: GoToNewRoomProps) 
 				</div>
 			</div>
 
-			<div className='w-full max-w-[22rem] animate-fade-in-300'>
+			<div className='w-full max-w-[22rem] motion-safe:animate-fade-in-300'>
 				<Link
 					href={hostRoomUrl}
-					className='btn btn-secondary w-full h-11 min-h-11 text-lg xs:text-xl uppercase animate-fade-in-300 shadow-xl shadow-black/70'
+					className='btn btn-secondary w-full h-11 min-h-11 text-lg xs:text-xl uppercase motion-safe:animate-fade-in-300 shadow-xl shadow-black/70'
 					tabIndex={0}
 				>
 					Go to New Room
