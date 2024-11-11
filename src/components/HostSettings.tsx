@@ -6,6 +6,7 @@ import RadioAnimationSetting from './RadioAnimationSetting'
 import { useRef } from 'react'
 import type { HostData } from '@/app/host/[roomId]/page'
 import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
+import XIcon from './icons/XIcon'
 
 type Props = {
 	hostData: HostData
@@ -17,7 +18,7 @@ type Props = {
 	handleShowHostCard: (isShow: boolean) => void
 }
 
-export default function HostSettingsButton({
+export default function HostSettings({
 	hostData,
 	defaultStoryPointValues,
 	allowedPointsEmitter,
@@ -61,7 +62,23 @@ export default function HostSettingsButton({
 				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' />
 			</button>
 			<dialog ref={dialogRef} className='modal bg-black/60'>
-				<div className='modal-box flex flex-col items-center justify-center gap-8 w-full max-w-[44rem] relative bg-slate-950 border-2 border-slate-700 text-gray-300'>
+				<div className='modal-box flex flex-col items-center justify-center gap-8 w-11/12 max-w-[44rem] mx-auto bg-slate-950 border-2 border-slate-600 text-gray-200 relative'>
+					<div
+						className='absolute top-4 right-3 sm:right-4 tooltip tooltip-bottom'
+						data-tip='Close'
+					>
+						<button
+							type='button'
+							className='btn btn-ghost size-6 min-h-6 p-0 border-0 hover:bg-transparent'
+							onClick={() => {
+								if (dialogRef.current) {
+									dialogRef.current.close()
+								}
+							}}
+						>
+							<XIcon className='w-full h-full hover:text-rose-500 hover:scale-110' />
+						</button>
+					</div>
 					<div className='flex flex-col justify-start items-start gap-6 py-4'>
 						<h3 className='font-bold text-3xl self-center text-center pb-4'>Host Settings</h3>
 
@@ -86,10 +103,12 @@ export default function HostSettingsButton({
 										selectedOption={showHostCard ? 'show' : 'hide'}
 										onChange={(value: 'show' | 'hide') => handleShowHostCard(value === 'show')}
 									/>
-									<div className='flex items-center text-md font-semibold self-start w-full'>
+									<div className='flex justify-between items-center text-md font-semibold self-start w-full'>
 										Select Allowed Story Points:
-										<span className='ml-8 text-xl text-rose-500 leading-none'>•</span>
-										<span className='ml-1 text-sm text-gray-350 italic'>= current</span>
+										<div className='flex items-center'>
+											<span className='mt-1 ml-8 text-3xl text-rose-500 leading-none'>•</span>
+											<span className='ml-1 text-sm text-gray-300 italic'>= current selection</span>
+										</div>
 									</div>
 
 									<fieldset className='flex justify-center gap-2 w-full'>
@@ -110,7 +129,7 @@ export default function HostSettingsButton({
 													{storyPoint}
 												</label>
 												{allowedStoryPoints.includes(storyPoint) && (
-													<span className='absolute top-0 right-1 text-lg text-rose-500 leading-none'>
+													<span className='absolute top-[-1px] right-1 text-2xl text-rose-500 leading-none'>
 														•
 													</span>
 												)}
@@ -119,14 +138,14 @@ export default function HostSettingsButton({
 									</fieldset>
 								</div>
 
-								<button type='submit' className='btn btn-accent w-72 min-h-9 h-9 text-xl'>
+								<button type='submit' className='btn btn-accent w-48 min-h-8 h-8 text-lg'>
 									Save & Close
 								</button>
 							</form>
 						</div>
 					</div>
-					<div className='w-5/6 h-px bg-slate-600' />
-					<div className='flex flex-col justify-center items-center gap-4 pt-1 pb-3 max-w-[32rem] w-full'>
+					<div className='w-5/6 h-px bg-slate-600 mt-4' />
+					<div className='flex flex-col justify-center items-center gap-4 pt-6 pb-3 max-w-[32rem] w-full'>
 						<div className='flex justify-center items-center gap-6'>
 							<span className='font-semibold text-sm tracking-wider'>
 								<span className='text-error font-bold text-base mr-2'>Caution!</span>
@@ -134,21 +153,12 @@ export default function HostSettingsButton({
 							</span>
 							<button
 								type='button'
-								className='btn btn-outline btn-info text-xs h-5 min-h-5 w-40'
+								className='btn btn-outline btn-info text-sm h-6 min-h-6 w-44'
 								onClick={handleClearAllUsersData}
 							>
 								Clear All Users Data
 							</button>
 						</div>
-						{/* <div className='w-full flex justify-center items-center gap-6'>
-							<button
-								type='button'
-								className='btn btn-outline btn-info text-xs h-6 min-h-6 w-44'
-								onClick={handleClearAllUsersData}
-							>
-								Clear All Users Data
-							</button>
-						</div> */}
 					</div>
 				</div>
 			</dialog>

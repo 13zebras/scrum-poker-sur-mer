@@ -46,10 +46,10 @@ body {
 }
 
 .btn-outline-gray {
-	@apply border border-zinc-400 text-zinc-400 bg-transparent;
+	@apply border border-gray-350 text-gray-350 bg-transparent;
 	@media (hover: hover) {
 		&:hover {
-			@apply border-zinc-100 text-zinc-100 bg-zinc-800;
+			@apply border-gray-200 text-gray-200 bg-gray-800;
 		}
 	}
 }
@@ -130,9 +130,10 @@ body {
 }
 
 .tooltip::before {
-	background-color: #131317;
-	box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.7);
-	font-size: 0.8rem;
+	background-color: #343439;
+	box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 1);
+	font-size: 0.9rem;
+	color: #fff;
 }
 
 .tooltip-fish::before {

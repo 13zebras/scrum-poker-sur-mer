@@ -16,7 +16,7 @@ import HostTools from '@/components/HostTools'
 import dynamic from 'next/dynamic'
 
 const RoomInfo = dynamic(() => import('@/components/RoomInfo'), { ssr: false })
-const HostSettingsButton = dynamic(() => import('@/components/HostSettingsButton'), { ssr: false })
+const HostSettings = dynamic(() => import('@/components/HostSettings'), { ssr: false })
 
 export type HostData = {
 	nameOfHost: string
@@ -182,7 +182,7 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					/>
 				</div>
 
-				<HostSettingsButton
+				<HostSettings
 					hostData={hostData}
 					allowedPointsEmitter={allowedPointsEmitter}
 					defaultStoryPointValues={DEFAULT_STORY_POINTS}
