@@ -1,11 +1,10 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { useDebounceValue } from 'usehooks-ts'
 import { motion, useAnimationControls } from 'framer-motion'
 import AnimatedFishButton from './AnimatedFishButton'
 import TropicalFishIcon from './icons/TropicalFishIcon'
 import useResize from '@/utils/hooks/useResize'
 
-export default function AnimatedFish() {
+export default function AnimatedFish({ isDialogOpen }: { isDialogOpen: boolean }) {
 	const [isFishSwimming, setIsFishSwimming] = useState(false)
 	const [displayNone, setDisplayNone] = useState(false)
 
@@ -89,8 +88,6 @@ export default function AnimatedFish() {
 			controls.stop()
 		}
 
-		// console.log('%c>>> viewportWidth', 'color: red', viewportWidth)
-		// console.log('%c>>> viewportHeight', 'color: yellow', viewportHeight)
 		return () => {
 			animationRef.current = false
 			controls.stop()
@@ -101,8 +98,12 @@ export default function AnimatedFish() {
 	}, [controls, viewportWidth, viewportHeight, isFishSwimming, createFrames])
 
 	return (
-		<div className='absolute w-full h-full'>
-			<AnimatedFishButton isFishSwimming={isFishSwimming} setIsFishSwimming={setIsFishSwimming} />
+		<div className='absolute w-full h-full top-0 left-0 z-0'>
+			<AnimatedFishButton
+				isFishSwimming={isFishSwimming}
+				setIsFishSwimming={setIsFishSwimming}
+				isDialogOpen={isDialogOpen}
+			/>
 			<motion.div
 				style={{
 					scaleX: isFlipped ? 1 : -1,

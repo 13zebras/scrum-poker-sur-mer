@@ -13,6 +13,7 @@ type HostToolsProps = {
 	demoMode: boolean
 	demoNumberUsers: number | undefined
 	demoPointPercent: number | undefined
+	isDialogOpen: boolean
 }
 
 export default function HostTools({
@@ -22,6 +23,7 @@ export default function HostTools({
 	demoMode,
 	demoNumberUsers = 10,
 	demoPointPercent = 50,
+	isDialogOpen,
 }: HostToolsProps) {
 	const [realUsers, setRealUsers] = useState<ListenerRes[]>([])
 	const [wasAdded, setWasAdded] = useState(false)
@@ -71,7 +73,11 @@ export default function HostTools({
 	return (
 		<div className='absolute top-6 left-6 sm:left-12 flex flex-row flex-start items-center gap-8 scale-90'>
 			<div className='tooltip tooltip-bottom text-xs' data-tip='Click to Create a New Room'>
-				<Link href='/host' className='btn btn-outline-gray h-6 min-h-6 w-28 px-1 text-xs'>
+				<Link
+					href='/host'
+					className='btn btn-outline-gray h-6 min-h-6 w-28 px-1 text-xs'
+					tabIndex={isDialogOpen ? -1 : 0}
+				>
 					Create Room
 				</Link>
 			</div>
@@ -82,6 +88,7 @@ export default function HostTools({
 						onClick={onAddRandomUsers}
 						className='btn btn-outline btn-accent h-6 min-h-6 w-16 px-1 text-xs'
 						disabled={wasAdded}
+						tabIndex={isDialogOpen ? -1 : 0}
 					>
 						Add
 					</button>
@@ -90,6 +97,7 @@ export default function HostTools({
 						onClick={onRemoveRandomUsers}
 						className='btn btn-outline btn-accent h-6 min-h-6 w-16 px-1 text-xs'
 						disabled={!wasAdded}
+						tabIndex={isDialogOpen ? -1 : 0}
 					>
 						Delete
 					</button>
@@ -97,6 +105,7 @@ export default function HostTools({
 						type='button'
 						onClick={onRemoveLocalStorage}
 						className='btn btn-outline btn-neutral h-6 min-h-6 w-24 px-1 text-xs'
+						tabIndex={isDialogOpen ? -1 : 0}
 					>
 						End Demo
 					</button>

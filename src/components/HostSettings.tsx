@@ -16,6 +16,8 @@ type Props = {
 	setAllowedStoryPoints: (allowedStoryPoints: string[]) => void
 	showHostCard: boolean
 	handleShowHostCard: (isShow: boolean) => void
+	isDialogOpen: boolean
+	setIsDialogOpen: (isOpen: boolean) => void
 }
 
 export default function HostSettings({
@@ -26,10 +28,13 @@ export default function HostSettings({
 	setAllowedStoryPoints,
 	showHostCard,
 	handleShowHostCard,
+	isDialogOpen,
+	setIsDialogOpen,
 }: Props) {
 	const dialogRef = useRef<HTMLDialogElement>(null)
 
 	function onSubmitForm(event: React.FormEvent<HTMLFormElement>) {
+		setIsDialogOpen(false)
 		const formData = new FormData(event.currentTarget)
 
 		const hostChosenPoints = formData.getAll('storyPoints') as string[]
@@ -55,14 +60,16 @@ export default function HostSettings({
 				onClick={() => {
 					if (dialogRef.current) {
 						dialogRef.current.showModal()
+						setIsDialogOpen(true)
 					}
 				}}
 				className='btn btn-ghost size-6 min-h-6 p-0 border-0 hover:bg-transparent'
+				tabIndex={isDialogOpen ? -1 : 0}
 			>
 				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' />
 			</button>
 			<dialog ref={dialogRef} className='modal bg-black/60'>
-				<div className='modal-box flex flex-col items-center justify-center gap-8 w-11/12 max-w-[44rem] mx-auto bg-slate-950 border-2 border-slate-600 text-gray-200 relative'>
+				<div className='modal-box flex flex-col items-center justify-center gap-8 w-11/12 max-w-[44rem] mx-auto bg-slate-950 border-2 border-slate-600 text-gray-200 relative bg-transparent'>
 					<div
 						className='absolute top-4 right-3 sm:right-4 tooltip tooltip-bottom'
 						data-tip='Close'
@@ -73,8 +80,10 @@ export default function HostSettings({
 							onClick={() => {
 								if (dialogRef.current) {
 									dialogRef.current.close()
+									setIsDialogOpen(false)
 								}
 							}}
+							tabIndex={isDialogOpen ? 0 : -1}
 						>
 							<XIcon className='w-full h-full hover:text-rose-500 hover:scale-110' />
 						</button>
@@ -98,10 +107,11 @@ export default function HostSettings({
 								onSubmit={onSubmitForm}
 							>
 								<div className='w-full flex flex-col items-center gap-6 pb-2'>
-									<RadioAnimationSetting hostData={hostData} />
+									<RadioAnimationSetting hostData={hostData} isDialogOpen={isDialogOpen} />
 									<RadioShowHide
 										selectedOption={showHostCard ? 'show' : 'hide'}
 										onChange={(value: 'show' | 'hide') => handleShowHostCard(value === 'show')}
+										isDialogOpen={isDialogOpen}
 									/>
 									<div className='flex justify-between items-center text-md font-semibold self-start w-full'>
 										Select Allowed Story Points:
@@ -124,7 +134,8 @@ export default function HostSettings({
 												/>
 												<label
 													htmlFor={storyPoint.toString()}
-													className='btn btn-primary btn-outline btn-checkbox-label'
+													className='btn btn-primary btn-outline btn-checkbox-label focus-visible:outline-indigo-300'
+													tabIndex={isDialogOpen ? 0 : -1}
 												>
 													{storyPoint}
 												</label>
@@ -138,7 +149,11 @@ export default function HostSettings({
 									</fieldset>
 								</div>
 
-								<button type='submit' className='btn btn-accent w-48 min-h-8 h-8 text-lg'>
+								<button
+									type='submit'
+									className='btn btn-accent w-48 min-h-8 h-8 text-lg'
+									tabIndex={isDialogOpen ? 0 : -1}
+								>
 									Save & Close
 								</button>
 							</form>
@@ -155,6 +170,7 @@ export default function HostSettings({
 								type='button'
 								className='btn btn-outline btn-info text-sm h-6 min-h-6 w-44'
 								onClick={handleClearAllUsersData}
+								tabIndex={isDialogOpen ? 0 : -1}
 							>
 								Clear All Users Data
 							</button>

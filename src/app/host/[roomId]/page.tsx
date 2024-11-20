@@ -28,6 +28,7 @@ export type HostData = {
 export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const { roomId } = params
 	const [disabledShowPointsButton, setDisabledShowPointsButton] = useState<boolean>(false)
+	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	// const [{ nameOfHost, userId: hostId, roomUrl, hostRoomUrl }, setHostData] =
 	const [hostData, setHostData] = useLocalStorage<HostData>('scrumPokerLaMerHostData', {
 		nameOfHost: '',
@@ -157,31 +158,30 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 		setShowHostCard(isShow)
 	}
 
+	console.log('%c>>> isDialogOpen', 'color: red', isDialogOpen)
+
 	return (
 		<div className='w-full h-full relative duration-500'>
-			<AnimatedFish />
-			<main className='px-8 sm:px-12 py-16 md:px-16 md:py-12 relative flex flex-col justify-start items-center gap-8 w-full max-w-[80rem] mx-auto'>
+			<main className='px-8 sm:px-12 py-16 md:px-16 md:py-12 relative flex flex-col justify-start items-center gap-8 w-full max-w-[80rem] mx-auto z-10'>
+				<HostTools
+					allUsersPoints={allUsersPoints}
+					allowedStoryPoints={allowedStoryPoints}
+					updateUsersPoints={updateUsersPoints}
+					demoMode={demoMode}
+					demoNumberUsers={demoNumberUsers}
+					demoPointPercent={demoPointPercent}
+					isDialogOpen={isDialogOpen}
+				/>
 				<div className='flex flex-col justify-start items-center gap-6'>
 					<h1 className='text-center text-2xl md:text-3xl text-gray-300'>
 						Host: Scrum Poker sous la Mer
 					</h1>
-					<RoomInfo roomUrl={hostData.roomUrl} nameOfHost={hostData.nameOfHost} />
-				</div>
-				<div className='pt-2 w-full flex flex-col justify-start items-center gap-8 md:gap-12'>
-					<HostControlsContainer
-						handleShowPoints={handleShowPoints}
-						disabledShowPointsButton={disabledShowPointsButton}
-						handleClearPoints={handleClearPoints}
-					/>
-					<RoomMainUi
-						roomId={roomId}
-						userName={hostData.nameOfHost}
-						userId={hostData.userId}
-						hostId={hostData.userId}
-						showHostCard={showHostCard}
+					<RoomInfo
+						roomUrl={hostData.roomUrl}
+						nameOfHost={hostData.nameOfHost}
+						isDialogOpen={isDialogOpen}
 					/>
 				</div>
-
 				<HostSettings
 					hostData={hostData}
 					allowedPointsEmitter={allowedPointsEmitter}
@@ -190,17 +190,27 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 					setAllowedStoryPoints={setAllowedStoryPoints}
 					showHostCard={showHostCard}
 					handleShowHostCard={handleShowHostCard}
+					isDialogOpen={isDialogOpen}
+					setIsDialogOpen={setIsDialogOpen}
 				/>
-
-				<HostTools
-					allUsersPoints={allUsersPoints}
-					allowedStoryPoints={allowedStoryPoints}
-					updateUsersPoints={updateUsersPoints}
-					demoMode={demoMode}
-					demoNumberUsers={demoNumberUsers}
-					demoPointPercent={demoPointPercent}
-				/>
+				<div className='pt-2 w-full flex flex-col justify-start items-center gap-8 md:gap-12'>
+					<HostControlsContainer
+						handleShowPoints={handleShowPoints}
+						disabledShowPointsButton={disabledShowPointsButton}
+						handleClearPoints={handleClearPoints}
+						isDialogOpen={isDialogOpen}
+					/>
+					<RoomMainUi
+						roomId={roomId}
+						userName={hostData.nameOfHost}
+						userId={hostData.userId}
+						hostId={hostData.userId}
+						showHostCard={showHostCard}
+						isDialogOpen={isDialogOpen}
+					/>
+				</div>
 			</main>
+			<AnimatedFish isDialogOpen={isDialogOpen} />
 		</div>
 	)
 }

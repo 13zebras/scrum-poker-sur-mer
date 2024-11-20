@@ -5,6 +5,7 @@ type NewRoomOrLastRoomProps = {
 	hostRef: React.RefObject<HTMLInputElement>
 	handleUseLastRoom: () => void
 	setNewName: (name: string) => void
+	nameError: boolean
 }
 
 export default function NewRoomOrLastRoom({
@@ -14,6 +15,7 @@ export default function NewRoomOrLastRoom({
 	hostRef,
 	handleUseLastRoom,
 	setNewName,
+	nameError,
 }: NewRoomOrLastRoomProps) {
 	function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
 		event.preventDefault()
@@ -24,10 +26,19 @@ export default function NewRoomOrLastRoom({
 		return (
 			<div className='w-full h-60 sm:h-80 flex flex-col items-center justify-start motion-safe:animate-fade-in-300'>
 				<div className='w-full h-full flex flex-col justify-end items-center'>
+					<label
+						htmlFor='nameOfHost'
+						className={`w-full max-w-[21rem] text-center pb-6 text-lg ${nameError ? 'text-red-500' : 'text-gray-300'}`}
+					>
+						{nameError
+							? 'You Forgot to Enter Your First Name in the Box Below. Please Try Again.'
+							: 'Please Enter Your First Name:'}
+					</label>
 					<input
 						type='text'
+						id='nameOfHost'
 						ref={hostRef}
-						placeholder='Enter Your First Name'
+						placeholder='Alexandria'
 						onChange={handleOnChange}
 						className='input input-bordered input-info w-full max-w-[22rem] mb-2 text-gray-200 text-xl placeholder:text-lg placeholder:italic placeholder:text-slate-400/70 shadow-xl shadow-black/70'
 					/>

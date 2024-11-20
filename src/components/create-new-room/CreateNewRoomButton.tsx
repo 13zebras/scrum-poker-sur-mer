@@ -12,9 +12,10 @@ export default function CreateNewRoomButton({
 			type='button'
 			className='btn btn-warning w-full h-11 min-h-11 text-lg xs:text-xl shadow-xl shadow-black/70'
 			onClick={handleCreateRoom}
-			disabled={!newName}
+			// disabled={!newName}
 		>
-			Click to Create New Room
+			{/* Click to Create New Room */}
+			Create New Room
 		</button>
 	)
 }

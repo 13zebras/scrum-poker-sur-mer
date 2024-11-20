@@ -3,9 +3,14 @@ type RadioOption = 'show' | 'hide'
 type Props = {
 	selectedOption: 'show' | 'hide'
 	onChange: (value: 'show' | 'hide') => void
+	isDialogOpen: boolean
 }
 
-export default function RadioShowHide({ selectedOption, onChange }: Props): JSX.Element {
+export default function RadioShowHide({
+	selectedOption,
+	onChange,
+	isDialogOpen,
+}: Props): JSX.Element {
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange(event.target.value as RadioOption)
 	}
@@ -13,7 +18,7 @@ export default function RadioShowHide({ selectedOption, onChange }: Props): JSX.
 	return (
 		<fieldset className='flex items-center gap-8 w-full text-md font-semibold'>
 			<span>Show / Hide Host Card?</span>
-			<label className='flex items-center px-1'>
+			<label className='flex items-center px-1 rounded-md focus-within:outline focus-within:outline-rose-500 focus-within:outline-offset-2'>
 				<input
 					type='radio'
 					name='showHideHostCard'
@@ -21,11 +26,12 @@ export default function RadioShowHide({ selectedOption, onChange }: Props): JSX.
 					aria-label='Show Host Card'
 					checked={selectedOption === 'show'}
 					onChange={handleChange}
-					className='size-3 rounded-full appearance-none outline outline-1 outline-offset-1 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-2'
+					tabIndex={isDialogOpen ? 0 : -1}
+					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3'
 				/>
 				Show
 			</label>
-			<label className='flex items-center px-1'>
+			<label className='flex items-center px-1 rounded-md focus-within:outline focus-within:outline-rose-500 focus-within:outline-offset-2'>
 				<input
 					type='radio'
 					name='showHideHostCard'
@@ -33,7 +39,8 @@ export default function RadioShowHide({ selectedOption, onChange }: Props): JSX.
 					aria-label='Hide Host Card'
 					checked={selectedOption === 'hide'}
 					onChange={handleChange}
-					className='size-3 rounded-full appearance-none outline outline-1 outline-offset-1 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-2'
+					tabIndex={isDialogOpen ? 0 : -1}
+					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3'
 				/>
 				Hide
 			</label>
