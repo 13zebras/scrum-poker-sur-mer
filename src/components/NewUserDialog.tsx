@@ -1,38 +1,73 @@
 import type { RefObject } from 'react'
 import { useState, useEffect } from 'react'
+import { socketEmitter } from '@/services/socket'
+import { POINT_CODES } from '@/utils/constants'
 import RightArrowIcon from './icons/RightArrowIcon'
 
-interface NewUserDialogProps {
+type UserData = {
+	userName: string
+	userId: string
+	lastRoomId: string
+	roomId: string
+}
+
+type NewUserDialogProps = {
 	dialogRef: RefObject<HTMLDialogElement>
 	user: string
 	userId: string
+	roomId: string
+	setUserData: (userData: UserData) => void
 	isRoomIdLastRoomId: boolean
-	handleOnSubmit: (newUserName: string, userId: string) => void
-	displayError: boolean
-	open?: boolean
+	isDialogOpen: boolean
+	setIsDialogOpen: (isDialogOpen: boolean) => void
 }
 
 export default function NewUserDialog({
 	dialogRef,
 	user,
 	userId,
+	roomId,
+	setUserData,
 	isRoomIdLastRoomId,
-	handleOnSubmit,
-	displayError,
-	...otherProps
+	isDialogOpen,
+	setIsDialogOpen,
 }: NewUserDialogProps) {
+	const [displayError, setDisplayError] = useState(false)
 	const [newUserName, setNewUserName] = useState('')
 
-	const [returningUser, setReturningUser] = useState(false)
+	const [isReturningUser, setIsReturningUser] = useState(false)
 
 	useEffect(() => {
-		// console.log('%c>>> userId in NewUserDialog', 'color: #f60', userId)
-		// console.log('%c>>> isRoomIdLastRoomId in NewUserDialog', 'color: #5f0', isRoomIdLastRoomId)
-		setReturningUser(!!userId && isRoomIdLastRoomId)
+		setIsReturningUser(!!userId && isRoomIdLastRoomId)
 		if (userId && isRoomIdLastRoomId) {
 			setNewUserName(user)
 		}
 	}, [userId, isRoomIdLastRoomId, user])
+
+	function handleOnSubmit(newUserName: string, userId: string) {
+		if (!newUserName) {
+			setDisplayError(true)
+			return
+		}
+		const newUserId = userId || crypto.randomUUID()
+		socketEmitter('join-room', {
+			roomId: roomId,
+			message: POINT_CODES.JOIN,
+			userName: newUserName,
+			userId: newUserId,
+		})
+
+		setUserData({
+			userName: newUserName,
+			userId: newUserId,
+			lastRoomId: roomId,
+			roomId: roomId,
+		})
+		if (dialogRef.current) {
+			dialogRef.current.close()
+		}
+		setIsDialogOpen(false)
+	}
 
 	function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
 		event.preventDefault()
@@ -40,42 +75,41 @@ export default function NewUserDialog({
 	}
 
 	function handleOnClickNewName() {
-		setReturningUser(false)
+		setIsReturningUser(false)
 		setNewUserName('')
 	}
 
-	function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-		if (event.key === 'Enter' && newUserName) {
-			handleOnSubmit(newUserName, userId)
-		}
-	}
-
 	return (
-		<dialog ref={dialogRef} className='modal bg-black/50' {...otherProps}>
+		<dialog ref={dialogRef} className='modal bg-black/50'>
 			<div className='relative py-8 px-4 flex flex-col justify-start items-center w-[90%] max-w-md h-[25rem] bg-dkblue-700 border border-blue-700 rounded-2xl gap-0'>
-				{returningUser ? (
+				{isReturningUser ? (
 					<div className='mt-4 h-32 flex flex-col justify-end items-center gap-4'>
 						<h3 className='font-bold text-3xl text-center'>Welcome back</h3>
 						<h3 className='font-bold text-3xl text-center'>{user}!</h3>
 					</div>
 				) : (
-					<div className='h-32 my-4 flex flex-col justify-center items-center gap-0 font-bold text-center'>
+					<div className='h-32 mt-4 mb-2 flex flex-col justify-start items-center gap-0 font-bold text-center'>
 						<h3 className='mb-4 text-3xl'>Greetings!</h3>
 						<p className=''>Please enter your first name,</p>
-						<p className=''>then click Join Room!</p>
+						<p className='mb-2'>then click Join Room!</p>
+						{displayError && (
+							<p className='text-red-500 text-center pb-2 max-w-72 w-full'>
+								You forgot your first name!
+							</p>
+						)}
 					</div>
 				)}
 
 				<div className='h-12 w-full flex flex-col justify-start items-center mb-2'>
-					{!returningUser && (
+					{!isReturningUser && (
 						<input
 							type='text'
-							placeholder='Your First Name'
+							placeholder='Alexander'
 							name='userName'
 							className='input input-bordered input-primary h-10 max-w-72 w-full text-gray-200 placeholder:italic placeholder:text-primary/80 shadow-lg shadow-black/70'
 							aria-label='your first name input'
 							onChange={handleOnChange}
-							onKeyDown={handleKeyDown}
+							tabIndex={isDialogOpen ? 0 : -1}
 						/>
 					)}
 				</div>
@@ -83,19 +117,20 @@ export default function NewUserDialog({
 					type='button'
 					onClick={() => handleOnSubmit(newUserName, userId)}
 					className='btn btn-accent max-w-72 w-full h-10 min-h-10 text-xl shadow-lg shadow-black/70'
-					disabled={!newUserName && !returningUser}
+					tabIndex={isDialogOpen ? 0 : -1}
 				>
 					Join Room
 					<RightArrowIcon className='h-6 w-6 inline' />
 				</button>
 
-				{returningUser && (
+				{isReturningUser && (
 					<div className='absolute bottom-6 flex flex-row flex-wrap justify-center items-center gap-x-4 gap-y-2 px-4'>
 						<span className='italic text-base text-gray-300'>Want to change your name:</span>
 						<button
 							type='button'
 							onClick={handleOnClickNewName}
 							className='btn btn-outline btn-primary h-6 min-h-6 text-sm px-3'
+							tabIndex={isDialogOpen ? 0 : -1}
 						>
 							Change Name
 						</button>

@@ -8,9 +8,9 @@ export default function Home() {
 					<span className='px-2'>Scrum Poker</span>
 					<span className='px-2'>sous la Mer</span>
 				</h1>
-				<h4 className='text-lg md:text-xl text-center text-gray-100 tracking-wider mb-[4vh] sm:mb-[7vh]'>
+				<h3 className='text-lg md:text-xl text-center text-gray-100 tracking-wider mb-[4vh] sm:mb-[7vh]'>
 					(Scrum Poker Under the Sea)
-				</h4>
+				</h3>
 				<h2 className='px-8 xs:px-0 text-xl sm:text-2xl text-center text-gray-100 mb-[6vh] sm:mb-[12vh]'>
 					A point planning game for Scrum teams
 				</h2>

@@ -4,7 +4,7 @@ type RoomInfoData = {
 	nameOfHost: string
 	roomUrl?: string
 	userName?: string
-	isDialogOpen: boolean
+	isDialogOpen?: boolean
 }
 
 export default function RoomInfo({ roomUrl, nameOfHost, userName, isDialogOpen }: RoomInfoData) {

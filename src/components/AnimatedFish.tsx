@@ -115,7 +115,7 @@ export default function AnimatedFish({ isDialogOpen }: { isDialogOpen: boolean }
 				}}
 				className={`${isFishSwimming ? 'opacity-100' : 'opacity-0'} fixed z-0 transition-opacity duration-500 ${displayNone ? 'hidden' : ''}`}
 			>
-				<TropicalFishIcon className='size-9' />
+				<TropicalFishIcon className='size-10' />
 			</motion.div>
 		</div>
 	)
