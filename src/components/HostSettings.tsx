@@ -60,7 +60,7 @@ export default function HostSettings({
 						setIsDialogOpen(true)
 					}
 				}}
-				className='btn btn-ghost size-8 min-h-8 p-1 border-0 hover:bg-transparent focus-visible:outline-red-600'
+				className='btn btn-ghost size-8 min-h-8 p-1 border-0 rounded-full hover:bg-transparent focus-visible:outline-none focus-visible:shadow-focusWhite'
 			>
 				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' />
 			</button>
