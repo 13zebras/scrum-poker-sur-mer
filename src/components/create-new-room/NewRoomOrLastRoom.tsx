@@ -40,7 +40,7 @@ export default function NewRoomOrLastRoom({
 						ref={hostRef}
 						placeholder='Alexandria'
 						onChange={handleOnChange}
-						className='input input-bordered input-info w-full max-w-[22rem] mb-2 text-gray-200 text-xl placeholder:text-lg placeholder:italic placeholder:text-slate-400/70 shadow-xl shadow-black/70'
+						className='input input-bordered input-info w-full max-w-[20rem] xs:max-w-[22rem] mb-2 text-gray-200 text-xl placeholder:text-lg placeholder:italic placeholder:text-slate-400/70 shadow-xl shadow-black/70'
 					/>
 				</div>
 			</div>
@@ -48,29 +48,32 @@ export default function NewRoomOrLastRoom({
 	}
 
 	return (
-		<div className='w-full h-60 sm:h-80 flex flex-col items-center justify-start -fade-in-300'>
+		<div className='w-full h-[17rem] sm:h-80 flex flex-col items-center justify-start motion-safe:animate-fade-in-300'>
 			<div className='w-full h-full flex flex-col justify-end items-center'>
-				<div
-					className='flex flex-col sm:flex-row items-center justify-center pb-14 text-2xl xs:text-3xl sm:text-4xl text-gray-300 text-center'
+				<p
+					className='w-full text-center text-balance px-6 pb-14 text-2xl xs:text-3xl sm:text-4xl text-gray-300'
 					style={{
 						textShadow: '1px 1px 1px black, 2px 2px 1px black',
 					}}
 				>
-					<span className='mr-[0.4em]'>Welcome back,</span>
-					<span className=''>{nameOfHost}!</span>
-				</div>
+					Welcome back, <span className='text-nowrap'>{nameOfHost}!</span>
+				</p>
 				{hostRoomUrl && (
 					<div
-						className='flex flex-col items-center'
+						className='flex flex-col items-center w-full'
 						style={{
 							textShadow: '1px 1px 1px black, 2px 2px 1px black',
 						}}
 					>
-						<div className='text-2xl text-gray-300 tracking-wider pb-2'>Your Last Room URL:</div>
-						<div className='text-sm xs:text-lg sm:text-xl text-gray-300 pb-6'>{roomUrl}</div>
+						<div className='w-full text-center text-xl xs:text-2xl text-gray-300 tracking-wider pb-2'>
+							Your Last Room URL:
+						</div>
+						<div className='w-full text-center text-sm xs:text-lg sm:text-xl text-gray-300 pb-6'>
+							{roomUrl}
+						</div>
 						<button
 							type='button'
-							className='btn btn-accent w-full max-w-[22rem] h-11 min-h-11 text-lg xs:text-xl shadow-xl shadow-black/70'
+							className='btn btn-accent w-full max-w-[20rem] xs:max-w-[22rem] h-11 min-h-11 text-lg xs:text-xl shadow-xl shadow-black/70'
 							onClick={handleUseLastRoom}
 							style={{
 								textShadow: 'none',
@@ -78,7 +81,9 @@ export default function NewRoomOrLastRoom({
 						>
 							Click to Use Last Room
 						</button>
-						<div className='text-2xl text-gray-300 pt-[3rem]'>Or if you prefer a new room:</div>
+						<div className='text-xl xs:text-2xl text-gray-300 pt-[3rem]'>
+							Or if you prefer a new room:
+						</div>
 					</div>
 				)}
 			</div>

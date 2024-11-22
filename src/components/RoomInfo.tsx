@@ -4,13 +4,11 @@ type RoomInfoData = {
 	nameOfHost: string
 	roomUrl?: string
 	userName?: string
-	isDialogOpen?: boolean
 }
 
-export default function RoomInfo({ roomUrl, nameOfHost, userName, isDialogOpen }: RoomInfoData) {
+export default function RoomInfo({ roomUrl, nameOfHost, userName }: RoomInfoData) {
 	const [isCopied, setIsCopied] = useState(false)
 	const isUser = !!userName
-	// console.log('%c>>> isUser:', 'color: red', isUser)
 
 	const handleCopyUrl = () => {
 		roomUrl && navigator.clipboard.writeText(roomUrl)
@@ -33,7 +31,6 @@ export default function RoomInfo({ roomUrl, nameOfHost, userName, isDialogOpen }
 						type='button'
 						onClick={handleCopyUrl}
 						className={`btn w-44 h-5 min-h-5 px-0 ${isCopied ? 'btn-copied' : 'btn-copy'}`}
-						tabIndex={isDialogOpen ? -1 : 0}
 					>
 						{isCopied ? 'Copied to Clipboard' : 'Copy User Room URL:'}
 					</button>

@@ -12,7 +12,6 @@ export default function StoryPointsContainer({
 	userId,
 	showHostCard,
 	hostId,
-	isDialogOpen,
 }: RoomData) {
 	const [selectedStoryPoint, setSelectedStoryPoint] = useState<number | null>(null)
 	const [isPointBtnDisabled, setIsPointBtnDisabled] = useState(false)
@@ -55,7 +54,6 @@ export default function StoryPointsContainer({
 					selectedStoryPoint={selectedStoryPoint}
 					handleSelectPoint={handleSelectPoint}
 					disabled={isPointBtnDisabled || isDisabledHost}
-					isDialogOpen={isDialogOpen}
 				/>
 			))}
 		</div>

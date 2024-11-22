@@ -4,7 +4,7 @@ import AnimatedFishButton from './AnimatedFishButton'
 import TropicalFishIcon from './icons/TropicalFishIcon'
 import useResize from '@/utils/hooks/useResize'
 
-export default function AnimatedFish({ isDialogOpen }: { isDialogOpen: boolean }) {
+export default function AnimatedFish() {
 	const [isFishSwimming, setIsFishSwimming] = useState(false)
 	const [displayNone, setDisplayNone] = useState(false)
 
@@ -102,7 +102,7 @@ export default function AnimatedFish({ isDialogOpen }: { isDialogOpen: boolean }
 			<AnimatedFishButton
 				isFishSwimming={isFishSwimming}
 				setIsFishSwimming={setIsFishSwimming}
-				isDialogOpen={isDialogOpen}
+				// isDialogOpen={isDialogOpen}
 			/>
 			<motion.div
 				style={{

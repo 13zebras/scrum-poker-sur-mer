@@ -1,18 +1,13 @@
 import Image from 'next/image'
-// import { usePathname } from 'next/navigation'
 
 type Props = {
-	// imageNum: number
 	userId: string
 	alt: string
 }
 
 const totalImages = 33
 
-// export function SealifeImage({ imageNum, alt }: Props) {
 export function SealifeImage({ userId, alt }: Props) {
-	// const pathName = usePathname()
-
 	// NOTE imageOffset adds a bit of randomness based on the first
 	// character of the roomId which is the long string in the pathName.
 	// Each time a new room is created, the imageOffset changes

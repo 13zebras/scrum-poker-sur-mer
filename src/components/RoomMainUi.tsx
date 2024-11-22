@@ -9,17 +9,9 @@ export type RoomData = {
 	userId: string
 	showHostCard?: boolean
 	hostId: string
-	isDialogOpen: boolean
 }
 
-export default function RoomMainUi({
-	roomId,
-	userName,
-	userId,
-	showHostCard,
-	hostId,
-	isDialogOpen,
-}: RoomData) {
+export default function RoomMainUi({ roomId, userName, userId, showHostCard, hostId }: RoomData) {
 	return (
 		<div className='h-full w-full flex flex-col justify-start items-center gap-10'>
 			<div className='h-full w-full flex flex-col justify-center items-center gap-10 md:gap-12 border-0 border-stone-800 '>
@@ -29,7 +21,6 @@ export default function RoomMainUi({
 					userId={userId}
 					showHostCard={showHostCard}
 					hostId={hostId}
-					isDialogOpen={isDialogOpen}
 				/>
 				<CardsContainer />
 			</div>

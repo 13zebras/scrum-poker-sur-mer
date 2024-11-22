@@ -4,7 +4,7 @@ type Props = {
 	color: string
 	classes?: string
 	disabled?: boolean
-	isDialogOpen: boolean
+	// isDialogOpen: boolean
 }
 
 export default function HostControlButton({
@@ -13,7 +13,6 @@ export default function HostControlButton({
 	color,
 	classes = 'w-28 h-6 min-h-6',
 	disabled,
-	isDialogOpen,
 }: Props) {
 	return (
 		<button
@@ -21,7 +20,6 @@ export default function HostControlButton({
 			className={`btn btn-${color} ${classes} btn-outline text-[0.8rem]`}
 			onClick={handler}
 			disabled={disabled}
-			tabIndex={isDialogOpen ? -1 : 0}
 		>
 			{children}
 		</button>

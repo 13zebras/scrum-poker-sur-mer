@@ -3,14 +3,9 @@ type RadioOption = 'show' | 'hide'
 type Props = {
 	selectedOption: 'show' | 'hide'
 	onChange: (value: 'show' | 'hide') => void
-	isDialogOpen: boolean
 }
 
-export default function RadioShowHide({
-	selectedOption,
-	onChange,
-	isDialogOpen,
-}: Props): JSX.Element {
+export default function RadioShowHide({ selectedOption, onChange }: Props): JSX.Element {
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange(event.target.value as RadioOption)
 	}
@@ -26,7 +21,6 @@ export default function RadioShowHide({
 					aria-label='Show Host Card'
 					checked={selectedOption === 'show'}
 					onChange={handleChange}
-					tabIndex={isDialogOpen ? 0 : -1}
 					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3'
 				/>
 				Show
@@ -39,7 +33,6 @@ export default function RadioShowHide({
 					aria-label='Hide Host Card'
 					checked={selectedOption === 'hide'}
 					onChange={handleChange}
-					tabIndex={isDialogOpen ? 0 : -1}
 					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3'
 				/>
 				Hide

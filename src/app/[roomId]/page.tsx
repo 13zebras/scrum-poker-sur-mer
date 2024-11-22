@@ -2,11 +2,9 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState, useRef } from 'react'
-// import { socketEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import RoomMainUi from '@/components/RoomMainUi'
 import NewUserDialog from '@/components/NewUserDialog'
-// import { POINT_CODES } from '@/utils/constants'
 import AnimatedFish from '@/components/AnimatedFish'
 import { useLocalStorage } from 'usehooks-ts'
 
@@ -17,11 +15,8 @@ type Params = {
 }
 
 export default function UserRooms({ params }: { params: Params }) {
-	// const [displayErrorMessage, setDisplayErrorMessage] = useState(false)
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	const dialogRef = useRef<HTMLDialogElement>(null)
-	// const [newUserName, setNewUserName] = useState('')
-	// const [isReturningUser, setIsReturningUser] = useState(false)
 
 	const [{ userName, userId, lastRoomId }, setUserData] = useLocalStorage('scrumPokerLaMerUser', {
 		userName: '',
@@ -37,44 +32,11 @@ export default function UserRooms({ params }: { params: Params }) {
 	const hostId = hostRoomInfo ? hostRoomInfo.userId : ''
 
 	useEffect(() => {
-		// const isRoomLastRoom = roomId === lastRoomId
-		// setIsReturningUser(!!userId && isRoomLastRoom)
-		// if (userId && isRoomLastRoom) {
-		// 	setNewUserName(userName)
-		// }
 		if (dialogRef.current) {
 			dialogRef.current.showModal()
 		}
-		setIsDialogOpen(!isDialogOpen)
+		setIsDialogOpen(true)
 	}, [])
-	// }, [roomId, userId, lastRoomId, userName])
-
-	// function handleOnSubmit(newUserName: string, userId: string) {
-	// 	if (!newUserName) {
-	// 		setDisplayErrorMessage(true)
-	// 		return
-	// 	}
-	// 	const newUserId = userId || crypto.randomUUID()
-	// 	socketEmitter('join-room', {
-	// 		roomId: roomId,
-	// 		message: POINT_CODES.JOIN,
-	// 		userName: newUserName,
-	// 		userId: newUserId,
-	// 	})
-
-	// 	setUserData({
-	// 		userName: newUserName,
-	// 		userId: newUserId,
-	// 		lastRoomId: roomId,
-	// 		roomId: roomId,
-	// 	})
-	// 	if (dialogRef.current) {
-	// 		dialogRef.current.close()
-	// 	}
-	// 	setIsDialogOpen(false)
-	// }
-
-	console.log('%c>>> isDialogOpen', 'color: red', isDialogOpen)
 
 	return (
 		<div className='w-full h-full'>
@@ -84,14 +46,8 @@ export default function UserRooms({ params }: { params: Params }) {
 					user={userName}
 					userId={userId}
 					roomId={roomId}
-					// isReturningUser={isReturningUser}
-					// setIsReturningUser={setIsReturningUser}
 					setUserData={setUserData}
-					// newUserName={newUserName}
-					// setNewUserName={setNewUserName}
 					isRoomIdLastRoomId={roomId === lastRoomId}
-					// handleOnSubmit={handleOnSubmit}
-					// displayError={displayErrorMessage}
 					isDialogOpen={isDialogOpen}
 					setIsDialogOpen={setIsDialogOpen}
 				/>
@@ -103,7 +59,7 @@ export default function UserRooms({ params }: { params: Params }) {
 					<RoomMainUi roomId={roomId} userName={userName} userId={userId} hostId={hostId} />
 				</div>
 			</main>
-			<AnimatedFish isDialogOpen={isDialogOpen} />
+			<AnimatedFish />
 		</div>
 	)
 }

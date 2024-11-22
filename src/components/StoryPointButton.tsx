@@ -1,9 +1,8 @@
-interface StoryPointButtonProps {
+type StoryPointButtonProps = {
 	allowedPointLabel: string
 	selectedStoryPoint: number | null
 	handleSelectPoint: (event: React.ChangeEvent<HTMLInputElement>) => void
 	disabled: boolean
-	isDialogOpen: boolean
 }
 
 export default function StoryPointButton({
@@ -11,7 +10,6 @@ export default function StoryPointButton({
 	selectedStoryPoint,
 	handleSelectPoint,
 	disabled,
-	isDialogOpen,
 }: StoryPointButtonProps) {
 	return (
 		<input
@@ -23,7 +21,6 @@ export default function StoryPointButton({
 			checked={selectedStoryPoint === Number(allowedPointLabel)}
 			onChange={handleSelectPoint}
 			disabled={disabled}
-			tabIndex={isDialogOpen ? -1 : 0}
 		/>
 	)
 }

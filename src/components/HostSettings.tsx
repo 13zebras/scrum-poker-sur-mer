@@ -3,7 +3,7 @@
 import GearIcon from './icons/GearIcon'
 import RadioShowHide from './RadioShowHide'
 import RadioAnimationSetting from './RadioAnimationSetting'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import type { HostData } from '@/app/host/[roomId]/page'
 import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
 import XIcon from './icons/XIcon'
@@ -16,8 +16,6 @@ type Props = {
 	setAllowedStoryPoints: (allowedStoryPoints: string[]) => void
 	showHostCard: boolean
 	handleShowHostCard: (isShow: boolean) => void
-	isDialogOpen: boolean
-	setIsDialogOpen: (isOpen: boolean) => void
 }
 
 export default function HostSettings({
@@ -28,10 +26,9 @@ export default function HostSettings({
 	setAllowedStoryPoints,
 	showHostCard,
 	handleShowHostCard,
-	isDialogOpen,
-	setIsDialogOpen,
 }: Props) {
 	const dialogRef = useRef<HTMLDialogElement>(null)
+	const [isDialogOpen, setIsDialogOpen] = useState(false)
 
 	function onSubmitForm(event: React.FormEvent<HTMLFormElement>) {
 		setIsDialogOpen(false)
@@ -64,12 +61,11 @@ export default function HostSettings({
 					}
 				}}
 				className='btn btn-ghost size-8 min-h-8 p-1 border-0 hover:bg-transparent focus-visible:outline-red-600'
-				tabIndex={isDialogOpen ? -1 : 0}
 			>
 				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' />
 			</button>
-			<dialog ref={dialogRef} className='modal bg-black/60'>
-				<div className='modal-box flex flex-col items-center justify-center gap-8 w-11/12 max-w-[44rem] mx-auto bg-slate-950 border-2 border-slate-600 text-gray-200 relative bg-transparent'>
+			<dialog ref={dialogRef} className={`modal ${isDialogOpen ? '' : 'hidden'} bg-black/60`}>
+				<div className='modal-box flex flex-col items-center justify-center gap-8 w-11/12 max-w-[44rem] mx-auto bg-slate-950 border-2 border-slate-600 text-gray-200 relative'>
 					<div
 						className='absolute top-4 right-3 sm:right-4 tooltip tooltip-bottom'
 						data-tip='Close'
@@ -83,7 +79,6 @@ export default function HostSettings({
 									setIsDialogOpen(false)
 								}
 							}}
-							tabIndex={isDialogOpen ? 0 : -1}
 						>
 							<XIcon className='w-full h-full hover:text-rose-500 hover:scale-110' />
 						</button>
@@ -107,11 +102,10 @@ export default function HostSettings({
 								onSubmit={onSubmitForm}
 							>
 								<div className='w-full flex flex-col items-center gap-6 pb-2'>
-									<RadioAnimationSetting hostData={hostData} isDialogOpen={isDialogOpen} />
+									<RadioAnimationSetting hostData={hostData} />
 									<RadioShowHide
 										selectedOption={showHostCard ? 'show' : 'hide'}
 										onChange={(value: 'show' | 'hide') => handleShowHostCard(value === 'show')}
-										isDialogOpen={isDialogOpen}
 									/>
 									<div className='flex justify-between items-center text-md font-semibold self-start w-full'>
 										Select Allowed Story Points:
@@ -149,11 +143,7 @@ export default function HostSettings({
 									</fieldset>
 								</div>
 
-								<button
-									type='submit'
-									className='btn btn-accent w-48 min-h-8 h-8 text-lg'
-									tabIndex={isDialogOpen ? 0 : -1}
-								>
+								<button type='submit' className='btn btn-accent w-48 min-h-8 h-8 text-lg'>
 									Save & Close
 								</button>
 							</form>
@@ -170,7 +160,6 @@ export default function HostSettings({
 								type='button'
 								className='btn btn-outline btn-info text-sm h-6 min-h-6 w-44'
 								onClick={handleClearAllUsersData}
-								tabIndex={isDialogOpen ? 0 : -1}
 							>
 								Clear All Users Data
 							</button>

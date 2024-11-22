@@ -88,12 +88,11 @@ export default function NewUserDialog({
 						<h3 className='font-bold text-3xl text-center'>{user}!</h3>
 					</div>
 				) : (
-					<div className='h-32 mt-4 mb-2 flex flex-col justify-start items-center gap-0 font-bold text-center'>
+					<div className='max-w-72 h-32 mt-4 mb-2 flex flex-col justify-start items-center gap-0 font-bold text-center'>
 						<h3 className='mb-4 text-3xl'>Greetings!</h3>
-						<p className=''>Please enter your first name,</p>
-						<p className='mb-2'>then click Join Room!</p>
+						<p className='text-balance mb-2'>Please enter your first name then click Join Room!</p>
 						{displayError && (
-							<p className='text-red-500 text-center pb-2 max-w-72 w-full'>
+							<p id='first-name-error' className='text-red-500 text-center pb-1'>
 								You forgot your first name!
 							</p>
 						)}
@@ -107,7 +106,8 @@ export default function NewUserDialog({
 							placeholder='Alexander'
 							name='userName'
 							className='input input-bordered input-primary h-10 max-w-72 w-full text-gray-200 placeholder:italic placeholder:text-primary/80 shadow-lg shadow-black/70'
-							aria-label='your first name input'
+							aria-label='your first name'
+							aria-describedby='first-name-error'
 							onChange={handleOnChange}
 							tabIndex={isDialogOpen ? 0 : -1}
 						/>

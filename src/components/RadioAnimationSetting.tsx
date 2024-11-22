@@ -8,10 +8,9 @@ export type AnimationType = 'minimum' | 'medium' | 'high'
 
 type Props = {
 	hostData: HostData
-	isDialogOpen: boolean
 }
 
-export default function RadioAnimationSetting({ hostData, isDialogOpen }: Props): JSX.Element {
+export default function RadioAnimationSetting({ hostData }: Props): JSX.Element {
 	const [animationSetting, setAnimationSetting] = useLocalStorage<string>(
 		'scrumPokerLaMerAnimationSetting',
 		'medium',
@@ -19,7 +18,6 @@ export default function RadioAnimationSetting({ hostData, isDialogOpen }: Props)
 	const [selectedOption, setSelectedOption] = useState<AnimationType>(
 		animationSetting as AnimationType,
 	)
-	// console.log('%c>>> animationSetting radio', 'color: red', animationSetting)
 	const params = useParams()
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +44,6 @@ export default function RadioAnimationSetting({ hostData, isDialogOpen }: Props)
 					checked={selectedOption === 'minimum'}
 					onChange={handleChange}
 					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3'
-					tabIndex={isDialogOpen ? 0 : -1}
 				/>
 				Minimum
 			</label>
@@ -60,7 +57,6 @@ export default function RadioAnimationSetting({ hostData, isDialogOpen }: Props)
 					checked={selectedOption === 'medium'}
 					onChange={handleChange}
 					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3'
-					tabIndex={isDialogOpen ? 0 : -1}
 				/>
 				Medium
 			</label>
@@ -73,8 +69,6 @@ export default function RadioAnimationSetting({ hostData, isDialogOpen }: Props)
 					checked={selectedOption === 'high'}
 					onChange={handleChange}
 					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3'
-					tabIndex={isDialogOpen ? 0 : -1}
-					// tabIndex={isDialogOpen ? undefined : -1}
 				/>
 				High
 			</label>
