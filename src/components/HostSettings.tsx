@@ -54,6 +54,7 @@ export default function HostSettings({
 		>
 			<button
 				type='button'
+				aria-label='Host Settings Button'
 				onClick={() => {
 					if (dialogRef.current) {
 						dialogRef.current.showModal()
@@ -62,7 +63,7 @@ export default function HostSettings({
 				}}
 				className='btn btn-ghost size-8 min-h-8 p-1 border-0 rounded-full hover:bg-transparent focus-visible:outline-none focus-visible:shadow-focusWhite'
 			>
-				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' />
+				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' aria-hidden='true' />
 			</button>
 			<dialog ref={dialogRef} className={`modal ${isDialogOpen ? '' : 'hidden'} bg-black/60`}>
 				<div className='modal-box flex flex-col items-center justify-center gap-8 w-11/12 max-w-[44rem] mx-auto bg-slate-950 border-2 border-slate-600 text-gray-200 relative'>
@@ -73,6 +74,7 @@ export default function HostSettings({
 						<button
 							type='button'
 							className='btn btn-ghost size-6 min-h-6 p-0 border-0 hover:bg-transparent'
+							aria-label='Close Button'
 							onClick={() => {
 								if (dialogRef.current) {
 									dialogRef.current.close()
@@ -80,7 +82,10 @@ export default function HostSettings({
 								}
 							}}
 						>
-							<XIcon className='w-full h-full hover:text-rose-500 hover:scale-110' />
+							<XIcon
+								className='w-full h-full hover:text-rose-500 hover:scale-110'
+								aria-hidden='true'
+							/>
 						</button>
 					</div>
 					<div className='flex flex-col justify-start items-start gap-6 py-4'>
@@ -129,7 +134,8 @@ export default function HostSettings({
 												<label
 													htmlFor={storyPoint.toString()}
 													className='btn btn-primary btn-outline btn-checkbox-label focus-visible:outline-indigo-300'
-													tabIndex={isDialogOpen ? 0 : -1}
+													// biome-ignore lint/a11y/noNoninteractiveTabindex: it is interactive
+													tabIndex={0}
 												>
 													{storyPoint}
 												</label>

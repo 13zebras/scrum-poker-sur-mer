@@ -4,7 +4,6 @@ type Props = {
 	color: string
 	classes?: string
 	disabled?: boolean
-	// isDialogOpen: boolean
 }
 
 export default function HostControlButton({

@@ -31,10 +31,9 @@ export default function GoToNewRoom({ roomUrl, hostRoomUrl }: GoToNewRoomProps) 
 				<Link
 					href={hostRoomUrl}
 					className='btn btn-secondary w-full h-11 min-h-11 text-lg xs:text-xl uppercase motion-safe:animate-fade-in-300 shadow-xl shadow-black/70'
-					tabIndex={0}
 				>
 					Go to New Room
-					<RightArrowIcon className='h-8 w-8 inline' />
+					<RightArrowIcon className='h-8 w-8 inline' aria-label='Right Arrow Icon' />
 				</Link>
 			</div>
 		</>

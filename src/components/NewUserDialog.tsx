@@ -80,7 +80,7 @@ export default function NewUserDialog({
 	}
 
 	return (
-		<dialog ref={dialogRef} className='modal bg-black/50'>
+		<dialog ref={dialogRef} className={`modal ${isDialogOpen ? '' : 'hidden'} bg-black/60`}>
 			<div className='relative py-8 px-4 flex flex-col justify-start items-center w-[90%] max-w-md h-[25rem] bg-dkblue-700 border border-blue-700 rounded-2xl gap-0'>
 				{isReturningUser ? (
 					<div className='mt-4 h-32 flex flex-col justify-end items-center gap-4'>
@@ -109,7 +109,6 @@ export default function NewUserDialog({
 							aria-label='your first name'
 							aria-describedby='first-name-error'
 							onChange={handleOnChange}
-							tabIndex={isDialogOpen ? 0 : -1}
 						/>
 					)}
 				</div>
@@ -117,7 +116,6 @@ export default function NewUserDialog({
 					type='button'
 					onClick={() => handleOnSubmit(newUserName, userId)}
 					className='btn btn-accent max-w-72 w-full h-10 min-h-10 text-xl shadow-lg shadow-black/70'
-					tabIndex={isDialogOpen ? 0 : -1}
 				>
 					Join Room
 					<RightArrowIcon className='h-6 w-6 inline' />
@@ -130,7 +128,6 @@ export default function NewUserDialog({
 							type='button'
 							onClick={handleOnClickNewName}
 							className='btn btn-outline btn-primary h-6 min-h-6 text-sm px-3'
-							tabIndex={isDialogOpen ? 0 : -1}
 						>
 							Change Name
 						</button>
