@@ -113,7 +113,7 @@ export default function HostSettings({
 										onChange={(value: 'show' | 'hide') => handleShowHostCard(value === 'show')}
 									/>
 									<div className='flex justify-between items-center text-md font-semibold self-start w-full'>
-										Select Allowed Story Points:
+										Select ALL Allowed Story Points:
 										<div className='flex items-center'>
 											<span className='mt-1 ml-8 text-3xl text-rose-500 leading-none'>•</span>
 											<span className='ml-1 text-sm text-gray-300 italic'>= current selection</span>
@@ -122,7 +122,10 @@ export default function HostSettings({
 
 									<fieldset className='flex justify-center gap-2 w-full'>
 										{defaultStoryPointValues?.map((storyPoint) => (
-											<div key={Math.random()} className='flex flex-col items-center relative'>
+											<div
+												key={storyPoint}
+												className='flex flex-col items-center relative focus-within:outline focus-within:outline-indigo-500 focus-within:outline-offset-1 rounded-lg'
+											>
 												<input
 													type='checkbox'
 													id={storyPoint}
@@ -133,9 +136,7 @@ export default function HostSettings({
 												/>
 												<label
 													htmlFor={storyPoint.toString()}
-													className='btn btn-primary btn-outline btn-checkbox-label focus-visible:outline-indigo-300'
-													// biome-ignore lint/a11y/noNoninteractiveTabindex: it is interactive
-													tabIndex={0}
+													className='btn btn-primary btn-outline btn-checkbox-label'
 												>
 													{storyPoint}
 												</label>

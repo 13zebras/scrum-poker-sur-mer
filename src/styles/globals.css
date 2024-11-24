@@ -110,7 +110,7 @@ body {
 }
 
 .btn-checkbox {
-	@apply hidden;
+	@apply absolute size-10 opacity-0;
 }
 
 .btn-checkbox-label {
