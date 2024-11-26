@@ -1,6 +1,3 @@
-// Motion: reduced. Medium. High
-//@media query reduced-motion for accessibility
-
 import type { HostData } from '@/app/host/[roomId]/page'
 import { socketEmitter } from '@/services/socket'
 import { useParams } from 'next/dist/client/components/navigation'
@@ -21,7 +18,6 @@ export default function RadioAnimationSetting({ hostData }: Props): JSX.Element 
 	const [selectedOption, setSelectedOption] = useState<AnimationType>(
 		animationSetting as AnimationType,
 	)
-	// console.log('%c>>> animationSetting radio', 'color: red', animationSetting)
 	const params = useParams()
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,9 +33,9 @@ export default function RadioAnimationSetting({ hostData }: Props): JSX.Element 
 	}
 
 	return (
-		<fieldset className='flex items-center gap-8 w-full text-md font-semibold'>
+		<fieldset className='flex items-center gap-8 w-full text-md font-semibold p-[2px]'>
 			<span>Motion / Animation?</span>
-			<label className='flex items-center px-1'>
+			<label className='flex items-center px-1 rounded-md'>
 				<input
 					type='radio'
 					name='animationSetting'
@@ -47,11 +43,12 @@ export default function RadioAnimationSetting({ hostData }: Props): JSX.Element 
 					aria-label='Minimum, Motion Reduced'
 					checked={selectedOption === 'minimum'}
 					onChange={handleChange}
-					className='size-3 rounded-full appearance-none outline outline-1 outline-offset-1 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-2'
+					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3 focus:shadow-radio1'
 				/>
 				Minimum
 			</label>
-			<label className='flex items-center px-1'>
+
+			<label className='flex items-center px-1 rounded-md'>
 				<input
 					type='radio'
 					name='animationSetting'
@@ -59,11 +56,11 @@ export default function RadioAnimationSetting({ hostData }: Props): JSX.Element 
 					aria-label='Medium Animation'
 					checked={selectedOption === 'medium'}
 					onChange={handleChange}
-					className='size-3 rounded-full appearance-none outline outline-1 outline-offset-1 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-2'
+					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3 focus:shadow-radio1'
 				/>
 				Medium
 			</label>
-			<label className='flex items-center px-1'>
+			<label className='flex items-center px-1 rounded-md'>
 				<input
 					type='radio'
 					name='animationSetting'
@@ -71,7 +68,7 @@ export default function RadioAnimationSetting({ hostData }: Props): JSX.Element 
 					aria-label='High Animation'
 					checked={selectedOption === 'high'}
 					onChange={handleChange}
-					className='size-3 rounded-full appearance-none outline outline-1 outline-offset-1 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-2'
+					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3 focus:shadow-radio1'
 				/>
 				High
 			</label>

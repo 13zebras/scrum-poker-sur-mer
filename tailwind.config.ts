@@ -18,6 +18,10 @@ const config: Config = {
 			fontSize: {
 				md: '0.95rem',
 			},
+			boxShadow: {
+				radio1: '0px 0px 5px 14px rgba(225,29,72,0.5)',
+				focusWhite: '0px 0px 8px 10px rgba(225,255,255,0.25)',
+			},
 			colors: {
 				dkblue: {
 					100: '#00008f',

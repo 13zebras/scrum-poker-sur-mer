@@ -13,7 +13,7 @@ export default function RadioShowHide({ selectedOption, onChange }: Props): JSX.
 	return (
 		<fieldset className='flex items-center gap-8 w-full text-md font-semibold'>
 			<span>Show / Hide Host Card?</span>
-			<label className='flex items-center px-1'>
+			<label className='flex items-center px-1 rounded-md'>
 				<input
 					type='radio'
 					name='showHideHostCard'
@@ -21,11 +21,11 @@ export default function RadioShowHide({ selectedOption, onChange }: Props): JSX.
 					aria-label='Show Host Card'
 					checked={selectedOption === 'show'}
 					onChange={handleChange}
-					className='size-3 rounded-full appearance-none outline outline-1 outline-offset-1 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-2'
+					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3 focus:shadow-radio1'
 				/>
 				Show
 			</label>
-			<label className='flex items-center px-1'>
+			<label className='flex items-center px-1 rounded-md'>
 				<input
 					type='radio'
 					name='showHideHostCard'
@@ -33,7 +33,7 @@ export default function RadioShowHide({ selectedOption, onChange }: Props): JSX.
 					aria-label='Hide Host Card'
 					checked={selectedOption === 'hide'}
 					onChange={handleChange}
-					className='size-3 rounded-full appearance-none outline outline-1 outline-offset-1 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-2'
+					className='size-3 rounded-full appearance-none outline outline-2 outline-offset-2 outline-gray-400 checked:bg-rose-600 checked:outline-rose-500 mr-3 focus:shadow-radio1'
 				/>
 				Hide
 			</label>

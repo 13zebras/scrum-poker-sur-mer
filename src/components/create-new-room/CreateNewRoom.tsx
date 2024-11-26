@@ -8,6 +8,7 @@ import GoToNewRoom from './GoToNewRoom'
 
 export default function CreateNewRoom() {
 	const [isCreate, setIsCreate] = useState(true)
+	const [nameError, setNameError] = useState(false)
 
 	const hostRef = useRef<HTMLInputElement>(null)
 	const [{ nameOfHost, roomUrl, hostRoomUrl, roomId, userId }, setHostData] = useLocalStorage(
@@ -42,6 +43,10 @@ export default function CreateNewRoom() {
 	}
 
 	function handleCreateRoom() {
+		if (!newName) {
+			setNameError(true)
+			return
+		}
 		const hostname = window.location.hostname
 		const http = hostname === 'localhost' ? 'http' : 'https'
 		const port = window.location.port ? `:${window.location.port}` : ''
@@ -74,13 +79,9 @@ export default function CreateNewRoom() {
 					textShadow: '1px 1px 1px black, 3px 3px 1px black',
 				}}
 			>
-				<h1 className='text-3xl xs:text-4xl sm:text-5xl text-gray-200 text-center flex flex-col md:flex-row items-center justify-center flex-wrap gap-y-2 tracking-wide'>
-					<span>Scrum Poker</span>
-					<span className='md:pl-3'>sous la Mer</span>
+				<h1 className='text-3xl xs:text-4xl sm:text-5xl text-gray-200 text-center text-balance tracking-wide'>
+					Scrum Poker sous la Mer
 				</h1>
-				{!nameOfHost && (
-					<h2 className='text-2xl sm:text-3xl text-gray-200 py-8'>Create a New Room</h2>
-				)}
 			</div>
 
 			{isCreate ? (
@@ -92,9 +93,10 @@ export default function CreateNewRoom() {
 						hostRef={hostRef}
 						handleUseLastRoom={handleUseLastRoom}
 						setNewName={setNewName}
+						nameError={nameError}
 					/>
-					<div className='w-full max-w-[22rem] motion-safe:animate-fade-in-300'>
-						<CreateNewRoomButton handleCreateRoom={handleCreateRoom} newName={newName} />
+					<div className='w-full max-w-[20rem] xs:max-w-[22rem] mx-auto motion-safe:animate-fade-in-300'>
+						<CreateNewRoomButton handleCreateRoom={handleCreateRoom} />
 					</div>
 				</>
 			) : (

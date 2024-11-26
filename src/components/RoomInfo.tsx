@@ -9,7 +9,6 @@ type RoomInfoData = {
 export default function RoomInfo({ roomUrl, nameOfHost, userName }: RoomInfoData) {
 	const [isCopied, setIsCopied] = useState(false)
 	const isUser = !!userName
-	// console.log('%c>>> isUser:', 'color: red', isUser)
 
 	const handleCopyUrl = () => {
 		roomUrl && navigator.clipboard.writeText(roomUrl)

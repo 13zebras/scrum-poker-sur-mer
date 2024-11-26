@@ -3,7 +3,7 @@
 import GearIcon from './icons/GearIcon'
 import RadioShowHide from './RadioShowHide'
 import RadioAnimationSetting from './RadioAnimationSetting'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import type { HostData } from '@/app/host/[roomId]/page'
 import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
 import XIcon from './icons/XIcon'
@@ -28,8 +28,10 @@ export default function HostSettings({
 	handleShowHostCard,
 }: Props) {
 	const dialogRef = useRef<HTMLDialogElement>(null)
+	const [isDialogOpen, setIsDialogOpen] = useState(false)
 
 	function onSubmitForm(event: React.FormEvent<HTMLFormElement>) {
+		setIsDialogOpen(false)
 		const formData = new FormData(event.currentTarget)
 
 		const hostChosenPoints = formData.getAll('storyPoints') as string[]
@@ -52,16 +54,18 @@ export default function HostSettings({
 		>
 			<button
 				type='button'
+				aria-label='Host Settings Button'
 				onClick={() => {
 					if (dialogRef.current) {
 						dialogRef.current.showModal()
+						setIsDialogOpen(true)
 					}
 				}}
-				className='btn btn-ghost size-6 min-h-6 p-0 border-0 hover:bg-transparent'
+				className='btn btn-ghost size-8 min-h-8 p-1 border-0 rounded-full hover:bg-transparent focus-visible:outline-none focus-visible:shadow-focusWhite'
 			>
-				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' />
+				<GearIcon className='w-full h-full hover:text-sky-400 hover:scale-110' aria-hidden='true' />
 			</button>
-			<dialog ref={dialogRef} className='modal bg-black/60'>
+			<dialog ref={dialogRef} className={`modal ${isDialogOpen ? '' : 'hidden'} bg-black/60`}>
 				<div className='modal-box flex flex-col items-center justify-center gap-8 w-11/12 max-w-[44rem] mx-auto bg-slate-950 border-2 border-slate-600 text-gray-200 relative'>
 					<div
 						className='absolute top-4 right-3 sm:right-4 tooltip tooltip-bottom'
@@ -70,13 +74,18 @@ export default function HostSettings({
 						<button
 							type='button'
 							className='btn btn-ghost size-6 min-h-6 p-0 border-0 hover:bg-transparent'
+							aria-label='Close Button'
 							onClick={() => {
 								if (dialogRef.current) {
 									dialogRef.current.close()
+									setIsDialogOpen(false)
 								}
 							}}
 						>
-							<XIcon className='w-full h-full hover:text-rose-500 hover:scale-110' />
+							<XIcon
+								className='w-full h-full hover:text-rose-500 hover:scale-110'
+								aria-hidden='true'
+							/>
 						</button>
 					</div>
 					<div className='flex flex-col justify-start items-start gap-6 py-4'>
@@ -104,7 +113,7 @@ export default function HostSettings({
 										onChange={(value: 'show' | 'hide') => handleShowHostCard(value === 'show')}
 									/>
 									<div className='flex justify-between items-center text-md font-semibold self-start w-full'>
-										Select Allowed Story Points:
+										Select ALL Allowed Story Points:
 										<div className='flex items-center'>
 											<span className='mt-1 ml-8 text-3xl text-rose-500 leading-none'>•</span>
 											<span className='ml-1 text-sm text-gray-300 italic'>= current selection</span>
@@ -113,7 +122,10 @@ export default function HostSettings({
 
 									<fieldset className='flex justify-center gap-2 w-full'>
 										{defaultStoryPointValues?.map((storyPoint) => (
-											<div key={Math.random()} className='flex flex-col items-center relative'>
+											<div
+												key={storyPoint}
+												className='flex flex-col items-center relative focus-within:outline focus-within:outline-indigo-500 focus-within:outline-offset-1 rounded-lg'
+											>
 												<input
 													type='checkbox'
 													id={storyPoint}

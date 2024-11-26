@@ -1,4 +1,4 @@
-interface StoryPointButtonProps {
+type StoryPointButtonProps = {
 	allowedPointLabel: string
 	selectedStoryPoint: number | null
 	handleSelectPoint: (event: React.ChangeEvent<HTMLInputElement>) => void

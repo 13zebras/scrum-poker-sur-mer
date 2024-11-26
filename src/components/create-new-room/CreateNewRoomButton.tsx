@@ -1,20 +1,15 @@
 type CreateNewRoomButtonProps = {
 	handleCreateRoom: () => void
-	newName: string
 }
 
-export default function CreateNewRoomButton({
-	handleCreateRoom,
-	newName,
-}: CreateNewRoomButtonProps) {
+export default function CreateNewRoomButton({ handleCreateRoom }: CreateNewRoomButtonProps) {
 	return (
 		<button
 			type='button'
-			className='btn btn-warning w-full h-11 min-h-11 text-lg xs:text-xl shadow-xl shadow-black/70'
+			className='btn btn-warning w-full max-w-[20rem] xs:max-w-[22rem] h-11 min-h-11 text-lg xs:text-xl shadow-xl shadow-black/70'
 			onClick={handleCreateRoom}
-			disabled={!newName}
 		>
-			Click to Create New Room
+			Create New Room
 		</button>
 	)
 }

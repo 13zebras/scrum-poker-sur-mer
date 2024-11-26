@@ -5,9 +5,7 @@ import { socketEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 import HostControlsContainer from '@/components/HostControlsContainer'
-// import HostSettingsButton from '@/components/HostSettingsButton'
 import RoomMainUi from '@/components/RoomMainUi'
-// import RoomInfo from '@/components/RoomInfo'
 import useUpdateUsersPoints from '@/utils/hooks/useUpdateUserPoints'
 import AnimatedFish from '@/components/AnimatedFish'
 import { POINT_CODES, DEFAULT_STORY_POINTS } from '@/utils/constants'
@@ -28,7 +26,6 @@ export type HostData = {
 export default function HostRoom({ params }: { params: { roomId: string } }) {
 	const { roomId } = params
 	const [disabledShowPointsButton, setDisabledShowPointsButton] = useState<boolean>(false)
-	// const [{ nameOfHost, userId: hostId, roomUrl, hostRoomUrl }, setHostData] =
 	const [hostData, setHostData] = useLocalStorage<HostData>('scrumPokerLaMerHostData', {
 		nameOfHost: '',
 		userId: '',
@@ -159,8 +156,24 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 
 	return (
 		<div className='w-full h-full relative duration-500'>
-			<AnimatedFish />
-			<main className='px-8 sm:px-12 py-16 md:px-16 md:py-12 relative flex flex-col justify-start items-center gap-8 w-full max-w-[80rem] mx-auto'>
+			<main className='px-8 sm:px-12 py-16 md:px-16 md:py-12 relative flex flex-col justify-start items-center gap-8 w-full max-w-[80rem] mx-auto z-10'>
+				<HostTools
+					allUsersPoints={allUsersPoints}
+					allowedStoryPoints={allowedStoryPoints}
+					updateUsersPoints={updateUsersPoints}
+					demoMode={demoMode}
+					demoNumberUsers={demoNumberUsers}
+					demoPointPercent={demoPointPercent}
+				/>
+				<HostSettings
+					hostData={hostData}
+					allowedPointsEmitter={allowedPointsEmitter}
+					defaultStoryPointValues={DEFAULT_STORY_POINTS}
+					allowedStoryPoints={allowedStoryPoints}
+					setAllowedStoryPoints={setAllowedStoryPoints}
+					showHostCard={showHostCard}
+					handleShowHostCard={handleShowHostCard}
+				/>
 				<div className='flex flex-col justify-start items-center gap-6'>
 					<h1 className='text-center text-2xl md:text-3xl text-gray-300'>
 						Host: Scrum Poker sous la Mer
@@ -181,26 +194,8 @@ export default function HostRoom({ params }: { params: { roomId: string } }) {
 						showHostCard={showHostCard}
 					/>
 				</div>
-
-				<HostSettings
-					hostData={hostData}
-					allowedPointsEmitter={allowedPointsEmitter}
-					defaultStoryPointValues={DEFAULT_STORY_POINTS}
-					allowedStoryPoints={allowedStoryPoints}
-					setAllowedStoryPoints={setAllowedStoryPoints}
-					showHostCard={showHostCard}
-					handleShowHostCard={handleShowHostCard}
-				/>
-
-				<HostTools
-					allUsersPoints={allUsersPoints}
-					allowedStoryPoints={allowedStoryPoints}
-					updateUsersPoints={updateUsersPoints}
-					demoMode={demoMode}
-					demoNumberUsers={demoNumberUsers}
-					demoPointPercent={demoPointPercent}
-				/>
 			</main>
+			<AnimatedFish />
 		</div>
 	)
 }

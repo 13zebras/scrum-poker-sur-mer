@@ -38,9 +38,7 @@ export default function HostTools({
 		const newUsers: ListenerRes[] = sampleNames.map((name, index) => {
 			const randomPoint = allowedStoryPoints[Math.floor(Math.random() * allowedStoryPoints.length)]
 			const pointAsNumber = randomPoint === '?' ? -1 : Number(randomPoint)
-			// console.log('%c>>> randomPoint', 'color: #5f0', randomPoint)
 			const storyPoint = Math.random() > demoPointPercent / 100 ? POINT_CODES.JOIN : pointAsNumber
-			// console.log('%c>>> storyPoint', 'color: yellow', storyPoint)
 			const userName = `*${name}`
 			const userId = crypto.randomUUID()
 

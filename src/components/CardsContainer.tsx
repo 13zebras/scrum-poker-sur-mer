@@ -16,10 +16,6 @@ export default function CardsContainer() {
 	// container width is need for the animation of the cards
 	const { viewportHeight, ref: containerRef, rect } = useResize('both', 50)
 
-	// console.log('%c>>> viewportHeight', 'color: yellow', viewportHeight)
-	// console.log('%c>>> rect', 'color: red', rect)
-	// console.log('%c>>> rect.bottom', 'color: red', rect?.bottom)
-
 	const allUsersStoryPoints = useSocketListener('all-users-story-points', {
 		onChange: (allPointsRes) => {
 			const allUsersPointsSorted = [...(allPointsRes.message as unknown as ListenerRes[])]
@@ -33,7 +29,6 @@ export default function CardsContainer() {
 		},
 	})
 	const usersPointsData = (allUsersStoryPoints?.message as unknown as ListenerRes[]) || []
-	// console.log('%c>>> usersPointsData[0].userId', 'color: red', usersPointsData[0]?.userId)
 
 	const showDisableReset = useSocketListener('show-disable-reset-points')
 	const showStoryPoints = !!showDisableReset?.message as unknown as boolean
@@ -46,7 +41,6 @@ export default function CardsContainer() {
 
 	const animationSettingListener = useSocketListener('animation-setting')
 	const animationSetting = animationSettingListener?.message as AnimationType
-	// console.log('%c>>> animationSetting CardsContainer', 'color: #5f0', animationSetting)
 
 	const numberOfBlankCards = usersPointsData.filter(
 		({ message }) => message === POINT_CODES.JOIN || message === POINT_CODES.RESET,

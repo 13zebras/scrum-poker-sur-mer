@@ -88,7 +88,6 @@ export default function UserPointsCard({
 
 	const lastRowDistanceToViewportBottom = viewportHeight + lastRowBottomNoOffset - containerBottom
 
-	// const containerBottomOffset = 30
 	let containerBottomOffset = 30
 	if (lastRowDistanceToViewportBottom > 100) {
 		containerBottomOffset = Math.floor(lastRowDistanceToViewportBottom / 3)

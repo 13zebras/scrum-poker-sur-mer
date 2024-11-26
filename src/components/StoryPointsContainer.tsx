@@ -45,7 +45,7 @@ export default function StoryPointsContainer({
 
 	return (
 		<div
-			className={`flex flex-row flex-wrap gap-4 justify-center items-center border-0 border-pink-800 ${isDisabledHost && 'scale-[0.85] py-2'}`}
+			className={`flex flex-row flex-wrap gap-4 justify-center items-center z-10 border-0 border-pink-800 ${isDisabledHost && 'scale-[0.85] py-2'}`}
 		>
 			{allowedPointsArray.map((allowedPoint) => (
 				<StoryPointButton
