@@ -3,7 +3,6 @@
 	"version": "0.1.0",
 	"private": true,
 	"type": "module",
-	"packageManager": "pnpm@11.21.0",
 	"scripts": {
 		"dev": "vite dev --port 3000",
 		"build": "vite build",
@@ -12,8 +11,11 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.worker.json",
-		"lint": "biome check src",
-		"cf-typegen": "wrangler types"
+		"lint": "oxlint",
+		"cf-typegen": "wrangler types",
+		"lint:fix": "oxlint --fix",
+		"format": "oxfmt",
+		"format:check": "oxfmt --check"
 	},
 	"dependencies": {
 		"@tanstack/react-router": "^1.170.46",
@@ -24,7 +26,6 @@
 		"usehooks-ts": "^3.1.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.3",
 		"@cloudflare/vite-plugin": "1.64.0",
 		"@testing-library/dom": "^10.4.0",
 		"@testing-library/jest-dom": "^6.5.0",
@@ -36,6 +37,8 @@
 		"@vitejs/plugin-react": "^6.1.2",
 		"daisyui": "^4.12.13",
 		"jsdom": "^29.1.1",
+		"oxfmt": "^0.75.0",
+		"oxlint": "^1.90.0",
 		"postcss": "^8.4.47",
 		"tailwindcss": "^3.4.19",
 		"tailwindcss-animate": "^1.0.7",
@@ -43,5 +46,6 @@
 		"vite": "^8.3.5",
 		"vitest": "^4.1.12",
 		"wrangler": "4.152.0"
-	}
+	},
+	"packageManager": "pnpm@11.21.0"
 }

@@ -1,7 +1,9 @@
-import type { AnimationType } from '@/components/RadioAnimationSetting'
 import { AnimatePresence, motion } from 'framer-motion'
-import { SealifeImage } from './SealifeImage'
+
+import type { AnimationType } from '@/components/RadioAnimationSetting'
+
 import JellyFishOutlineIcon from './icons/JellyFishOutlineIcon'
+import { SealifeImage } from './SealifeImage'
 
 type CardProps = {
 	name: string

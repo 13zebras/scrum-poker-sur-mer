@@ -1,16 +1,16 @@
+import { useEffect, useState } from 'react'
+import { useLocalStorage } from 'usehooks-ts'
+
 import AnimatedFish from '@/components/AnimatedFish'
 import HostControlsContainer from '@/components/HostControlsContainer'
 import HostSettings from '@/components/HostSettings'
 import HostTools from '@/components/HostTools'
 import RoomInfo from '@/components/RoomInfo'
 import RoomMainUi from '@/components/RoomMainUi'
-import { socketEmitter } from '@/services/socket'
-import { useSocketListener } from '@/services/socket'
+import { socketEmitter, useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 import { DEFAULT_STORY_POINTS, POINT_CODES } from '@/utils/constants'
 import useUpdateUsersPoints from '@/utils/hooks/useUpdateUserPoints'
-import { useEffect, useState } from 'react'
-import { useLocalStorage } from 'usehooks-ts'
 
 export type HostData = {
 	nameOfHost: string
@@ -21,7 +21,7 @@ export type HostData = {
 
 export default function HostRoomPage({ roomId }: { roomId: string }) {
 	const [disabledShowPointsButton, setDisabledShowPointsButton] = useState<boolean>(false)
-	const [hostData, setHostData] = useLocalStorage<HostData>('scrumPokerLaMerHostData', {
+	const [hostData] = useLocalStorage<HostData>('scrumPokerLaMerHostData', {
 		nameOfHost: '',
 		userId: '',
 		roomUrl: '',
@@ -51,7 +51,6 @@ export default function HostRoomPage({ roomId }: { roomId: string }) {
 
 	const [animationSetting] = useLocalStorage<string>('scrumPokerLaMerAnimationSetting', 'medium')
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: no need to add updateUsersPoints or roomId to useEffect dependency array as this should only run once when the page loads
 	useEffect(() => {
 		if (allUsersPointsLocal) {
 			updateUsersPoints(allUsersPointsLocal)
@@ -63,6 +62,7 @@ export default function HostRoomPage({ roomId }: { roomId: string }) {
 			userName: hostData.nameOfHost,
 			userId: hostData.userId,
 		})
+		// oxlint-disable-next-line react-hooks/exhaustive-deps -- no need to add updateUsersPoints or roomId to useEffect dependency array as this should only run once when the page loads
 	}, [])
 
 	useSocketListener('join-room', {
@@ -170,7 +170,7 @@ export default function HostRoomPage({ roomId }: { roomId: string }) {
 					handleShowHostCard={handleShowHostCard}
 				/>
 				<div className='flex flex-col justify-start items-center gap-6'>
-					<h1 className='text-center text-2xl md:text-3xl text-gray-300'>
+					<h1 className='text-center text-2xl md:text-3xl text-gray-300 pt-4'>
 						Host: Scrum Poker sous la Mer
 					</h1>
 					<RoomInfo roomUrl={hostData.roomUrl} nameOfHost={hostData.nameOfHost} />

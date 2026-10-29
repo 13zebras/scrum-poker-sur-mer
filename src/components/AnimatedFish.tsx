@@ -1,6 +1,8 @@
-import useResize from '@/utils/hooks/useResize'
 import { motion, useAnimationControls } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
+import useResize from '@/utils/hooks/useResize'
+
 import AnimatedFishButton from './AnimatedFishButton'
 import TropicalFishIcon from './icons/TropicalFishIcon'
 
@@ -92,7 +94,7 @@ export default function AnimatedFish() {
 			animationRef.current = false
 			controls.stop()
 			setTimeout(() => {
-				animationRef.current ? setDisplayNone(false) : setDisplayNone(true)
+				setDisplayNone(!animationRef.current)
 			}, 1000)
 		}
 	}, [controls, viewportWidth, viewportHeight, isFishSwimming, createFrames])

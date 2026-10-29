@@ -1,8 +1,9 @@
-import type { HostData } from '@/pages/HostRoomPage'
-import { socketEmitter } from '@/services/socket'
 import { useParams } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
+
+import type { HostData } from '@/pages/HostRoomPage'
+import { socketEmitter } from '@/services/socket'
 
 export type AnimationType = 'minimum' | 'medium' | 'high'
 

@@ -1,9 +1,10 @@
+import { Link, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
+
 import type { ListenerRes } from '@/services/socket'
 import { POINT_CODES } from '@/utils/constants'
 import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
 import { sampleNamesArray } from '@/utils/sampleData'
-import { Link, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
 
 type HostToolsProps = {
 	allUsersPoints: ListenerRes[]
@@ -34,7 +35,7 @@ export default function HostTools({
 		const sampleNames = sampleNamesArray.slice(namesStart, namesEnd)
 
 		setRealUsers(allUsersPoints)
-		const newUsers: ListenerRes[] = sampleNames.map((name, index) => {
+		const newUsers: ListenerRes[] = sampleNames.map((name) => {
 			const randomPoint = allowedStoryPoints[Math.floor(Math.random() * allowedStoryPoints.length)]
 			const pointAsNumber = randomPoint === '?' ? -1 : Number(randomPoint)
 			const storyPoint = Math.random() > demoPointPercent / 100 ? POINT_CODES.JOIN : pointAsNumber

@@ -1,4 +1,3 @@
-import HomePage from '@/pages/HomePage'
 import {
 	RouterProvider,
 	createMemoryHistory,
@@ -6,6 +5,8 @@ import {
 	createRouter,
 } from '@tanstack/react-router'
 import { render, screen } from '@testing-library/react'
+
+import HomePage from '@/pages/HomePage'
 
 function renderWithRouter() {
 	const router = createRouter({

@@ -1,5 +1,6 @@
-import { SealifeImage } from '@/components/SealifeImage'
 import { render, screen } from '@testing-library/react'
+
+import { SealifeImage } from '@/components/SealifeImage'
 
 describe('SealifeImage', () => {
 	it('picks the image from the start of the user id', () => {

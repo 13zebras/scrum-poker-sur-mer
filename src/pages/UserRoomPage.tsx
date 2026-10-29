@@ -1,10 +1,11 @@
+import { useEffect, useRef, useState } from 'react'
+import { useLocalStorage } from 'usehooks-ts'
+
 import AnimatedFish from '@/components/AnimatedFish'
 import NewUserDialog from '@/components/NewUserDialog'
 import RoomInfo from '@/components/RoomInfo'
 import RoomMainUi from '@/components/RoomMainUi'
 import { useSocketListener } from '@/services/socket'
-import { useEffect, useRef, useState } from 'react'
-import { useLocalStorage } from 'usehooks-ts'
 
 export default function UserRoomPage({ roomId }: { roomId: string }) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false)

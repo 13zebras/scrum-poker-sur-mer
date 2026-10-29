@@ -1,0 +1,33 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"plugins": ["typescript", "unicorn", "oxc", "eslint", "react", "import", "jsx-a11y", "vitest"],
+	"ignorePatterns": [
+		"src/routeTree.gen.ts",
+		"worker-configuration.d.ts",
+		"dist/**",
+		".wrangler/**"
+	],
+	"categories": {
+		"correctness": "error"
+	},
+	"rules": {
+		"@typescript-eslint/consistent-type-imports": [
+			"warn",
+			{
+				"prefer": "type-imports",
+				"fixStyle": "separate-type-imports"
+			}
+		],
+		"@typescript-eslint/no-explicit-any": "warn",
+		"import/no-duplicates": "warn",
+		"react/exhaustive-deps": "warn",
+		"react/rules-of-hooks": "error",
+		"react/no-array-index-key": "warn",
+		"react/react-in-jsx-scope": "off",
+		"react/purity": "off",
+		"react/set-state-in-effect": "off"
+	},
+	"env": {
+		"builtin": true
+	}
+}

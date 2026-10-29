@@ -1,12 +1,12 @@
-import useResize from '@/utils/hooks/useResize'
 import { useState } from 'react'
-import UserPointsCard from './UserPointsCard'
-
-import { useSocketListener } from '@/services/socket'
-import type { ListenerRes } from '@/services/socket'
 
 import type { AnimationType } from '@/components/RadioAnimationSetting'
+import { useSocketListener } from '@/services/socket'
+import type { ListenerRes } from '@/services/socket'
 import { POINT_CODES } from '@/utils/constants'
+import useResize from '@/utils/hooks/useResize'
+
+import UserPointsCard from './UserPointsCard'
 
 export default function CardsContainer() {
 	const [sortedUsersPoints, setSortedUsersPoints] = useState<ListenerRes[]>([])

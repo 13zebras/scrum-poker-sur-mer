@@ -1,15 +1,19 @@
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import type { ComponentProps } from 'react'
+
 import NewUserDialog from '@/components/NewUserDialog'
 import { socketEmitter } from '@/services/socket'
 import { POINT_CODES } from '@/utils/constants'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
-vi.mock('@/services/socket', () => ({ socketEmitter: vi.fn() }))
+vi.mock('@/services/socket', () => ({ socketEmitter: vi.fn<typeof socketEmitter>() }))
+
+type Props = ComponentProps<typeof NewUserDialog>
 
 function renderDialog(
 	props: { user?: string; userId?: string; isRoomIdLastRoomId?: boolean } = {},
 ) {
-	const setUserData = vi.fn()
+	const setUserData = vi.fn<Props['setUserData']>()
 	render(
 		<NewUserDialog
 			dialogRef={{ current: null }}
@@ -19,7 +23,7 @@ function renderDialog(
 			setUserData={setUserData}
 			isRoomIdLastRoomId={props.isRoomIdLastRoomId ?? false}
 			isDialogOpen={true}
-			setIsDialogOpen={vi.fn()}
+			setIsDialogOpen={vi.fn<Props['setIsDialogOpen']>()}
 		/>,
 	)
 	// The parent page opens the dialog the same way.

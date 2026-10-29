@@ -1,7 +1,9 @@
-import { socketEmitter } from '@/services/socket'
-import { POINT_CODES } from '@/utils/constants'
 import type { RefObject } from 'react'
 import { useEffect, useState } from 'react'
+
+import { socketEmitter } from '@/services/socket'
+import { POINT_CODES } from '@/utils/constants'
+
 import RightArrowIcon from './icons/RightArrowIcon'
 
 type UserData = {

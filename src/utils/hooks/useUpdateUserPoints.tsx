@@ -1,7 +1,8 @@
+import { useState } from 'react'
+
 import type { ListenerRes } from '@/services/socket'
 import { POINT_CODES } from '@/utils/constants'
 import removeInactiveUsers from '@/utils/helpers/removeInactiveUsers'
-import { useState } from 'react'
 
 type UpdateUsersPointsProps = {
 	allUsersPointsEmitter: (newPoints: ListenerRes[]) => void

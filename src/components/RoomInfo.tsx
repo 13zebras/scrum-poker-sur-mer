@@ -11,7 +11,7 @@ export default function RoomInfo({ roomUrl, nameOfHost, userName }: RoomInfoData
 	const isUser = !!userName
 
 	const handleCopyUrl = () => {
-		roomUrl && navigator.clipboard.writeText(roomUrl)
+		if (roomUrl) navigator.clipboard.writeText(roomUrl)
 		setIsCopied(true)
 		setTimeout(() => {
 			setIsCopied(false)

@@ -16,7 +16,6 @@ export default function useResize(containerType = 'both', debounceDelay = 300): 
 	const [debouncedHeight, setViewportHeight] = useDebounceValue(0, debounceDelay)
 	const [debouncedRect, setRect] = useDebounceValue<DOMRect | null>(null, debounceDelay)
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: debounce same as useState, not needed in dependency array
 	const handleResize = useCallback(() => {
 		const isViewport = containerType === 'viewport'
 		const isContainer = containerType === 'container'
@@ -37,6 +36,7 @@ export default function useResize(containerType = 'both', debounceDelay = 300): 
 		setViewportWidth(vpWidth)
 		setViewportHeight(vpHeight)
 		setRect(containerRect)
+		// oxlint-disable-next-line react-hooks/exhaustive-deps -- debounce setters are stable like useState, not needed in dependency array
 	}, [containerType])
 
 	useEffect(() => {

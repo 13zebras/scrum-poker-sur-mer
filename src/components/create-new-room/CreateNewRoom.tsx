@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
+import { useLocalStorage } from 'usehooks-ts'
 
 import NewRoomOrLastRoom from '@/components/create-new-room/NewRoomOrLastRoom'
-import { useLocalStorage } from 'usehooks-ts'
+
 import CreateNewRoomButton from './CreateNewRoomButton'
 import GoToNewRoom from './GoToNewRoom'
 
