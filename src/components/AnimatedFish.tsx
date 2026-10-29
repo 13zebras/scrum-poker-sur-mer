@@ -1,8 +1,8 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
+import useResize from '@/utils/hooks/useResize'
 import { motion, useAnimationControls } from 'framer-motion'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import AnimatedFishButton from './AnimatedFishButton'
 import TropicalFishIcon from './icons/TropicalFishIcon'
-import useResize from '@/utils/hooks/useResize'
 
 export default function AnimatedFish() {
 	const [isFishSwimming, setIsFishSwimming] = useState(false)
@@ -27,7 +27,7 @@ export default function AnimatedFish() {
 				y: yBase + 0.05,
 				duration: durationScale,
 				delay: 0,
-				ease: 'linear',
+				ease: 'linear' as const,
 			},
 		]
 		for (let i = 0; i < numberOfFrames; i++) {

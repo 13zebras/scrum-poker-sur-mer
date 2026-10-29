@@ -1,6 +1,6 @@
-import type { HostData } from '@/app/host/[roomId]/page'
+import type { HostData } from '@/pages/HostRoomPage'
 import { socketEmitter } from '@/services/socket'
-import { useParams } from 'next/dist/client/components/navigation'
+import { useParams } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 
@@ -10,7 +10,7 @@ type Props = {
 	hostData: HostData
 }
 
-export default function RadioAnimationSetting({ hostData }: Props): JSX.Element {
+export default function RadioAnimationSetting({ hostData }: Props): React.JSX.Element {
 	const [animationSetting, setAnimationSetting] = useLocalStorage<string>(
 		'scrumPokerLaMerAnimationSetting',
 		'medium',
@@ -18,7 +18,7 @@ export default function RadioAnimationSetting({ hostData }: Props): JSX.Element 
 	const [selectedOption, setSelectedOption] = useState<AnimationType>(
 		animationSetting as AnimationType,
 	)
-	const params = useParams()
+	const params = useParams({ strict: false })
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newAnimationSetting = event.target.value as AnimationType

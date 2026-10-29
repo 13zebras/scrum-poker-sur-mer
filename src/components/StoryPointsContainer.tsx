@@ -1,10 +1,8 @@
-'use client'
-
+import type { RoomData } from '@/components/RoomMainUi'
+import StoryPointButton from '@/components/StoryPointButton'
 import { socketEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import { useState } from 'react'
-import StoryPointButton from '@/components/StoryPointButton'
-import type { RoomData } from '@/components/RoomMainUi'
 
 export default function StoryPointsContainer({
 	roomId,

@@ -1,0 +1,8 @@
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/sealife-images/*
+  Cache-Control: public, max-age=604800
+
+/school-fish/*
+  Cache-Control: public, max-age=604800

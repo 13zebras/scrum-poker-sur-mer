@@ -1,10 +1,9 @@
-import { useState } from 'react'
-import Link from 'next/link'
 import type { ListenerRes } from '@/services/socket'
-import { sampleNamesArray } from '@/utils/sampleData'
 import { POINT_CODES } from '@/utils/constants'
 import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
-import { useRouter } from 'next/navigation'
+import { sampleNamesArray } from '@/utils/sampleData'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 
 type HostToolsProps = {
 	allUsersPoints: ListenerRes[]
@@ -25,7 +24,7 @@ export default function HostTools({
 }: HostToolsProps) {
 	const [realUsers, setRealUsers] = useState<ListenerRes[]>([])
 	const [wasAdded, setWasAdded] = useState(false)
-	const router = useRouter()
+	const navigate = useNavigate()
 
 	function onAddRandomUsers() {
 		if (wasAdded) return
@@ -63,13 +62,13 @@ export default function HostTools({
 
 	function onRemoveLocalStorage() {
 		removeAllLocalStorageData()
-		router.push('/host')
+		navigate({ to: '/host' })
 	}
 
 	return (
 		<div className='absolute top-6 left-6 sm:left-12 flex flex-row flex-start items-center gap-8 scale-90'>
 			<div className='tooltip tooltip-bottom text-xs' data-tip='Click to Create a New Room'>
-				<Link href='/host' className='btn btn-outline-gray h-6 min-h-6 w-28 px-1 text-xs'>
+				<Link to='/host' className='btn btn-outline-gray h-6 min-h-6 w-28 px-1 text-xs'>
 					Create Room
 				</Link>
 			</div>

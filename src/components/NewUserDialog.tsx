@@ -1,7 +1,7 @@
-import type { RefObject } from 'react'
-import { useState, useEffect } from 'react'
 import { socketEmitter } from '@/services/socket'
 import { POINT_CODES } from '@/utils/constants'
+import type { RefObject } from 'react'
+import { useEffect, useState } from 'react'
 import RightArrowIcon from './icons/RightArrowIcon'
 
 type UserData = {
@@ -12,7 +12,7 @@ type UserData = {
 }
 
 type NewUserDialogProps = {
-	dialogRef: RefObject<HTMLDialogElement>
+	dialogRef: RefObject<HTMLDialogElement | null>
 	user: string
 	userId: string
 	roomId: string

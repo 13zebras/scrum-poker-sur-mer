@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import RightArrowIcon from '@/components/icons/RightArrowIcon'
 
 type GoToNewRoomProps = {
@@ -28,13 +27,13 @@ export default function GoToNewRoom({ roomUrl, hostRoomUrl }: GoToNewRoomProps) 
 			</div>
 
 			<div className='w-full max-w-[20rem] xs:max-w-[22rem] motion-safe:animate-fade-in-300'>
-				<Link
+				<a
 					href={hostRoomUrl}
 					className='btn btn-secondary w-full h-11 min-h-11 text-lg xs:text-xl uppercase motion-safe:animate-fade-in-300 shadow-xl shadow-black/70'
 				>
 					Go to New Room
 					<RightArrowIcon className='h-8 w-8 inline' aria-label='Right Arrow Icon' />
-				</Link>
+				</a>
 			</div>
 		</>
 	)

@@ -1,14 +1,12 @@
-'use client'
-
-import UserPointsCard from './UserPointsCard'
-import { useState } from 'react'
 import useResize from '@/utils/hooks/useResize'
+import { useState } from 'react'
+import UserPointsCard from './UserPointsCard'
 
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
 
-import { POINT_CODES } from '@/utils/constants'
 import type { AnimationType } from '@/components/RadioAnimationSetting'
+import { POINT_CODES } from '@/utils/constants'
 
 export default function CardsContainer() {
 	const [sortedUsersPoints, setSortedUsersPoints] = useState<ListenerRes[]>([])

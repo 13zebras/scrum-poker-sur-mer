@@ -5,7 +5,7 @@ import { useDebounceValue } from 'usehooks-ts'
 type UseResizeReturn = {
 	viewportWidth?: number
 	viewportHeight?: number
-	ref?: RefObject<HTMLDivElement>
+	ref?: RefObject<HTMLDivElement | null>
 	rect?: DOMRect | null
 }
 

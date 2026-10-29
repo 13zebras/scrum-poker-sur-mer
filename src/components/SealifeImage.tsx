@@ -1,5 +1,3 @@
-import Image from 'next/image'
-
 type Props = {
 	userId: string
 	alt: string
@@ -17,13 +15,12 @@ export function SealifeImage({ userId, alt }: Props) {
 
 	const paddedImageNum = newImageNum.toString().padStart(3, '0')
 	return (
-		<Image
+		<img
 			src={`/sealife-images/sealife_256_${paddedImageNum}.webp`}
 			alt={alt}
 			width='256'
 			height='256'
-			priority
-			quality={80}
+			fetchPriority='high'
 		/>
 	)
 }

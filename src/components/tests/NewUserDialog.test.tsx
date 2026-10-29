@@ -1,63 +1,72 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import NewUserDialog from '@/components/NewUserDialog'
-import type { RefObject } from 'react'
+import { socketEmitter } from '@/services/socket'
+import { POINT_CODES } from '@/utils/constants'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
-const mockRef: RefObject<HTMLDialogElement> = {
-	current: {
-		showModal: jest.fn(),
-		close: jest.fn(),
-	} as unknown as HTMLDialogElement,
+vi.mock('@/services/socket', () => ({ socketEmitter: vi.fn() }))
+
+function renderDialog(
+	props: { user?: string; userId?: string; isRoomIdLastRoomId?: boolean } = {},
+) {
+	const setUserData = vi.fn()
+	render(
+		<NewUserDialog
+			dialogRef={{ current: null }}
+			user={props.user ?? ''}
+			userId={props.userId ?? ''}
+			roomId='room-1'
+			setUserData={setUserData}
+			isRoomIdLastRoomId={props.isRoomIdLastRoomId ?? false}
+			isDialogOpen={true}
+			setIsDialogOpen={vi.fn()}
+		/>,
+	)
+	// The parent page opens the dialog the same way.
+	const dialog = screen.getByRole('dialog', { hidden: true }) as HTMLDialogElement
+	dialog.showModal()
+	return { setUserData }
 }
 
-const mockUser = 'Test User'
-const mockUserId = '12345'
-const mockIsRoomIdLastRoomId = true
-
-// ... existing code ...
+function getJoinButton() {
+	return screen.getByRole('button', { name: /join room/i })
+}
 
 describe('NewUserDialog', () => {
-	it('submit the form calls onSubmit prop', async () => {
-		const user = userEvent.setup()
-		const handleOnSubmit = jest.fn()
-		render(
-			<NewUserDialog
-				dialogRef={mockRef}
-				handleOnSubmit={handleOnSubmit}
-				displayError={false}
-				isDialogOpen={true}
-				user={mockUser} // Add this line
-				userId={mockUserId} // Add this line
-				isRoomIdLastRoomId={mockIsRoomIdLastRoomId} // Add this line
-				setIsDialogOpen={jest.fn()} // Add this line
-			/>,
-		)
-		const input = screen.getByLabelText('your first name') as HTMLInputElement
-
-		await user.type(input, 'bob')
-		expect(input.value).toBe('bob')
-
-		const form = screen.getByRole('form')
-		fireEvent.submit(form)
-
-		expect(handleOnSubmit).toHaveBeenCalledWith('bob')
+	afterEach(() => {
+		vi.clearAllMocks()
 	})
 
-	it('renders display error', () => {
-		const handleOnSubmit = jest.fn()
-		render(
-			<NewUserDialog
-				dialogRef={mockRef}
-				handleOnSubmit={handleOnSubmit}
-				displayError={false}
-				isDialogOpen={true}
-				user={mockUser} // Add this line
-				userId={mockUserId} // Add this line
-				isRoomIdLastRoomId={mockIsRoomIdLastRoomId} // Add this line
-				setIsDialogOpen={jest.fn()} // Add this line
-			/>,
+	it('joins the room with the typed name', async () => {
+		const user = userEvent.setup()
+		const { setUserData } = renderDialog()
+
+		await user.type(screen.getByLabelText('your first name', { selector: 'input' }), 'bob')
+		await user.click(getJoinButton())
+
+		expect(socketEmitter).toHaveBeenCalledWith(
+			'join-room',
+			expect.objectContaining({ roomId: 'room-1', message: POINT_CODES.JOIN, userName: 'bob' }),
 		)
-		const error = screen.getByText('Please enter your name!')
-		expect(error).toBeInTheDocument()
+		expect(setUserData).toHaveBeenCalledWith(
+			expect.objectContaining({ userName: 'bob', roomId: 'room-1' }),
+		)
+	})
+
+	it('shows an error when the name is empty', async () => {
+		const user = userEvent.setup()
+		renderDialog()
+
+		await user.click(getJoinButton())
+
+		expect(screen.getByText('You forgot your first name!')).toBeInTheDocument()
+		expect(socketEmitter).not.toHaveBeenCalled()
+	})
+
+	it('welcomes a returning user back', () => {
+		renderDialog({ user: 'Alice', userId: 'abc', isRoomIdLastRoomId: true })
+
+		expect(screen.getByText('Welcome back')).toBeInTheDocument()
+		expect(screen.getByText('Alice!')).toBeInTheDocument()
 	})
 })

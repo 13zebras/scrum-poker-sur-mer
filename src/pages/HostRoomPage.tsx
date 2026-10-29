@@ -1,20 +1,16 @@
-'use client'
-
-import { useEffect, useState } from 'react'
+import AnimatedFish from '@/components/AnimatedFish'
+import HostControlsContainer from '@/components/HostControlsContainer'
+import HostSettings from '@/components/HostSettings'
+import HostTools from '@/components/HostTools'
+import RoomInfo from '@/components/RoomInfo'
+import RoomMainUi from '@/components/RoomMainUi'
 import { socketEmitter } from '@/services/socket'
 import { useSocketListener } from '@/services/socket'
 import type { ListenerRes } from '@/services/socket'
-import HostControlsContainer from '@/components/HostControlsContainer'
-import RoomMainUi from '@/components/RoomMainUi'
+import { DEFAULT_STORY_POINTS, POINT_CODES } from '@/utils/constants'
 import useUpdateUsersPoints from '@/utils/hooks/useUpdateUserPoints'
-import AnimatedFish from '@/components/AnimatedFish'
-import { POINT_CODES, DEFAULT_STORY_POINTS } from '@/utils/constants'
+import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
-import HostTools from '@/components/HostTools'
-import dynamic from 'next/dynamic'
-
-const RoomInfo = dynamic(() => import('@/components/RoomInfo'), { ssr: false })
-const HostSettings = dynamic(() => import('@/components/HostSettings'), { ssr: false })
 
 export type HostData = {
 	nameOfHost: string
@@ -23,8 +19,7 @@ export type HostData = {
 	hostRoomUrl: string
 }
 
-export default function HostRoom({ params }: { params: { roomId: string } }) {
-	const { roomId } = params
+export default function HostRoomPage({ roomId }: { roomId: string }) {
 	const [disabledShowPointsButton, setDisabledShowPointsButton] = useState<boolean>(false)
 	const [hostData, setHostData] = useLocalStorage<HostData>('scrumPokerLaMerHostData', {
 		nameOfHost: '',

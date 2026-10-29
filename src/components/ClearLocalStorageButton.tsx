@@ -1,5 +1,3 @@
-'use client'
-
 import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
 
 export default function ClearLocalStorageButton() {

@@ -3,13 +3,7 @@ import daisyui from 'daisyui'
 
 const config: Config = {
 	darkMode: ['class'],
-	content: [
-		'./components/**/*.{ts,tsx}',
-		'./app/**/*.{ts,tsx}',
-		'./src/**/*.{ts,tsx}',
-		'./node_modules/daisyui/dist/**/*.js',
-		'./node_modules/react-daisyui/dist/**/*.js',
-	],
+	content: ['./src/**/*.{ts,tsx}'],
 	theme: {
 		extend: {
 			screens: {

@@ -1,11 +1,9 @@
-'use client'
-
-import GearIcon from './icons/GearIcon'
-import RadioShowHide from './RadioShowHide'
-import RadioAnimationSetting from './RadioAnimationSetting'
-import { useRef, useState } from 'react'
-import type { HostData } from '@/app/host/[roomId]/page'
+import type { HostData } from '@/pages/HostRoomPage'
 import removeAllLocalStorageData from '@/utils/helpers/removeAllLocalStorageData'
+import { useRef, useState } from 'react'
+import RadioAnimationSetting from './RadioAnimationSetting'
+import RadioShowHide from './RadioShowHide'
+import GearIcon from './icons/GearIcon'
 import XIcon from './icons/XIcon'
 
 type Props = {

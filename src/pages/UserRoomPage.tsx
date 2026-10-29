@@ -1,20 +1,12 @@
-'use client'
-
-import dynamic from 'next/dynamic'
-import { useEffect, useState, useRef } from 'react'
-import { useSocketListener } from '@/services/socket'
-import RoomMainUi from '@/components/RoomMainUi'
-import NewUserDialog from '@/components/NewUserDialog'
 import AnimatedFish from '@/components/AnimatedFish'
+import NewUserDialog from '@/components/NewUserDialog'
+import RoomInfo from '@/components/RoomInfo'
+import RoomMainUi from '@/components/RoomMainUi'
+import { useSocketListener } from '@/services/socket'
+import { useEffect, useRef, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 
-const RoomInfo = dynamic(() => import('@/components/RoomInfo'), { ssr: false })
-
-type Params = {
-	roomId: string
-}
-
-export default function UserRooms({ params }: { params: Params }) {
+export default function UserRoomPage({ roomId }: { roomId: string }) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	const dialogRef = useRef<HTMLDialogElement>(null)
 
@@ -24,8 +16,6 @@ export default function UserRooms({ params }: { params: Params }) {
 		lastRoomId: '',
 		roomId: '',
 	})
-
-	const { roomId } = params
 
 	const hostRoomInfo = useSocketListener('host-room-info')
 	const nameOfHost = hostRoomInfo ? hostRoomInfo.userName : ''

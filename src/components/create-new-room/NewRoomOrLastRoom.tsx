@@ -2,7 +2,7 @@ type NewRoomOrLastRoomProps = {
 	nameOfHost: string
 	roomUrl: string
 	hostRoomUrl: string
-	hostRef: React.RefObject<HTMLInputElement>
+	hostRef: React.RefObject<HTMLInputElement | null>
 	handleUseLastRoom: () => void
 	setNewName: (name: string) => void
 	nameError: boolean

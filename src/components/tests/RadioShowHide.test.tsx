@@ -1,9 +1,9 @@
+import RadioShowHide from '@/components/RadioShowHide'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import RadioShowHide from '@/components/RadioShowHide'
 
 describe('RadioShowHide', () => {
-	const onChange = jest.fn()
+	const onChange = vi.fn()
 	it('renders properly', () => {
 		const option = 'hide'
 		render(<RadioShowHide selectedOption={option} onChange={onChange} />)

@@ -1,5 +1,8 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"files": {
+		"ignore": ["src/routeTree.gen.ts", "src/styles/globals.css"]
+	},
 	"organizeImports": {
 		"enabled": true
 	},

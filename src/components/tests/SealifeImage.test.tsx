@@ -1,41 +1,20 @@
-import { render, screen } from '@testing-library/react'
 import { SealifeImage } from '@/components/SealifeImage'
-
-jest.mock('next/navigation', () => ({
-	usePathname: jest.fn(),
-}))
-
-import { usePathname } from 'next/navigation'
+import { render, screen } from '@testing-library/react'
 
 describe('SealifeImage', () => {
-	beforeEach(() => {
-		;(usePathname as jest.Mock).mockReturnValue('/some/mock/path')
+	it('picks the image from the start of the user id', () => {
+		render(<SealifeImage userId='00000-user' alt='Test image' />)
+		expect(screen.getByRole('img')).toHaveAttribute('src', '/sealife-images/sealife_256_001.webp')
 	})
 
-	afterEach(() => {
-		jest.clearAllMocks()
+	it('wraps around the 33 images', () => {
+		render(<SealifeImage userId='00026-user' alt='Test image' />)
+		// 0x26 = 38, 38 % 33 + 1 = 6
+		expect(screen.getByRole('img')).toHaveAttribute('src', '/sealife-images/sealife_256_006.webp')
 	})
 
-	it('renders img with correct source number', () => {
-		const imageNum = 1
-		const { container } = render(<SealifeImage imageNum={imageNum} alt='Test image' />)
-
-		const imgElement = container.querySelector('img')
-		expect(imgElement!.src).toContain('sealife-images%2Fsealife_256_009.webp&w=640&q=75')
-	})
-
-	it('renders img with 2nd correct source number', () => {
-		const imageNum = 5
-		const { container } = render(<SealifeImage imageNum={imageNum} alt='Test image' />)
-
-		const imgElement = container.querySelector('img')
-		expect(imgElement!.src).toContain('sealife-images%2Fsealife_256_013.webp&w=640&q=75')
-	})
-
-	it('renders image and alt text', () => {
-		render(<SealifeImage imageNum={1} alt='Test image' />)
-
-		const alt = screen.getByAltText(/Test/i)
-		expect(alt).toBeInTheDocument()
+	it('renders the alt text', () => {
+		render(<SealifeImage userId='00000-user' alt='Test image' />)
+		expect(screen.getByAltText('Test image')).toBeInTheDocument()
 	})
 })

@@ -1,7 +1,5 @@
-'use client'
-
-import StoryPointsContainer from '@/components/StoryPointsContainer'
 import CardsContainer from '@/components/CardsContainer'
+import StoryPointsContainer from '@/components/StoryPointsContainer'
 
 export type RoomData = {
 	roomId: string
